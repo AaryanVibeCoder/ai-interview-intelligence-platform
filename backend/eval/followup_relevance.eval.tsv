@@ -1,0 +1,13 @@
+id	candidate_answer	generated_followup	ground_truth_relevance
+1	I optimized database query latency by adding composite indexes on foreign keys.	Can you walk me through how you identified which columns to index and what database explain plans you used to verify the performance gain?	relevant
+2	I optimized database query latency by adding composite indexes on foreign keys.	Tell me about a time you had to resolve a conflict with a product manager.	irrelevant
+3	I optimized database query latency by adding composite indexes on foreign keys.	Did you add indexes on your database keys to improve speed?	redundant
+4	I led a refactor of our user auth module to support JWT token rotation.	What security considerations did you have to keep in mind when implementing the token rotation, specifically around token expiration and revocation?	relevant
+5	I led a refactor of our user auth module to support JWT token rotation.	What language did you write the calculator application in?	irrelevant
+6	I led a refactor of our user auth module to support JWT token rotation.	So you refactored the authentication module to rotate JWT tokens, correct?	redundant
+7	We migrated from a Postgres monolith to a microservices architecture using Kafka.	How did you manage schema changes or database transaction boundary issues across the split services?	relevant
+8	We migrated from a Postgres monolith to a microservices architecture using Kafka.	Did you use Kafka for the microservices?	redundant
+9	We migrated from a Postgres monolith to a microservices architecture using Kafka.	Do you prefer programming in Python or JavaScript?	irrelevant
+10	I implemented a Redis caching layer which dropped our API response time from 2 seconds to 200 milliseconds.	What cache eviction strategy did you choose, and how did you prevent cache stampede under heavy load?	relevant
+11	I implemented a Redis caching layer which dropped our API response time from 2 seconds to 200 milliseconds.	What is your favorite cooking recipe?	irrelevant
+12	I implemented a Redis caching layer which dropped our API response time from 2 seconds to 200 milliseconds.	How much did you drop the latency? Was it from two seconds to two hundred milliseconds?	redundant

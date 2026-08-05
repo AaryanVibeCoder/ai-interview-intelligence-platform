@@ -1,0 +1,7000 @@
+{
+  "mismatches_found": [
+    {
+      "company_name": "Clerk",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "1Password",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Cybersecurity"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "ActiveCampaign",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Behavioral & Coding"
+        }
+      }
+    },
+    {
+      "company_name": "Adobe",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Affirm",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Algorithmic & Behavioral"
+        }
+      }
+    },
+    {
+      "company_name": "Airbnb",
+      "mismatches": {
+        "industry": {
+          "current": "Unicorns & Cutting Edge",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Airtable",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Akamai",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Algolia",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Amazon",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Big Tech & E-commerce"
+        }
+      }
+    },
+    {
+      "company_name": "AMD",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Amplitude",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Anthropic",
+      "mismatches": {
+        "industry": {
+          "current": "Unicorns & Cutting Edge",
+          "corrected": "Artificial Intelligence"
+        }
+      }
+    },
+    {
+      "company_name": "Apple",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Big Tech & Consumer Electronics"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Algorithmic & Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Aqua Security",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Arc Browser",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "ASML",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Atlassian",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Auth0",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Authress",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Autodesk",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Bamboo",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Behavioral & Coding"
+        }
+      }
+    },
+    {
+      "company_name": "BigCommerce",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "E-commerce"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Bitbucket",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Box",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Brex",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Fintech"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Broadcom",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Buy Me a Coffee",
+      "mismatches": {
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Bytebase",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Canva",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Cart.com",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Carta",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Fintech"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Checkmarx",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Domain Specific & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Chime",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Fintech"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Algorithmic & Behavioral"
+        }
+      }
+    },
+    {
+      "company_name": "CircleCI",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Cisco",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Cloudflare",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Cohere",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Artificial Intelligence"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Coinbase",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Web3 & Blockchain"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Confluent",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "Cloud Infrastructure"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "ConvertKit",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Crunchbase",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Dashlane",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Databricks",
+      "mismatches": {
+        "industry": {
+          "current": "Unicorns & Cutting Edge",
+          "corrected": "Data & Analytics"
+        }
+      }
+    },
+    {
+      "company_name": "Datadog",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        }
+      }
+    },
+    {
+      "company_name": "Deel",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Dell",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Descript",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Dev.to",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Social Media & Comm"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "DigitalOcean",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Docker",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "DoorDash",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Logistics & Delivery"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Dropbox",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Dynatrace",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Elastic",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "F5",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Cloud Infrastructure"
+        }
+      }
+    },
+    {
+      "company_name": "Fastly",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "Cloud Infrastructure"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Fathom",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Figma",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Fly.io",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Flywheel",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Ghost",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "GitHub",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "GitHub Actions",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "GitLab",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "GitLab CI",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Gong",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Google",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Big Tech"
+        }
+      }
+    },
+    {
+      "company_name": "Gumroad",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Gusto",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "HackerNews",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Social Media & Comm"
+        }
+      }
+    },
+    {
+      "company_name": "Harness",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "DevOps & Developer Tools"
+        }
+      }
+    },
+    {
+      "company_name": "HashiCorp",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Hashnode",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Heroku",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "HP",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "HubSpot",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Hugging Face",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Artificial Intelligence"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "IBM",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Behavioral & Coding"
+        }
+      }
+    },
+    {
+      "company_name": "Instacart",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Logistics & Delivery"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Intel",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Jasper AI",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Artificial Intelligence"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Jenkins",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Klarna",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Algorithmic & Behavioral"
+        }
+      }
+    },
+    {
+      "company_name": "Ko-fi",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Kraken",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Web3 & Blockchain"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Lacework",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "LastPass",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "LaunchDarkly",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Linear",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Linode",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "Cloud Infrastructure"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "LogRocket",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Loom",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Lyft",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        }
+      }
+    },
+    {
+      "company_name": "Magento",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Mailchimp",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Mailgun",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Marqeta",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Medium",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Social Media & Comm"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Meta",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Big Tech"
+        }
+      }
+    },
+    {
+      "company_name": "Micron",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Microsoft",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Big Tech"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Algorithmic & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Midjourney",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Artificial Intelligence"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Miro",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Mixpanel",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Data & Analytics"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "MongoDB",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Algorithmic & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Monzo",
+      "mismatches": {
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Neon",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "NetApp",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Netflix",
+      "mismatches": {
+        "industry": {
+          "current": "Big Tech & Social Media",
+          "corrected": "Entertainment & Tech"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "System Design & Culture Fit"
+        }
+      }
+    },
+    {
+      "company_name": "Netlify",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "New Relic",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "NordPass",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Notion",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Nvidia",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Domain Specific & C++"
+        }
+      }
+    },
+    {
+      "company_name": "Octopus Deploy",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Okta",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "OpenAI",
+      "mismatches": {
+        "industry": {
+          "current": "Unicorns & Cutting Edge",
+          "corrected": "Artificial Intelligence"
+        }
+      }
+    },
+    {
+      "company_name": "Optimizely",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Oracle",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Orca Security",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "PagerDuty",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Palantir",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Algorithmic & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Patreon",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "PitchBook",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "PlanetScale",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Practical & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Plausible",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Postman",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Postmark",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Printful",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Printify",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "E-commerce"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Product Hunt",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Social Media & Comm"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Proton",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Qualcomm",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Railway",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Ramp",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Raycast",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Remote",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Render",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Resend",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Retool",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Revolut",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        }
+      }
+    },
+    {
+      "company_name": "Rippling",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Robinhood",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Runway",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Artificial Intelligence"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Salesforce",
+      "mismatches": {
+        "industry": {
+          "current": "DevOps & Developer Tools",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "SAP",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Behavioral & Coding"
+        }
+      }
+    },
+    {
+      "company_name": "Scale AI",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Artificial Intelligence"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Segment",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Data & Analytics"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Sendgrid",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Sentry",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "ServiceNow",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Shopify",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "E-commerce"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Signal",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Social Media & Comm"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Simple Analytics",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Low"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Snowflake",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Algorithmic & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Snyk",
+      "mismatches": {
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "SoFi",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "SonarQube",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "SpaceX",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "SparkPost",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Split.io",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Splunk",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Squarespace",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Coding & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Statsig",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Stripe",
+      "mismatches": {
+        "industry": {
+          "current": "Unicorns & Cutting Edge",
+          "corrected": "Fintech"
+        },
+        "interview_style": {
+          "current": "Practical & Algorithmic",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Substack",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Social Media & Comm"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Supabase",
+      "mismatches": {
+        "industry": {
+          "current": "Fintech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Practical & Architectural",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Synopsys",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Sysdig",
+      "mismatches": {
+        "industry": {
+          "current": "Software & SaaS",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & System Design",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Talon Cyber",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "TeamCity",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Teespring",
+      "mismatches": {
+        "industry": {
+          "current": "Hardware & Semiconductors",
+          "corrected": "E-commerce"
+        },
+        "interview_style": {
+          "current": "Domain Specific",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Telegram",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "Social Media & Comm"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Algorithmic & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Toast",
+      "mismatches": {
+        "industry": {
+          "current": "Web3 & Blockchain",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Practical & Security",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Travis CI",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "TSMC",
+      "mismatches": {
+        "industry": {
+          "current": "Artificial Intelligence",
+          "corrected": "Hardware & Semiconductors"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Domain Specific",
+          "corrected": "Domain Specific"
+        }
+      }
+    },
+    {
+      "company_name": "Twilio",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "Twilio SendGrid",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "DevOps & Developer Tools"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Uber",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Logistics & Delivery"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Veracode",
+      "mismatches": {
+        "industry": {
+          "current": "Data & Analytics",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Coding & Architectural",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "Vercel",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Cloud Infrastructure"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "VMware",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Cloud Infrastructure"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Webflow",
+      "mismatches": {
+        "industry": {
+          "current": "EdTech",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Behavioral & Coding",
+          "corrected": "Practical & Architectural"
+        }
+      }
+    },
+    {
+      "company_name": "WhatsApp",
+      "mismatches": {
+        "industry": {
+          "current": "Logistics & Delivery",
+          "corrected": "Social Media & Comm"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        }
+      }
+    },
+    {
+      "company_name": "Wise",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Fintech"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Wix",
+      "mismatches": {
+        "industry": {
+          "current": "E-commerce",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & System Design"
+        }
+      }
+    },
+    {
+      "company_name": "Wiz",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Cybersecurity"
+        },
+        "hiring_intensity": {
+          "current": "Medium",
+          "corrected": "High"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Security"
+        }
+      }
+    },
+    {
+      "company_name": "WooCommerce",
+      "mismatches": {
+        "industry": {
+          "current": "Cybersecurity",
+          "corrected": "E-commerce"
+        },
+        "interview_style": {
+          "current": "Domain Specific & Algorithmic",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "WordPress",
+      "mismatches": {
+        "industry": {
+          "current": "Social Media & Comm",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "Low",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    },
+    {
+      "company_name": "Workday",
+      "mismatches": {
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        }
+      }
+    },
+    {
+      "company_name": "Zapier",
+      "mismatches": {
+        "industry": {
+          "current": "Cloud Infrastructure",
+          "corrected": "Software & SaaS"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Scale",
+          "corrected": "System Design & Practical"
+        }
+      }
+    },
+    {
+      "company_name": "Zoom",
+      "mismatches": {
+        "industry": {
+          "current": "HealthTech",
+          "corrected": "Software & SaaS"
+        },
+        "interview_style": {
+          "current": "Algorithmic & Behavioral",
+          "corrected": "System Design & Scale"
+        }
+      }
+    },
+    {
+      "company_name": "Zoom Info",
+      "mismatches": {
+        "industry": {
+          "current": "AdTech",
+          "corrected": "Data & Analytics"
+        },
+        "hiring_intensity": {
+          "current": "High",
+          "corrected": "Medium"
+        },
+        "interview_style": {
+          "current": "System Design & Practical",
+          "corrected": "Practical & Algorithmic"
+        }
+      }
+    }
+  ],
+  "corrected_entries": [
+    {
+      "name": "Clerk",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "1Password",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "ActiveCampaign",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Adobe",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Affirm",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Airbnb",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Airtable",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Akamai",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Algolia",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Amazon",
+      "industry": "Big Tech & E-commerce",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Amazon SES",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "AMD",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Amplitude",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Anthropic",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Apexbase",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexcast",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexcore",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexdrive",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexfield",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexflow",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexforce",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexforge",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexglide",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexgrid",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Apexhub",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexify",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexio",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexiq",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexlabs",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexline",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexlink",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexloop",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexly",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexmind",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexnet",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexnode",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexpath",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apexpulse",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Apexrise",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexrun",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexscale",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexshift",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexspace",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexspan",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Apexstack",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apextech",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Apexvault",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexwave",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexwise",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Apexworks",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Apexzone",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Apple",
+      "industry": "Big Tech & Consumer Electronics",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Aqua Security",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Arc Browser",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "ASML",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "High",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Atlassian",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Auth0",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Authress",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Autodesk",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Bamboo",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "BigCommerce",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Bitbucket",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Box",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Brex",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Broadcom",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Buy Me a Coffee",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Bytebase",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Bytecast",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytecore",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytedrive",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytefield",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Byteflow",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Byteforce",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Byteforge",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Byteglide",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Bytegrid",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytehub",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Byteify",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Byteio",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Byteiq",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytelabs",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Byteline",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytelink",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Byteloop",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytely",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Bytemind",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytenet",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytenode",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytepath",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytepulse",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Byterise",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Byterun",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytescale",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Byteshift",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytespace",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytespan",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytestack",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytetech",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Bytevault",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytewave",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Bytewise",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Byteworks",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Bytezone",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Cadence",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Canva",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Cart.com",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Carta",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Checkmarx",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Chime",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "CircleCI",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Cisco",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Cloudflare",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Cohere",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Coinbase",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Confluent",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "ConvertKit",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Corebase",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corecast",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Corecore",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Coredrive",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corefield",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Coreflow",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Coreforce",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coreforge",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Coreglide",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Coregrid",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Corehub",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Coreify",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Coreio",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Coreiq",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corelabs",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coreline",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corelink",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coreloop",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Corely",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Coremind",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corenet",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corenode",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Corepath",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corepulse",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corerise",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corerun",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corescale",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coreshift",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corespace",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Corespan",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corestack",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coretech",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corevault",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corewave",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Corewise",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Coreworks",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Corezone",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Crunchbase",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Dashlane",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Databricks",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Datadog",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Deel",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Dell",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Descript",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Dev.to",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "DigitalOcean",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Docker",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "DoorDash",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Dropbox",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Dynatrace",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Elastic",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "F5",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Fastly",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Fathom",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Figma",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Fluxbase",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxcast",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxcore",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxdrive",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxfield",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxflow",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxforce",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxforge",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxglide",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxgrid",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxhub",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxify",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxio",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxiq",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxlabs",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxline",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxlink",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxloop",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxly",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxmind",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxnet",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxnode",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxpath",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxpulse",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxrise",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxrun",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxscale",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxshift",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxspace",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxspan",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxstack",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxtech",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxvault",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxwave",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxwise",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxworks",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Fluxzone",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Fly.io",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Flywheel",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Ghost",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "GitHub",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "GitHub Actions",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "GitLab",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "GitLab CI",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Gong",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Google",
+      "industry": "Big Tech",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Gumroad",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Gusto",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "HackerNews",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Harness",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "HashiCorp",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Hashnode",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Heroku",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "HP",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "HubSpot",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Hugging Face",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "IBM",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Instacart",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Intel",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Jasper AI",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Jenkins",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Klarna",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Ko-fi",
+      "industry": "Fintech",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Kraken",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Lacework",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "LastPass",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "LaunchDarkly",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Linear",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Linode",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "LogRocket",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Loom",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Lyft",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Magento",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Mailchimp",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Mailgun",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Marqeta",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Scale",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Medium",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Meta",
+      "industry": "Big Tech",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Micron",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Microsoft",
+      "industry": "Big Tech",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & System Design",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Midjourney",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Miro",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Mixpanel",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "MongoDB",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Scale",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Monzo",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Neon",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "NetApp",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Netflix",
+      "industry": "Entertainment & Tech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Culture Fit",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Netlify",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "New Relic",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Nexusbase",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuscast",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuscore",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusdrive",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusfield",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusflow",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusforce",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusforge",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusglide",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusgrid",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexushub",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusify",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusio",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusiq",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuslabs",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusline",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuslink",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusloop",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusly",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusmind",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusnet",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusnode",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuspath",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuspulse",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusrise",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusrun",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusscale",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusshift",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusspace",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusspan",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusstack",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexustech",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusvault",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuswave",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuswise",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexusworks",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Nexuszone",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "NordPass",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Notion",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Novabase",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Novacast",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novacore",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novadrive",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novafield",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novaflow",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novaforce",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novaforge",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novaglide",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novagrid",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novahub",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novaify",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Novaio",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novaiq",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novalabs",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novaline",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novalink",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novaloop",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novaly",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Novamind",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novanet",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novanode",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novapath",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novapulse",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Novarise",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novarun",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novascale",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novashift",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Novaspace",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novaspan",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novastack",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Novatech",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novavault",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novawave",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Novawise",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novaworks",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Novazone",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Nvidia",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "High",
+      "interview_style": "Domain Specific & C++",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Octopus Deploy",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Okta",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "OpenAI",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Optimizely",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Oracle",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Orca Security",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "PagerDuty",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Palantir",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Patreon",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "PitchBook",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "PlanetScale",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Plausible",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Postman",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Postmark",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Printful",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Printify",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Product Hunt",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Proton",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Qualcomm",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Quantumbase",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumcast",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumcore",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumdrive",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumfield",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumflow",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumforce",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumforge",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumglide",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumgrid",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumhub",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumify",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumio",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumiq",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumlabs",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumline",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumlink",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumloop",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumly",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Quantummind",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumnet",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumnode",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumpath",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumpulse",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumrise",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumrun",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumscale",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumshift",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumspace",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumspan",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumstack",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumtech",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumvault",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumwave",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumwise",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumworks",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Quantumzone",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Railway",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Ramp",
+      "industry": "Fintech",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Raycast",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Remote",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Render",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Resend",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Retool",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Revolut",
+      "industry": "Fintech",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Rippling",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Robinhood",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Runway",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Salesforce",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "SAP",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Scale AI",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Segment",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Sendgrid",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Sentry",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "ServiceNow",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Shopify",
+      "industry": "E-commerce",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & System Design",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Signal",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Simple Analytics",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Snowflake",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Snyk",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "SoFi",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "SonarQube",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "SpaceX",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "High",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "SparkPost",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Split.io",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Splunk",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Squarespace",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Statsig",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Stripe",
+      "industry": "Fintech",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Substack",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Supabase",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Synk",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Synopsys",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Sysdig",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Talon Cyber",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "TeamCity",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Teespring",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Telegram",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "High",
+      "interview_style": "Algorithmic & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Toast",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 7,
+      "needs_review": false
+    },
+    {
+      "name": "Travis CI",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "TSMC",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "High",
+      "interview_style": "Domain Specific",
+      "avg_questions": 8,
+      "needs_review": false
+    },
+    {
+      "name": "Twilio",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Twilio SendGrid",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Uber",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Veracode",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Security",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Vercel",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Scale",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Vertexbase",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexcast",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexcore",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexdrive",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexfield",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexflow",
+      "industry": "DevOps & Developer Tools",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexforce",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexforge",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexglide",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexgrid",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexhub",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexify",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexio",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexiq",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexlabs",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexline",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexlink",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexloop",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexly",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexmind",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexnet",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexnode",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexpath",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexpulse",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexrise",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexrun",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexscale",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexshift",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexspace",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexspan",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexstack",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertextech",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexvault",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexwave",
+      "industry": "AdTech",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexwise",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexworks",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Vertexzone",
+      "industry": "Logistics & Delivery",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "VMware",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Webflow",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "WhatsApp",
+      "industry": "Social Media & Comm",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Wise",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Wix",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & System Design",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Wiz",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "High",
+      "interview_style": "Practical & Security",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "WooCommerce",
+      "industry": "E-commerce",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "WordPress",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": false
+    },
+    {
+      "name": "Workday",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": false
+    },
+    {
+      "name": "Zapier",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Zenithbase",
+      "industry": "Cybersecurity",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific & Algorithmic",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithflow",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithgrid",
+      "industry": "Artificial Intelligence",
+      "hiring_intensity": "Low",
+      "interview_style": "Algorithmic & Domain Specific",
+      "avg_questions": 8,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithify",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithio",
+      "industry": "Web3 & Blockchain",
+      "hiring_intensity": "Low",
+      "interview_style": "Practical & Security",
+      "avg_questions": 7,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithiq",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithlabs",
+      "industry": "HealthTech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Algorithmic & Behavioral",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithlink",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithloop",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & Architectural",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithly",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithnode",
+      "industry": "Hardware & Semiconductors",
+      "hiring_intensity": "Medium",
+      "interview_style": "Domain Specific",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithpulse",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithscale",
+      "industry": "Fintech",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Architectural",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithstack",
+      "industry": "Cloud Infrastructure",
+      "hiring_intensity": "High",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithtech",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "High",
+      "interview_style": "Coding & System Design",
+      "avg_questions": 4,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithvault",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithwave",
+      "industry": "E-commerce",
+      "hiring_intensity": "Low",
+      "interview_style": "System Design & Practical",
+      "avg_questions": 6,
+      "needs_review": true
+    },
+    {
+      "name": "Zenithwise",
+      "industry": "EdTech",
+      "hiring_intensity": "Low",
+      "interview_style": "Behavioral & Coding",
+      "avg_questions": 5,
+      "needs_review": true
+    },
+    {
+      "name": "Zoom",
+      "industry": "Software & SaaS",
+      "hiring_intensity": "Medium",
+      "interview_style": "System Design & Scale",
+      "avg_questions": 5,
+      "needs_review": false
+    },
+    {
+      "name": "Zoom Info",
+      "industry": "Data & Analytics",
+      "hiring_intensity": "Medium",
+      "interview_style": "Practical & Algorithmic",
+      "avg_questions": 4,
+      "needs_review": false
+    }
+  ]
+}

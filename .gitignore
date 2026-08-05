@@ -1,0 +1,38 @@
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+!.env.*.example
+
+# Dependencies and virtual environments
+node_modules/
+.venv/
+venv/
+env/
+
+# Build and cache output
+.next/
+out/
+build/
+dist/
+__pycache__/
+*.py[cod]
+*.tsbuildinfo
+
+# Local runtime data
+backend/uploads/
+backend/logs/
+*.log
+*.db
+*.sqlite
+*.sqlite3
+
+# Unrelated local/vendor repositories
+ponytail-antigravity-IDE/
+python-clients/
+
+# IDE and OS files
+.vscode/
+.idea/
+.DS_Store
