@@ -42,13 +42,14 @@ class InterviewAnswerRequest(BaseModel):
 
 
 class InterviewFeedback(BaseModel):
-    strengths: list[str]
-    gaps: list[str]
-    score: int
+    strengths: Optional[list[str]] = None
+    gaps: Optional[list[str]] = None
+    score: Optional[int] = None
     potential_score: Optional[int] = None
     growth_path: Optional[str] = None
     streak_message: Optional[str] = None
     example_rewrites: Optional[list[str]] = None
+
 
 
 class InterviewAnswerResponse(BaseModel):

@@ -39,7 +39,7 @@ export function AppShell({ children, userMenu }: AppShellProps) {
             userMenu={userMenu}
           />
 
-          <main className="min-w-0 flex-1 px-page py-6">{children}</main>
+          <main className="min-w-0 flex-1 px-page py-8">{children}</main>
         </div>
       </div>
 

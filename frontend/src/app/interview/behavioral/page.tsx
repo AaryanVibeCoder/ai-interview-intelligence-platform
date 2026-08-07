@@ -72,6 +72,11 @@ export default function BehavioralPage() {
   const [hintsRemaining, setHintsRemaining] = useState(3);
   const [activeHint, setActiveHint] = useState<string | null>(null);
   const [isLoadingHint, setIsLoadingHint] = useState(false);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
 
   const audioContextRef = useRef<AudioContext | null>(null);
   const mediaStreamRef = useRef<MediaStream | null>(null);
@@ -82,6 +87,11 @@ export default function BehavioralPage() {
   const ignoreSubmitOnEndRef = useRef(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+
+  // Refs to handle auto-restart on no-speech and trace listening state
+  const shouldBeListeningRef = useRef(false);
+  const shouldRestartNoSpeechRef = useRef(false);
+  const lastRestartRef = useRef(0);
 
   // Initialize Speech Recognition
   useEffect(() => {
@@ -115,25 +125,53 @@ export default function BehavioralPage() {
           if (txt) {
             setUserAnswerText(txt);
 
-            // Auto submit on silence (1.2s quiet window)
+            // Auto submit on silence (5s quiet window)
             if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
             silenceTimeoutRef.current = setTimeout(() => {
-              console.log("Silence threshold met, stopping recognition...");
+              console.log("Silence threshold met (5s), stopping recognition and auto-submitting...");
+              shouldBeListeningRef.current = false;
               rec.stop();
-            }, 1200);
+            }, 5000);
           }
         };
 
         rec.onerror = (e: { error: string }) => {
           if (e.error === "no-speech") {
             ignoreSubmitOnEndRef.current = true;
+            shouldRestartNoSpeechRef.current = true;
             return;
           }
+          
+          // Surface errors visually to the user
+          if (e.error === "not-allowed" || e.error === "service-not-allowed") {
+            setErrorMessage("Microphone access blocked. Please check browser microphone permissions.");
+          } else if (e.error === "network") {
+            setErrorMessage("Speech recognition network error. Please verify your connection.");
+          } else {
+            setErrorMessage(`Speech recognition error: ${e.error}`);
+          }
+          
           console.warn("Speech recognition error:", e.error);
           ignoreSubmitOnEndRef.current = true;
         };
 
         rec.onend = () => {
+          // If we stopped due to a "no-speech" error but we still intend to be listening, auto-restart
+          if (shouldRestartNoSpeechRef.current && shouldBeListeningRef.current) {
+            shouldRestartNoSpeechRef.current = false;
+            const now = Date.now();
+            if (now - lastRestartRef.current > 1000) {
+              lastRestartRef.current = now;
+              console.log("[Speech] Auto-restarting SpeechRecognition after thinking pause/no-speech...");
+              try {
+                rec.start();
+              } catch (err) {
+                console.warn("[Speech] Auto-restart failed:", err);
+              }
+              return;
+            }
+          }
+
           setIsRecording(false);
           stopAudioAnalysis();
           if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
@@ -398,16 +436,22 @@ export default function BehavioralPage() {
   const startRecordingSpeech = async () => {
     if (!recognition) return;
     ignoreSubmitOnEndRef.current = false;
+    shouldBeListeningRef.current = true;
+    shouldRestartNoSpeechRef.current = false;
     window.speechSynthesis.cancel();
     setEleanorSpeaking(false);
     setUserAnswerText("");
     setIsRecording(true);
-    await startAudioAnalysis();
+
+    // Synchronously start recognition within the gesture loop context to bypass browser restrictions
     try {
       recognition.start();
     } catch (err) {
-      console.warn("Recognition already active", err);
+      console.warn("[Speech] Recognition start failed or already active:", err);
     }
+
+    // Start audio analysis in parallel
+    await startAudioAnalysis();
   };
 
   const handleToggleRecord = async () => {
@@ -417,6 +461,7 @@ export default function BehavioralPage() {
     }
 
     if (isRecording) {
+      shouldBeListeningRef.current = false;
       ignoreSubmitOnEndRef.current = true;
       try {
         recognition.stop();
@@ -458,6 +503,7 @@ export default function BehavioralPage() {
 
     // Stop recording first
     ignoreSubmitOnEndRef.current = true;
+    shouldBeListeningRef.current = false;
     if (recognition) {
       try {
         recognition.stop();
@@ -539,8 +585,11 @@ export default function BehavioralPage() {
     setErrorMessage(null);
 
     // Stop recording first
+    shouldBeListeningRef.current = false;
     if (isRecording) {
-      recognition?.stop();
+      try {
+        recognition?.stop();
+      } catch (e) { }
       setIsRecording(false);
       stopAudioAnalysis();
     }
@@ -629,6 +678,15 @@ export default function BehavioralPage() {
       router.push("/interview/feedback");
     }
   };
+
+  if (!hasMounted || (isSubmitting && !activeSessionId)) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] w-full space-y-4">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-muted-foreground font-semibold">Starting your session...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-4xl mx-auto py-10 px-6 space-y-8">

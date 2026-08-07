@@ -244,7 +244,7 @@ export default function PreflightPage() {
         } else if (interviewType === "behavioral") {
           router.push("/interview/behavioral");
         } else {
-          router.push("/interview/select-type");
+          router.push("/dashboard");
         }
       }, 1500);
     } else {
@@ -363,7 +363,15 @@ export default function PreflightPage() {
               <span className="text-sm font-semibold">Pre-Flight calibration has already passed for this session.</span>
             </div>
             <button 
-              onClick={() => router.push("/interview/select-type")}
+              onClick={() => {
+                if (interviewType === "coding") {
+                  router.push("/interview/coding");
+                } else if (interviewType === "behavioral") {
+                  router.push("/interview/behavioral");
+                } else {
+                  router.push("/dashboard");
+                }
+              }}
               className="text-xs font-bold bg-success text-success-foreground hover:bg-success/90 py-2 px-4 rounded-lg flex items-center gap-1.5 transition-all"
             >
               Skip to Interview <ArrowRight className="w-3.5 h-3.5" />

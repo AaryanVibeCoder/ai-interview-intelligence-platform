@@ -69,32 +69,27 @@ export default function InterviewFeedbackPage() {
     : 0;
 
   // For coding sessions, aggregate all submissions to get the total passed test rate
-  const totalCodingSubmissions = codingSubmissions.length;
-  const lastCodingSubmission = totalCodingSubmissions > 0 
-    ? codingSubmissions[codingSubmissions.length - 1] 
-    : null;
+  let passRate = 0;
+  let totalPassed = 0;
+  let totalTests = 0;
+  let lastCodingSubmission = null;
 
-  // Calculate combined passed/total across all questions in the B2B coding session
-  const totalPassed = codingSubmissions.reduce(
-    (acc, curr) => acc + (curr.test_results?.filter((r: { passed: boolean }) => r.passed).length || 0),
-    0
-  );
-  const totalTests = codingSubmissions.reduce(
-    (acc, curr) => acc + (curr.test_results?.length || 0),
-    0
-  );
-  const passRate = totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0;
+  if (interviewType === "coding") {
+    const totalCodingSubmissions = codingSubmissions.length;
+    lastCodingSubmission = totalCodingSubmissions > 0 
+      ? codingSubmissions[codingSubmissions.length - 1] 
+      : null;
 
-  // Final aggregate index out of 100
-  // Coding round: 70% Algorithmic Accuracy + 30% Resume ATS Score
-  // Behavioral round: 40% Behavioral Avg * 10 + 40% Algorithmic + 20% ATS Score
-  const finalAggregate = interviewType === "coding"
-    ? Math.round((passRate * 0.7) + ((atsScore || 75) * 0.3))
-    : Math.round(
-        (behavioralAverage * 10 * 0.4) + 
-        (passRate * 0.4) + 
-        ((atsScore || 75) * 0.2)
-      );
+    totalPassed = codingSubmissions.reduce(
+      (acc, curr) => acc + (curr.test_results?.filter((r: { passed: boolean }) => r.passed).length || 0),
+      0
+    );
+    totalTests = codingSubmissions.reduce(
+      (acc, curr) => acc + (curr.test_results?.length || 0),
+      0
+    );
+    passRate = totalTests > 0 ? Math.round((totalPassed / totalTests) * 100) : 0;
+  }
 
   const [selectedSubIdx, setSelectedSubIdx] = useState(0);
 
@@ -115,52 +110,30 @@ export default function InterviewFeedbackPage() {
       </div>
 
       {/* Score Grid Cards */}
-      <div className={`grid grid-cols-1 ${interviewType === "coding" ? "md:grid-cols-3" : "md:grid-cols-4"} gap-6`}>
-        
-        {/* Core Index Card */}
-        <div className="bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20 p-6 rounded-2xl text-center space-y-2 flex flex-col justify-center items-center shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider block">ElevateIQ Index</span>
-          <span className="text-5xl font-black text-foreground">{finalAggregate}</span>
-          <span className="text-[10px] text-foreground font-bold px-2 py-0.5 bg-foreground/10 border border-foreground/10 rounded-full block">
-            {finalAggregate >= 80 ? "Highly Recommended" : finalAggregate >= 60 ? "Strong Fit" : "Under Evaluation"}
-          </span>
-        </div>
-
-        {/* Behavioral Metrics - Only display if not coding round */}
-        {interviewType !== "coding" && (
-          <div className="bg-card border border-border p-6 rounded-2xl space-y-3 shadow-sm">
-            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1.5">
+      <div className="flex justify-center">
+        {interviewType === "coding" ? (
+          /* Coding Challenge Metrics */
+          <div className="bg-card border border-border p-6 rounded-2xl space-y-3 shadow-sm max-w-md w-full">
+            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1.5 justify-center">
+              <Cpu className="w-4 h-4 text-accent" /> Algorithmic Accuracy
+            </span>
+            <h3 className="text-3xl font-black text-foreground text-center">{passRate}% <span className="text-xs font-semibold text-muted-foreground">({totalPassed}/{totalTests} tests)</span></h3>
+            <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
+              Successful process execution in {lastCodingSubmission?.language || "selected"} environment.
+            </p>
+          </div>
+        ) : (
+          /* Behavioral Metrics */
+          <div className="bg-card border border-border p-6 rounded-2xl space-y-3 shadow-sm max-w-md w-full">
+            <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1.5 justify-center">
               <Volume2 className="w-4 h-4 text-primary" /> Behavioral Score
             </span>
-            <h3 className="text-3xl font-black text-foreground">{behavioralAverage} <span className="text-sm font-semibold text-muted-foreground">/ 10</span></h3>
-            <p className="text-[10px] text-muted-foreground leading-relaxed">
+            <h3 className="text-3xl font-black text-foreground text-center">{behavioralAverage} <span className="text-sm font-semibold text-muted-foreground">/ 10</span></h3>
+            <p className="text-[10px] text-muted-foreground leading-relaxed text-center">
               Evaluated across {answers.length} voice/text conversational rounds using strict STAR criteria metrics.
             </p>
           </div>
         )}
-
-        {/* Coding Challenge Metrics */}
-        <div className="bg-card border border-border p-6 rounded-2xl space-y-3 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1.5">
-            <Cpu className="w-4 h-4 text-accent" /> Algorithmic Accuracy
-          </span>
-          <h3 className="text-3xl font-black text-foreground">{passRate}% <span className="text-xs font-semibold text-muted-foreground">({totalPassed}/{totalTests} tests)</span></h3>
-          <p className="text-[10px] text-muted-foreground leading-relaxed">
-            Successful process execution in {lastCodingSubmission?.language || "selected"} environment.
-          </p>
-        </div>
-
-        {/* Resume ATS Alignment */}
-        <div className="bg-card border border-border p-6 rounded-2xl space-y-3 shadow-sm">
-          <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-wider flex items-center gap-1.5">
-            <Award className="w-4 h-4 text-amber-500" /> Resume ATS Score
-          </span>
-          <h3 className="text-3xl font-black text-foreground">{atsScore || 78} <span className="text-sm font-semibold text-muted-foreground">/ 100</span></h3>
-          <p className="text-[10px] text-muted-foreground leading-relaxed">
-            Algorithmic alignment with target seniority for {targetCompany || "partner clients"}.
-          </p>
-        </div>
-
       </div>
 
       {/* Detailed Report Tabs Section */}

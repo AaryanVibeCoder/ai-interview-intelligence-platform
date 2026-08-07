@@ -1,5 +1,7 @@
 import { ResumeUpload } from "@/features/resume/components/resume-upload";
 import { StartPracticeSection } from "@/features/interview/components/StartPracticeSection";
+import { DocumentationCard } from "@/components/dashboard/DocumentationCard";
+import { SupportCard } from "@/components/dashboard/SupportCard";
 import { Metadata } from "next";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
@@ -22,34 +24,24 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Welcome, {displayName}!</h1>
-        <p className="mt-2 text-muted-foreground">
+        <h1 className="text-2xl font-medium tracking-tight">Welcome, {displayName}!</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
           This is your dashboard. You&apos;ll find all your content and workspace here.
         </p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         {/* Dashboard cards will go here */}
-        <div className="rounded-lg border bg-card p-6 shadow-sm">
+        <div className="rounded-2xl border bg-card/70 p-6 backdrop-blur-xl">
           <h3 className="font-semibold">Getting Started</h3>
           <p className="mt-2 text-sm text-muted-foreground">
             Explore the dashboard and customize your workspace.
           </p>
         </div>
 
-        <div className="rounded-lg border bg-card p-6 shadow-sm">
-          <h3 className="font-semibold">Documentation</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Learn how to use ElevateIQ to its full potential.
-          </p>
-        </div>
+        <DocumentationCard />
 
-        <div className="rounded-lg border bg-card p-6 shadow-sm">
-          <h3 className="font-semibold">Support</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            Need help? Check out our support resources.
-          </p>
-        </div>
+        <SupportCard />
 
         <div className="md:col-span-2 lg:col-span-3">
           <StartPracticeSection />

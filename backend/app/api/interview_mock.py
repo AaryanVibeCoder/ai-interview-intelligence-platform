@@ -3,8 +3,9 @@ from typing import Optional, List, Dict
 import logging
 import json
 from pydantic import BaseModel
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from app.api.interview import settings, client, _model
+from app.core.rate_limit import limiter
 
 logger = logging.getLogger(__name__)
 
@@ -149,10 +150,11 @@ async def create_mock_session_handler(payload: MockStartRequest) -> MockStartRes
 
     # Use LLM if API Key is configured
     if settings.LLM_API_KEY and settings.LLM_API_KEY != "placeholder_key":
-        system_prompt = f"""You are an elite technical interviewer at {company_name} conducting a Senior {type_name} interview for a {payload.job_type or "full time job"} {payload.role or "Software Engineer"} position.
+        system_prompt = f"""You are Eleanor, an elite technical interviewer at {company_name} conducting a Senior {type_name} interview for a {payload.job_type or "full time job"} {payload.role or "Software Engineer"} position.
 Your job is to conduct a realistic, high-quality interview by asking exactly one question at a time.
 Do not ask multiple questions at once. Keep the tone professional, encouraging yet rigorous.
-Begin the interview by introducing yourself briefly as the {company_name} interviewer and asking the first question appropriate for a Senior candidate applying for a {payload.job_type or "full time job"} {payload.role or "Software Engineer"} position in a {type_name} loop."""
+Your name is Eleanor, and you must introduce yourself as Eleanor. Do not invent or use any other name.
+Begin the interview by introducing yourself briefly as Eleanor, the {company_name} interviewer, and asking the first question appropriate for a Senior candidate applying for a {payload.job_type or "full time job"} {payload.role or "Software Engineer"} position in a {type_name} loop."""
         try:
             response = await client.chat.completions.create(
                 model=_model,
@@ -218,8 +220,8 @@ async def answer_mock_session_handler(payload: MockAnswerRequest) -> MockAnswerR
         user_message_count = sum(1 for m in history if m["role"] == "user")
         is_last_round = user_message_count >= 5
         
-        system_prompt = f"""You are an elite technical interviewer at {session['company']} conducting a Senior {session['type']} interview for a {session.get('job_type', 'full time job')} {session.get('role', 'Software Engineer')} position.
-You are evaluating the candidate's responses and generating the next question.
+        system_prompt = f"""You are Eleanor, an elite technical interviewer at {session['company']} conducting a Senior {session['type']} interview for a {session.get('job_type', 'full time job')} {session.get('role', 'Software Engineer')} position.
+You are evaluating the candidate's responses and generating the next question. Your name is Eleanor. Do not invent or use any other name.
 
 CRITICAL REQUIREMENT FOR 'next_question':
 - You MUST generate a conversational and direct follow-up question based on the candidate's latest response.
@@ -462,7 +464,8 @@ Ensure the JSON is valid."""
 
 # Define routes under both prefixes for max compatibility
 @router.post("/api/interview/mock/start", response_model=MockStartResponse)
-async def start_mock_api(payload: MockStartRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def start_mock_api(request: Request, payload: MockStartRequest, db: Session = Depends(get_db)):
     company = payload.target_company
     itype = payload.interview_type
     if not company or not itype:
@@ -476,7 +479,8 @@ async def start_mock_api(payload: MockStartRequest, db: Session = Depends(get_db
     return await create_mock_session_handler(payload)
 
 @router.post("/interviews/mock/start", response_model=MockStartResponse)
-async def start_mock_interviews(payload: MockStartRequest, db: Session = Depends(get_db)):
+@limiter.limit("5/minute")
+async def start_mock_interviews(request: Request, payload: MockStartRequest, db: Session = Depends(get_db)):
     company = payload.target_company
     itype = payload.interview_type
     if not company or not itype:
@@ -490,11 +494,13 @@ async def start_mock_interviews(payload: MockStartRequest, db: Session = Depends
     return await create_mock_session_handler(payload)
 
 @router.post("/api/interview/mock/answer", response_model=MockAnswerResponse)
-async def answer_mock_api(payload: MockAnswerRequest):
+@limiter.limit("30/minute")
+async def answer_mock_api(request: Request, payload: MockAnswerRequest):
     return await answer_mock_session_handler(payload)
 
 @router.post("/interviews/mock/answer", response_model=MockAnswerResponse)
-async def answer_mock_interviews(payload: MockAnswerRequest):
+@limiter.limit("30/minute")
+async def answer_mock_interviews(request: Request, payload: MockAnswerRequest):
     return await answer_mock_session_handler(payload)
 
 

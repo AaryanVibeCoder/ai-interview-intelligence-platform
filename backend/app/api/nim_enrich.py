@@ -135,6 +135,43 @@ async def enrich_interview(
         )
         return {"status": "skipped", "reason": "no_audio_stored", "session_id": payload.session_id}
 
+    # Fast-path check: fallback immediately if API key or library is missing
+    from app.core.config import get_settings
+    settings = get_settings()
+    has_key = bool(settings.NVIDIA_PARAKEET_API_KEY)
+    try:
+        import riva.client # type: ignore[import]
+        has_riva = True
+    except ImportError:
+        has_riva = False
+
+    user_msgs = [m for m in history if m.get("role") == "user"]
+
+    if not has_key or not has_riva:
+        logger.warning(
+            "[NIM-Enrich] session=%s Riva/Parakeet absent (key_configured=%s, library_installed=%s) "
+            "-- falling back to browser transcripts directly",
+            payload.session_id, has_key, has_riva,
+        )
+        nim_transcripts = {}
+        for q_idx_str in audio_store.keys():
+            q_idx = int(q_idx_str)
+            browser_transcript = ""
+            if q_idx < len(user_msgs):
+                browser_transcript = user_msgs[q_idx].get("content", "")
+            nim_transcripts[str(q_idx)] = browser_transcript
+        
+        session.nim_transcripts = nim_transcripts
+        flag_modified(session, "nim_transcripts")
+        db.commit()
+
+        return {
+            "status": "skipped",
+            "reason": "riva_absent_fallback_to_browser",
+            "session_id": payload.session_id,
+        }
+
+
     # Build answer items from stored audio files + conversation history
     # conversation_history alternates assistant/user; user messages are the answers.
     user_msgs = [m for m in history if m.get("role") == "user"]

@@ -1,13 +1,14 @@
 import logging
 from datetime import datetime, timedelta
 from typing import List, Dict, Any, Optional
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
 from sqlalchemy.orm.attributes import flag_modified
 from app.core.clerk_auth import get_current_user
 from app.core.database import get_db
+from app.core.rate_limit import limiter
 from app.models.interview_session import InterviewSession
 from app.models.resume import Resume
 from app.models.interview_profile import InterviewProfile
@@ -21,6 +22,8 @@ import time
 logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/coding", tags=["Coding Challenges"])
+
+NUM_CODING_CHALLENGES = 3
 
 # Input schemas
 class CodeSubmissionItem(BaseModel):
@@ -38,6 +41,12 @@ class CodingSubmissionRequest(BaseModel):
     test_results: List[Dict[str, Any]]
     execution_time: int
     memory_used: int
+
+class CodeQualityRequest(BaseModel):
+    session_id: Optional[int] = None
+    code: str
+    language: str
+    test_results: List[Dict[str, Any]]
 
 async def generate_corrections_report(company: str, role: str, challenges: List[Dict], submissions: List[Dict]) -> List[Dict]:
     formatted_data = []
@@ -134,7 +143,9 @@ Return ONLY this JSON list. Do not wrap in markdown code fences or include any e
         ]
 
 @router.post("/submit", status_code=status.HTTP_200_OK)
+@limiter.limit("15/minute")
 async def submit_coding_challenge(
+    request: Request,
     payload: CodingSubmissionRequest,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
@@ -179,8 +190,8 @@ async def submit_coding_challenge(
     next_idx = current_idx + 1
     current_feedback["current_challenge_index"] = next_idx
 
-    # Check if all completed (3 questions)
-    if next_idx >= 3:
+    # Check if all completed (NUM_CODING_CHALLENGES questions)
+    if next_idx >= NUM_CODING_CHALLENGES:
         session.status = "completed"
         current_feedback["status"] = "completed"
         
@@ -460,9 +471,12 @@ Example JSON output structure:
                             {"role": "user", "content": prompt}
                         ],
                         max_tokens=3000,
-                        temperature=0.7,
+                        temperature=0.1,
                     )
-                    content = response.choices[0].message.content.strip()
+                    content_raw = response.choices[0].message.content
+                    if not content_raw:
+                        raise ValueError("Model returned empty content (None)")
+                    content = content_raw.strip()
                     
                     # Extract robust JSON list using regex
                     match = re.search(r'\[\s*\{.*\}\s*\]', content, re.DOTALL)
@@ -553,14 +567,17 @@ async def get_coding_challenge(
     current_idx = feedback.get("current_challenge_index", 0)
     challenges = feedback.get("coding_challenges", [])
 
-    if current_idx >= 3:
+    if current_idx >= NUM_CODING_CHALLENGES:
         return {"completed": True, "sessionId": session.id}
+
+    total_challenges = len(challenges) if challenges else NUM_CODING_CHALLENGES
 
     if current_idx < len(challenges):
         challenge_data = dict(challenges[current_idx])
         challenge_data["sessionId"] = session.id
         challenge_data["questionIndex"] = current_idx
         challenge_data["questionSource"] = session.question_source or "fallback"
+        challenge_data["totalChallenges"] = total_challenges
         return challenge_data
         
     fallback_challenge = FALLBACK_CODING_CHALLENGES[current_idx % len(FALLBACK_CODING_CHALLENGES)]
@@ -568,17 +585,127 @@ async def get_coding_challenge(
     challenge_response["sessionId"] = session.id
     challenge_response["questionIndex"] = current_idx
     challenge_response["questionSource"] = session.question_source or "fallback"
+    challenge_response["totalChallenges"] = total_challenges
     return challenge_response
 
 
+def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
+    """
+    Execute candidate code against the challenge test cases in a real local
+    sandboxed subprocess. Supports python, javascript, and cpp.
+    Returns per-test results identical in shape to py_runner/js_runner output.
+    Raises ValueError for unsupported languages.
+    """
+    import tempfile
+    import os
+    import sys
+    import subprocess
+
+    lang = lang.lower()
+
+    if lang not in ["python", "javascript", "cpp"]:
+        raise ValueError(f"Language {lang} is not supported for local sandboxed execution.")
+
+    # Paths to runner scripts
+    api_dir = os.path.dirname(os.path.abspath(__file__))
+    services_dir = os.path.join(os.path.dirname(api_dir), "services")
+
+    runner_script = {
+        "python": "py_runner.py",
+        "javascript": "js_runner.js",
+        "cpp": "cpp_runner.py",
+    }[lang]
+    runner_path = os.path.join(services_dir, runner_script)
+
+    # Create temporary JSON file for inputs
+    temp_json = tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".json", encoding="utf-8")
+    try:
+        json.dump({
+            "code": code,
+            "testCases": test_cases
+        }, temp_json)
+        temp_json.close()
+
+        # Build command
+        if lang == "javascript":
+            cmd = ["node", runner_path, temp_json.name]
+        else:
+            cmd = [sys.executable, runner_path, temp_json.name]
+
+        # C++ compilation happens inside cpp_runner.py; give it extra headroom.
+        timeout_secs = 15.0 if lang == "cpp" else 4.0
+
+        # Execute subprocess
+        try:
+            proc = subprocess.run(
+                cmd,
+                capture_output=True,
+                text=True,
+                timeout=timeout_secs
+            )
+
+            # Check stderr or crash
+            if proc.returncode != 0:
+                logger.error(f"Runner subprocess failed: stdout={proc.stdout}, stderr={proc.stderr}")
+                return [
+                    {
+                        "testCaseId": tc.get("id"),
+                        "passed": False,
+                        "expected": tc.get("expectedOutput"),
+                        "actual": "Execution crash or compile error",
+                        "error": proc.stderr.strip() or f"Runner exited with code {proc.returncode}",
+                        "runtime": 0
+                    } for tc in test_cases
+                ]
+
+            # Parse stdout
+            results_list = json.loads(proc.stdout.strip())
+            return results_list
+
+        except subprocess.TimeoutExpired:
+            logger.warning(f"Code execution timed out for language {lang}")
+            return [
+                {
+                    "testCaseId": tc.get("id"),
+                    "passed": False,
+                    "expected": tc.get("expectedOutput"),
+                    "actual": "Time Limit Exceeded",
+                    "error": "Execution timed out after 4 seconds (infinite loop protection).",
+                    "runtime": 4000
+                } for tc in test_cases
+            ]
+        except Exception as run_err:
+            logger.error(f"Error running sandbox subprocess: {run_err}")
+            return [
+                {
+                    "testCaseId": tc.get("id"),
+                    "passed": False,
+                    "expected": tc.get("expectedOutput"),
+                    "actual": "Sandbox pipeline error",
+                    "error": str(run_err),
+                    "runtime": 0
+                } for tc in test_cases
+            ]
+
+    finally:
+        # Clean up temporary JSON file
+        if os.path.exists(temp_json.name):
+            try:
+                os.remove(temp_json.name)
+            except Exception as rm_err:
+                logger.warning(f"Failed to remove temporary file {temp_json.name}: {rm_err}")
+
+
 @router.post("/run", status_code=status.HTTP_200_OK)
+@limiter.limit("20/minute")
 async def run_coding_challenge(
+    request: Request,
     payload: CodeRunRequest,
     db: Session = Depends(get_db),
     current_user = Depends(get_current_user)
 ):
     """
-    Evaluate the candidate's code against the challenge test cases using the LLM.
+    Evaluate the candidate's code against the challenge test cases using real local sandboxed execution.
     """
     # 1. Fetch Session
     session = (
@@ -609,57 +736,112 @@ async def run_coding_challenge(
     challenge = challenges[current_idx]
     test_cases = challenge.get("testCases", [])
 
-    # 3. Call LLM to evaluate the code
-    prompt = f"""You are an elite code execution, compilation, and evaluation engine. 
-Evaluate the candidate's code for the given challenge against each of the test cases.
+    lang = payload.language.lower()
 
-Challenge Title: {challenge.get('title')}
-Problem Description: {challenge.get('description')}
-Constraints: {json.dumps(challenge.get('constraints', []))}
+    try:
+        results_list = _execute_code(lang, payload.code, test_cases)
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(ve)
+        )
+    return results_list
 
-Candidate Language: {payload.language}
+
+@router.post("/quality", status_code=status.HTTP_200_OK)
+@limiter.limit("20/minute")
+async def evaluate_code_quality(
+    request: Request,
+    payload: CodeQualityRequest,
+    current_user = Depends(get_current_user)
+):
+    """
+    Evaluate the candidate's code quality, returning a score, strengths, gaps, and suggestions.
+    Grounded in real test results.
+    """
+    code = payload.code.strip()
+    
+    # 1. Strip comments/whitespace to check for stub/empty code
+    cleaned_code = re.sub(r'#.*', '', code)  # Python comments
+    cleaned_code = re.sub(r'//.*', '', cleaned_code)  # JS single-line comments
+    cleaned_code = re.sub(r'/\*[\s\S]*?\*/', '', cleaned_code)  # JS multi-line comments
+    cleaned_code = "".join(cleaned_code.split())  # strip all whitespace
+    
+    is_stub = len(cleaned_code) < 50 or not cleaned_code
+    
+    if is_stub:
+        score = 1.0 if len(code) > 0 else 0.0
+        return {
+            "score": score,
+            "strengths": [],
+            "gaps": ["No solution was written.", "Code only contains templates or is completely empty."],
+            "suggestions": ["Write a complete implementation of the coding challenge solution function."],
+            "codeQuality": f"{score}/10"
+        }
+
+    # 2. Determine pass rate from real execution results
+    test_results = payload.test_results
+    total_tests = len(test_results)
+    passed_tests = sum(1 for r in test_results if r.get("passed", False))
+
+    pass_rate = passed_tests / total_tests if total_tests > 0 else 0.0
+    
+    has_errors = any(r.get("error") is not None for r in test_results)
+    
+    # 3. Handle zero pass rate or compilation failure
+    if pass_rate == 0.0:
+        score = 2.0 if has_errors else 3.0
+        return {
+            "score": score,
+            "strengths": ["Code structure set up."],
+            "gaps": ["Compilation/runtime error encountered." if has_errors else "All test cases failed assertion."],
+            "suggestions": ["Debug syntax/runtime errors.", "Correct the logical implementation to output expected return values."],
+            "codeQuality": f"{score}/10"
+        }
+
+    # 4. Handle partial pass rate
+    if pass_rate < 1.0:
+        score = round(4.0 + (pass_rate * 2.0), 1)  # scaled between 4.0 and 6.0
+        return {
+            "score": score,
+            "strengths": [f"Passed {passed_tests} out of {total_tests} test cases."],
+            "gaps": ["Code failed on some test cases (e.g., edge cases or negative numbers)."],
+            "suggestions": ["Verify code logical constraints.", "Add check conditions for empty/boundary inputs."],
+            "codeQuality": f"{score}/10"
+        }
+
+    # 5. All tests passed (pass_rate == 1.0): Use LLM to evaluate efficiency and style
+    # Score range: 7.0 - 10.0
+    prompt = f"""You are an elite code quality assessor. Rate the candidate's code on a scale of 7.0 to 10.0 because it successfully passed all test cases.
+Evaluate the code for time complexity (O(N) vs O(N^2)), space complexity, readability, and variable naming conventions.
+
+Language: {payload.language}
 Candidate Code:
 ```
 {payload.code}
 ```
 
-Test Cases to run:
-{json.dumps(test_cases, indent=2)}
+Format your response as a strictly valid JSON object conforming to this structure:
+{{
+  "score": 8.5, // float between 7.0 and 10.0
+  "strengths": ["string"],
+  "gaps": ["string"],
+  "suggestions": ["string"]
+}}
 
-For each test case, determine:
-1. Does the candidate's code (when completed and run) correctly solve the test case and match the expected output? (boolean 'passed')
-2. What is the actual output or error message returned by the execution? (string 'actual')
-3. Any syntax errors, runtime exceptions, or infinite loops? (string 'error', null if none)
-4. A realistic simulation of execution runtime in milliseconds (integer 'runtime', e.g., 5, 12, etc.)
-
-You MUST respond with a single, valid JSON list of test case results conforming exactly to this structure:
-[
-  {{
-    "testCaseId": "t1",
-    "passed": true/false,
-    "expected": "expected output",
-    "actual": "actual output or error",
-    "error": null or "error description",
-    "runtime": 12 // integer ms
-  }},
-  ...
-]
-
-Evaluate strictly and accurately. Do not let incorrect code pass.
-Return ONLY this JSON list. Do not wrap in markdown backticks or include any explanation."""
+Return ONLY this JSON object. Do not wrap in markdown code fences, do not include any conversation or explanation."""
 
     try:
         response = await client.chat.completions.create(
             model=_model,
             messages=[
-                {"role": "system", "content": "You are a precise code execution evaluator that outputs strictly valid JSON lists."},
+                {"role": "system", "content": "You are a precise code quality feedback generator that outputs strictly valid JSON objects."},
                 {"role": "user", "content": prompt}
             ],
-            max_tokens=600,
+            max_tokens=800,
             temperature=0.1,
         )
         content = response.choices[0].message.content.strip()
-        
         if content.startswith("```"):
             lines = content.splitlines()
             if lines[0].startswith("```"):
@@ -667,20 +849,24 @@ Return ONLY this JSON list. Do not wrap in markdown backticks or include any exp
             if lines and lines[-1].strip() == "```":
                 lines = lines[:-1]
             content = "\n".join(lines).strip()
-
-        results_list = json.loads(content)
-        return results_list
+            
+        data = json.loads(content)
+        score = min(10.0, max(7.0, float(data.get("score", 8.0))))
+        
+        return {
+            "score": score,
+            "strengths": data.get("strengths", ["Optimal code solution."]),
+            "gaps": data.get("gaps", []),
+            "suggestions": data.get("suggestions", []),
+            "codeQuality": f"{score}/10"
+        }
     except Exception as e:
-        logger.error(f"Failed to evaluate code execution via LLM: {e}")
-        # Fallback response in case LLM fails
-        return [
-            {
-                "testCaseId": tc.get("id"),
-                "passed": False,
-                "expected": tc.get("expectedOutput"),
-                "actual": "Evaluation pipeline timeout",
-                "error": str(e),
-                "runtime": 0
-            } for tc in test_cases
-        ]
-
+        logger.error(f"Failed to call LLM for code quality assessment: {e}")
+        # Default fallback for passing code
+        return {
+            "score": 8.0,
+            "strengths": ["Code passed all test cases.", "Good structure."],
+            "gaps": ["Could not perform deep algorithmic analysis."],
+            "suggestions": ["Ensure variable names follow language style guidelines."],
+            "codeQuality": "8.0/10"
+        }

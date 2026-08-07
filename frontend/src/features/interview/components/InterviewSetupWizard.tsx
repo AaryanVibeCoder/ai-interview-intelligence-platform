@@ -81,7 +81,8 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
     setRole,
     setJobType,
     setCurrentQuestion,
-    setQuestionSource
+    setQuestionSource,
+    resetSession
   } = useInterviewStore();
 
   // Wizard Step States
@@ -257,16 +258,27 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
   }, [resumes]);
 
   const filteredRoles = useMemo(() => {
-    if (apiRoles.length > 0) {
-      return apiRoles;
+    let baseList = apiRoles.length > 0 ? apiRoles : companyRoles;
+    if (apiRoles.length === 0 && roleSearchQuery.trim()) {
+      baseList = companyRoles.filter((r) => {
+        const formatted = formatRoleName(r, localJobType).toLowerCase();
+        const raw = r.toLowerCase();
+        const query = roleSearchQuery.toLowerCase();
+        return raw.includes(query) || formatted.includes(query);
+      });
     }
-    if (!roleSearchQuery.trim()) return companyRoles;
-    return companyRoles.filter((r) => {
-      const formatted = formatRoleName(r, localJobType).toLowerCase();
-      const raw = r.toLowerCase();
-      const query = roleSearchQuery.toLowerCase();
-      return raw.includes(query) || formatted.includes(query);
-    });
+    
+    // Deduplicate the list at the component data layer
+    const deduped: string[] = [];
+    const seen = new Set<string>();
+    for (const r of baseList) {
+      const normalized = r.trim().toLowerCase();
+      if (!seen.has(normalized)) {
+        seen.add(normalized);
+        deduped.push(r);
+      }
+    }
+    return deduped;
   }, [companyRoles, roleSearchQuery, localJobType, apiRoles]);
 
   // Auto-select the first completed resume if available
@@ -478,6 +490,9 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
     setIsSubmitting(true);
     setError(null);
 
+    // Reset previous interview state
+    resetSession();
+
     // Safety timeout release: clear submission lock after 15s in case of unexpected network hang
     const safetyTimeout = setTimeout(() => {
       if (submitInFlightRef.current) {
@@ -583,13 +598,13 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300">
-      <div className="bg-card w-full max-w-xl rounded-2xl border border-border shadow-2xl relative flex flex-col p-6 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xl transition-all duration-300">
+      <div className="bg-card/80 w-full max-w-xl rounded-3xl border border-border backdrop-blur-2xl relative flex flex-col p-6 animate-in zoom-in-95 duration-200">
 
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 p-1.5 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer"
+          className="absolute right-4 top-4 p-1.5 rounded-xl text-muted-foreground hover:text-foreground hover:bg-muted/80 transition-colors cursor-pointer"
         >
           <X className="h-5 w-5" />
         </button>
@@ -599,7 +614,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
           {steps.map((s) => (
             <div key={s.num} className="flex items-center gap-2">
               <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${currentStep === s.num
-                ? "bg-primary text-primary-foreground ring-2 ring-primary/20"
+                ? "bg-primary text-primary-foreground ring-1 ring-primary/10"
                 : currentStep > s.num
                   ? "bg-primary/20 text-primary"
                   : "bg-muted text-muted-foreground"
@@ -610,7 +625,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                 }`}>
                 {s.label}
               </span>
-              {s.num < 4 && <div className="h-px w-4 bg-border" />}
+              {s.num < 4 && <div className="h-px w-4 bg-border/60" />}
             </div>
           ))}
         </div>
@@ -635,7 +650,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                     const val = e.target.value ? Number(e.target.value) : null;
                     setSelectedResumeId(val);
                   }}
-                  className="flex-1 text-sm rounded-lg border border-border shadow-sm p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                  className="flex-1 text-sm rounded-xl border border-border p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                 >
                   <option value="">Select an analyzed resume...</option>
                   {analyzedResumes.map((r) => (
@@ -649,7 +664,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 text-xs font-semibold py-3 px-4 rounded-lg shadow-sm transition-all whitespace-nowrap flex items-center justify-center gap-1.5"
+                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 text-xs font-semibold py-3 px-4 rounded-xl transition-all whitespace-nowrap flex items-center justify-center gap-1.5"
                 >
                   {isUploading ? (
                     <>
@@ -674,14 +689,14 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
               </div>
 
               {uploadErrorMessage && (
-                <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive text-xs rounded-lg flex items-center gap-1.5 font-medium">
+                <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive text-xs rounded-xl flex items-center gap-1.5 font-medium">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   {uploadErrorMessage}
                 </div>
               )}
 
               {uploadSuccessMessage && (
-                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-lg flex items-center gap-1.5 font-medium">
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 text-xs rounded-xl flex items-center gap-1.5 font-medium">
                   <CheckCircle2 className="h-4 w-4 shrink-0" />
                   {uploadSuccessMessage}
                 </div>
@@ -689,7 +704,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
 
               {/* Parsed resume metadata details */}
               {selectedResume ? (
-                <div className="p-4 bg-muted/20 rounded-xl border border-border space-y-4 animate-in fade-in duration-200">
+                <div className="p-4 bg-muted/20 rounded-2xl border border-border space-y-4 animate-in fade-in duration-200">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-primary">
                       Extracted Resume Analysis
@@ -706,7 +721,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                         selectedResume.technical_skills.slice(0, 12).map((skill) => (
                           <span
                             key={skill}
-                            className="px-2 py-0.5 bg-background border border-border text-foreground rounded text-[10px] font-medium shadow-sm"
+                            className="px-2 py-0.5 bg-background border border-border text-foreground rounded text-[10px] font-medium"
                           >
                             {skill}
                           </span>
@@ -723,7 +738,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                   </div>
                 </div>
               ) : (
-                <div className="p-8 border border-dashed border-border rounded-xl flex flex-col items-center justify-center text-center">
+                <div className="p-8 border border-dashed border-border rounded-2xl flex flex-col items-center justify-center text-center">
                   <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                   <span className="text-xs text-muted-foreground">Select or upload a resume to unlock the next steps.</span>
                 </div>
@@ -735,7 +750,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                   type="button"
                   disabled={!selectedResumeId}
                   onClick={() => setCurrentStep(2)}
-                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+                  className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-xl transition-all flex items-center gap-1.5"
                 >
                   Next Step
                   <ChevronRight className="h-4 w-4" />
@@ -802,7 +817,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Back
@@ -868,7 +883,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                       setIsDropdownOpen(false);
                     }
                   }}
-                  className="w-full text-sm rounded-lg border border-border shadow-sm p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                  className="w-full text-sm rounded-xl border border-border p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                 />
 
                 {searchQuery && (
@@ -885,7 +900,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                 )}
 
                 {isDropdownOpen && filteredCompanies.length > 0 && (
-                  <div className="absolute z-50 w-full mt-1.5 max-h-60 overflow-y-auto bg-card border border-border rounded-lg shadow-lg scrollbar-thin">
+                  <div className="absolute z-50 w-full mt-1.5 max-h-60 overflow-y-auto bg-card/90 border border-border rounded-xl shadow-md backdrop-blur-xl scrollbar-thin">
                     {filteredCompanies.map((company, index) => (
                       <div
                         key={company.name}
@@ -946,7 +961,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                             setSearchQuery(c.name);
                             setIsDropdownOpen(false);
                           }}
-                          className="px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground rounded-lg text-xs font-semibold shadow-sm transition-all cursor-pointer flex items-center gap-1"
+                          className="px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1"
                         >
                           {c.name}
                         </button>
@@ -958,7 +973,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
 
               {/* Selected company match profile */}
               {selectedCompany && (
-                <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl space-y-3 animate-in fade-in duration-200">
+                <div className="p-4 bg-primary/5 border border-primary/20 rounded-2xl space-y-3 animate-in fade-in duration-200">
                   <div className="flex items-center gap-1.5">
                     <Briefcase className="h-4 w-4 text-primary" />
                     <span className="text-xs font-bold text-foreground uppercase tracking-wider block">
@@ -1046,7 +1061,7 @@ onKeyDown={(e) => {
                               setTargetRole(formatted);
                             }
                           }}
-                        className="w-full text-sm rounded-lg border border-border shadow-sm p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+                        className="w-full text-sm rounded-xl border border-border p-3 bg-muted/10 text-foreground outline-none focus:ring-1 focus:ring-primary focus:border-primary"
                       />
 
                       {roleSearchQuery && (
@@ -1064,7 +1079,7 @@ onKeyDown={(e) => {
                       )}
 
                       {isRoleDropdownOpen && filteredRoles.length > 0 && (
-                        <div className="absolute z-50 w-full mt-1.5 max-h-48 overflow-y-auto bg-card border border-border rounded-lg shadow-lg scrollbar-thin">
+                        <div className="absolute z-50 w-full mt-1.5 max-h-48 overflow-y-auto bg-card/90 border border-border rounded-xl shadow-md backdrop-blur-xl scrollbar-thin">
                           {filteredRoles.map((roleName, index) => {
                             const formattedName = formatRoleName(roleName, localJobType);
                             const isRecommended = recommendedRoles.includes(roleName);
@@ -1104,7 +1119,7 @@ onKeyDown={(e) => {
                       <button
                         type="button"
                         onClick={() => setLocalJobType("full time job")}
-                        className={`flex-grow py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${localJobType === "full time job"
+                        className={`flex-grow py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${localJobType === "full time job"
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background text-muted-foreground border-border hover:border-primary/50"
                           }`}
@@ -1114,7 +1129,7 @@ onKeyDown={(e) => {
                       <button
                         type="button"
                         onClick={() => setLocalJobType("intern")}
-                        className={`flex-grow py-2 text-xs font-semibold rounded-lg border transition-all cursor-pointer ${localJobType === "intern"
+                        className={`flex-grow py-2 text-xs font-semibold rounded-xl border transition-all cursor-pointer ${localJobType === "intern"
                           ? "bg-primary text-primary-foreground border-primary"
                           : "bg-background text-muted-foreground border-border hover:border-primary/50"
                           }`}
@@ -1125,7 +1140,7 @@ onKeyDown={(e) => {
                   </div>
 
                   {roleValidationError && (
-                    <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive text-xs rounded-lg flex items-center gap-1.5 font-medium animate-in slide-in-from-top-2">
+                    <div className="p-3 bg-destructive/10 border border-destructive/20 text-destructive text-xs rounded-xl flex items-center gap-1.5 font-medium animate-in slide-in-from-top-2">
                       <AlertCircle className="h-4 w-4 shrink-0" />
                       {roleValidationError}
                     </div>
@@ -1138,7 +1153,7 @@ onKeyDown={(e) => {
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Back
@@ -1152,7 +1167,7 @@ onKeyDown={(e) => {
                       setRoleValidationError(null);
                       setCurrentStep(4);
                     }}
-                    className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-lg shadow-sm transition-all"
+                    className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all"
                   >
                     Skip this
                   </button>
@@ -1179,7 +1194,7 @@ onKeyDown={(e) => {
                       }
                       setCurrentStep(4);
                     }}
-                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-xl transition-all flex items-center gap-1.5"
                   >
                     Next Step
                     <ChevronRight className="h-4 w-4" />
@@ -1199,7 +1214,7 @@ onKeyDown={(e) => {
                 </p>
               </div>
 
-              <div className="p-5 bg-muted/20 border border-border rounded-xl space-y-4">
+              <div className="p-5 bg-muted/20 border border-border rounded-2xl space-y-4">
                 <div className="flex items-center gap-1.5 border-b border-border/50 pb-2">
                   <Layers className="h-4 w-4 text-primary" />
                   <span className="text-xs font-bold text-primary uppercase tracking-wider block">
@@ -1247,7 +1262,7 @@ onKeyDown={(e) => {
               </div>
 
               {error && (
-                <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium rounded-lg flex items-center gap-1.5">
+                <div className="p-3.5 bg-destructive/10 border border-destructive/20 text-destructive text-xs font-medium rounded-xl flex items-center gap-1.5">
                   <AlertCircle className="h-4 w-4 shrink-0" />
                   {error}
                 </div>
@@ -1259,7 +1274,7 @@ onKeyDown={(e) => {
                   type="button"
                   disabled={isSubmitting}
                   onClick={() => setCurrentStep(3)}
-                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-lg shadow-sm transition-all flex items-center gap-1.5"
+                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Back
@@ -1268,7 +1283,7 @@ onKeyDown={(e) => {
                   type="button"
                   onClick={handleStartInterview}
                   disabled={isSubmitting}
-                  className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 px-8 rounded-lg shadow-md transition-all flex items-center justify-center gap-2"
+                  className="cursor-pointer bg-primary hover:bg-primary/95 text-primary-foreground font-bold text-sm py-3 px-8 rounded-xl transition-all flex items-center justify-center gap-2"
                 >
                   {isSubmitting ? (
                     <>
@@ -1277,7 +1292,7 @@ onKeyDown={(e) => {
                     </>
                   ) : (
                     <>
-                      <Play className="h-4 w-4 fill-white" />
+                      <Play className="h-4 w-4 fill-current" />
                       Start Interview
                     </>
                   )}

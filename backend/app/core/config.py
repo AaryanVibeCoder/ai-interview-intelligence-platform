@@ -31,28 +31,21 @@ class Settings(BaseSettings):
     DATABASE_ECHO: bool = False
 
     # Clerk / JWT Authentication (used for protected endpoints)
-    # Notes:
-    # - Clerk issues JWTs signed with keys available at JWKS.
-    # - We validate signature using JWKS and validate issuer/audience/exp.
     CLERK_SECRET_KEY: str = Field(
         default="",
         description="Clerk API secret key (for reference, not used in JWT validation)",
     )
     CLERK_JWT_ENABLED: bool = False
 
-    # Commonly found in Clerk dashboard / JWT settings
     CLERK_JWT_ISSUER: str = Field(default="", description="Expected JWT issuer (iss)")
     CLERK_JWT_AUDIENCE: str = Field(
         default="", description="Expected JWT audience (aud)"
     )
 
-    # JWKS endpoint for key discovery
     CLERK_JWKS_URL: str = Field(
         default="", description="Clerk JWKS URL for verifying JWT signatures"
     )
 
-    # If you prefer to validate a single audience/issuer that may be optional in some Clerk configs,
-    # keep the above fields empty to skip that specific validation.
     CLERK_JWT_ALGORITHMS: str = Field(
         default="RS256",
         description="Comma-separated JWT algorithms to accept (e.g., RS256)",
@@ -68,25 +61,16 @@ class Settings(BaseSettings):
     LLM_API_KEY: str = Field(default="", description="LLM/OpenRouter/NVIDIA API Key")
     NVIDIA_API_KEY: str = Field(default="", description="Backward-compatible NVIDIA API key alias")
     NVIDIA_MODEL_NAME: str = Field(
-        default="inclusionai/ling-3.0-flash:free",
+        default="poolside/laguna-s-2.1:free",
         description="OpenRouter/NVIDIA model used for interview generation and scoring",
     )
 
     # ─── NVIDIA Parakeet ASR Configuration ────────────────────────────────────
-    # IMPORTANT: NVIDIA testing-tier API keys expire in ~6 months from issuance.
-    # If NIM transcription enrichment silently stops working, the most likely
-    # cause is a stale/expired NVIDIA_PARAKEET_API_KEY.
-    #
-    # TODO (calendar reminder): Re-generate NVIDIA_PARAKEET_API_KEY before
-    #   2027-02-01 (6 months from initial deployment ~2026-07-31).
-    #   Endpoint: https://build.nvidia.com → API Keys → Regenerate.
-    #   After regenerating: update the key in .env and redeploy.
-    # ─────────────────────────────────────────────────────────────────────────
     NVIDIA_PARAKEET_API_KEY: str = Field(
         default="",
         description=(
             "NVIDIA NIM Parakeet-TDT-0.6b-v2 ASR API key. "
-            "Testing-tier keys expire in ~6 months — see comment above."
+            "Testing-tier keys expire in ~6 months."
         ),
     )
     NVIDIA_PARAKEET_KEY_ISSUED_DATE: Optional[str] = Field(
@@ -96,6 +80,12 @@ class Settings(BaseSettings):
             "Used to emit expiry warnings in startup logs."
         ),
     )
+
+    # SMTP Configuration
+    SMTP_HOST: str = Field(default="smtp.gmail.com", description="SMTP server host")
+    SMTP_PORT: int = Field(default=587, description="SMTP server port")
+    SMTP_USER: str = Field(default="", description="SMTP server user")
+    SMTP_PASSWORD: str = Field(default="", description="SMTP server password")
 
     class Config:
         """Pydantic config."""
@@ -133,13 +123,14 @@ class Settings(BaseSettings):
         return [a.strip() for a in self.CLERK_JWT_ALGORITHMS.split(",") if a.strip()]
 
     def get_parakeet_key_age_days(self) -> Optional[int]:
-        """Return number of days since NVIDIA_PARAKEET_API_KEY was issued, or None."""
+        """Calculate age of the Parakeet key in days, or None if issue date not set."""
         if not self.NVIDIA_PARAKEET_KEY_ISSUED_DATE:
             return None
         try:
-            issued = datetime.date.fromisoformat(self.NVIDIA_PARAKEET_KEY_ISSUED_DATE)
-            return (datetime.date.today() - issued).days
-        except ValueError:
+            issue_date = datetime.date.fromisoformat(self.NVIDIA_PARAKEET_KEY_ISSUED_DATE)
+            today = datetime.date.today()
+            return (today - issue_date).days
+        except Exception:
             return None
 
     def get_startup_warnings(self) -> List[str]:

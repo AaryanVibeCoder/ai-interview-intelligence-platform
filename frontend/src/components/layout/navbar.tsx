@@ -18,7 +18,7 @@ export function Navbar({
   userMenu,
 }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-30 flex h-header items-center gap-3 border-b border-border bg-background/80 px-page backdrop-blur-xl">
+    <header className="sticky top-0 z-30 flex h-header items-center gap-3 border-b border-border/60 bg-background/60 px-page backdrop-blur-2xl">
       <Button
         type="button"
         variant="ghost"
@@ -46,7 +46,7 @@ export function Navbar({
       </Button>
 
       <div className="min-w-0 flex-1">
-        <div className="hidden h-9 max-w-md items-center gap-2 rounded-xl border border-input bg-surface px-3 text-muted-foreground shadow-elevate-xs md:flex">
+        <div className="hidden h-9 max-w-md items-center gap-2 rounded-xl border border-input/60 bg-surface px-3 text-muted-foreground md:flex">
           <Search className="size-4 shrink-0" aria-hidden="true" />
           <span className="truncate text-sm">Search workspace, agents, or insights</span>
           <kbd className="ml-auto rounded-md border border-border bg-surface-raised px-1.5 py-0.5 text-[0.7rem] text-muted-foreground">
@@ -72,7 +72,7 @@ export function Navbar({
         </Button>
         <div
           aria-label="Current workspace"
-          className="grid size-9 place-items-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground shadow-glow-primary"
+          className="grid size-9 place-items-center rounded-xl bg-primary text-sm font-semibold text-primary-foreground"
         >
           EI
         </div>

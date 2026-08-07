@@ -101,6 +101,11 @@ export default function CodingChallengePage() {
 
   const [challenge, setChallenge] = useState<CodeChallenge | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
   const [questionIndex, setQuestionIndex] = useState(0);
   const [prepCountdown, setPrepCountdown] = useState(10);
   const [isPrepActive, setIsPrepActive] = useState(true);
@@ -111,7 +116,7 @@ export default function CodingChallengePage() {
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editorTheme, setEditorTheme] = useState("monokai");
-  const [codeQuality, setCodeQuality] = useState<string>("8.5/10");
+  const [codeQuality, setCodeQuality] = useState<string>("—");
   const [atsAlerts, setAtsAlerts] = useState<string[]>([]);
   
   const [stats, setStats] = useState<CodingRoundStats>({
@@ -210,6 +215,7 @@ export default function CodingChallengePage() {
 
   // Mount initialization: fetch challenge from backend (or fallback), announce start
   useEffect(() => {
+    if (!hasMounted) return;
     const loadChallenge = async () => {
       setIsLoading(true);
       let selectedChallenge: (CodeChallenge & { sessionId?: number; questionIndex?: number }) | null = null;
@@ -281,7 +287,7 @@ export default function CodingChallengePage() {
     };
 
     loadChallenge();
-  }, [activeSessionId, getToken, questionIndex]);
+  }, [activeSessionId, getToken, questionIndex, hasMounted]);
 
   // Poll for background customized coding challenge swap
   useEffect(() => {
@@ -290,11 +296,11 @@ export default function CodingChallengePage() {
     let active = true;
     let pollInterval: NodeJS.Timeout;
     const startTime = Date.now();
-    const maxPollMs = 40000; // 40 seconds timeout ceiling
+    const maxPollMs = 120000; // 120 seconds timeout ceiling
 
     const checkStatus = async () => {
       if (Date.now() - startTime >= maxPollMs) {
-        console.warn("Coding challenge generation polling timed out after 40s. Keeping fallback challenges.");
+        console.warn("Coding challenge generation polling timed out after 120s. Keeping fallback challenges.");
         clearInterval(pollInterval);
         return;
       }
@@ -475,14 +481,29 @@ export default function CodingChallengePage() {
       
       // Fetch code quality recommendations
       try {
-        const feedbackResponse = await fetch("/api/feedback-generation", {
+        const token = await getToken();
+        const headers: Record<string, string> = {
+          "Content-Type": "application/json"
+        };
+        if (token) {
+          headers["Authorization"] = `Bearer ${token}`;
+        }
+
+        const feedbackResponse = await fetch(`${baseUrl}/coding/quality`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ code, language: selectedLanguage })
+          headers: headers as any,
+          body: JSON.stringify({
+            code,
+            language: selectedLanguage,
+            test_results: results
+          })
         });
-        const feedbackData = await feedbackResponse.json();
-        setCodeQuality(feedbackData.codeQuality || "8.0/10");
-      } catch {
+        if (feedbackResponse.ok) {
+          const feedbackData = await feedbackResponse.json();
+          setCodeQuality(feedbackData.codeQuality || "—");
+        }
+      } catch (err) {
+        console.error("Failed to fetch code quality:", err);
         // Non-critical: don't fail the whole run if feedback fails
       }
 
@@ -559,6 +580,13 @@ export default function CodingChallengePage() {
           setIsPrepActive(true);
           setPrepCountdown(10);
           setQuestionIndex((idx) => idx + 1);
+          setCodeQuality("—");
+          setStats((s) => ({
+            ...s,
+            totalTestsPassed: 0,
+            executionTime: 0,
+            memoryUsed: 0
+          }));
         }
       }
     } catch (e) {
@@ -595,20 +623,11 @@ export default function CodingChallengePage() {
 
   const passPercentage = Math.round((stats.totalTestsPassed / stats.totalTests) * 100) || 0;
 
-  if (isLoading || !challenge) {
+  if (!hasMounted || isLoading || !challenge) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] w-full space-y-6 bg-slate-950 text-white">
-        <div className="flex flex-col items-center text-center max-w-md px-4 space-y-4">
-          <div className="p-4 bg-primary/10 rounded-2xl text-primary animate-spin">
-            <RefreshCw className="w-12 h-12" />
-          </div>
-          <h2 className="text-xl font-bold bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent animate-pulse">
-            Generating Dynamic Challenge
-          </h2>
-          <p className="text-sm text-slate-400 leading-relaxed">
-            Our AI is synthesizing practice questions in the typical style of <strong className="text-white">{targetCompany || "Google"}</strong>&apos;s interview loops for a <strong className="text-white">{experienceLevel || "Senior"} {role || "Software Engineer"}</strong>. Just a moment...
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-[calc(100vh-6rem)] w-full space-y-4">
+        <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        <p className="text-xs text-muted-foreground font-semibold">Starting your session...</p>
       </div>
     );
   }
@@ -617,16 +636,16 @@ export default function CodingChallengePage() {
     <div className="flex flex-col h-[calc(100vh-6rem)] -m-6 overflow-hidden cursor-default">
       
       {/* Upper header action bar */}
-      <div className="bg-card border-b border-border py-3 px-6 flex items-center justify-between z-10">
+      <div className="bg-card/60 backdrop-blur-xl border-b border-border/60 py-3 px-6 flex items-center justify-between z-10">
         <div className="flex items-center gap-3">
-          <span className="p-2 rounded-lg bg-accent/10 text-accent">
+          <span className="p-2 rounded-xl bg-accent/10 text-accent">
             <FileCode className="w-5 h-5" />
           </span>
           <div>
             <h1 className="text-md font-bold text-foreground flex items-center gap-2">
               {challenge.title}
               <span className="text-[10px] font-extrabold uppercase bg-primary/10 border border-primary/20 text-primary py-0.5 px-2.5 rounded-full">
-                Question {questionIndex + 1} of 3
+                Question {questionIndex + 1} of {(challenge as any).totalChallenges || 3}
               </span>
             </h1>
             <span className="text-[10px] text-muted-foreground font-semibold uppercase">
@@ -636,7 +655,7 @@ export default function CodingChallengePage() {
         </div>
 
         {/* Timer Display */}
-        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-background/50 shadow-sm backdrop-blur-sm">
+        <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-border bg-background/50 backdrop-blur-xl">
           <Clock className={`w-4 h-4 ${timeLeft <= 120 ? "text-destructive animate-pulse" : "text-muted-foreground"}`} />
           <span className={`font-mono text-xs font-bold ${timeLeft <= 120 ? "text-destructive animate-pulse" : "text-foreground"}`}>
             {formatTime(timeLeft)}
@@ -651,7 +670,7 @@ export default function CodingChallengePage() {
               value={selectedLanguage} 
               onChange={(e) => setSelectedLanguage(e.target.value)}
               disabled={isRunning || isSubmitting}
-              className="py-1 px-3 bg-background border border-border rounded-lg text-foreground font-semibold outline-none disabled:opacity-50"
+              className="py-1 px-3 bg-background border border-border rounded-xl text-foreground font-semibold outline-none disabled:opacity-50"
             >
               {challenge.languages.map((lang) => (
                 <option key={lang} value={lang}>{lang.charAt(0).toUpperCase() + lang.slice(1)}</option>
@@ -665,7 +684,7 @@ export default function CodingChallengePage() {
               value={editorTheme} 
               onChange={(e) => setEditorTheme(e.target.value)}
               disabled={isRunning || isSubmitting}
-              className="py-1 px-3 bg-background border border-border rounded-lg text-foreground font-semibold outline-none disabled:opacity-50"
+              className="py-1 px-3 bg-background border border-border rounded-xl text-foreground font-semibold outline-none disabled:opacity-50"
             >
               <option value="monokai">Monokai Dark</option>
               <option value="dracula">Dracula</option>
@@ -679,7 +698,7 @@ export default function CodingChallengePage() {
       <div className="flex-1 grid grid-cols-1 lg:grid-cols-12 min-h-0">
         
         {/* Left Column: Problem statement (span 3) */}
-        <div className="lg:col-span-3 border-r border-border bg-card p-5 overflow-y-auto space-y-6">
+        <div className="lg:col-span-3 border-r border-border/60 bg-card/60 backdrop-blur-xl p-5 overflow-y-auto space-y-6">
           <div>
             <h2 className="text-sm font-bold text-foreground uppercase tracking-wider mb-2">Description</h2>
             <p className="text-xs text-muted-foreground leading-relaxed">
@@ -699,7 +718,7 @@ export default function CodingChallengePage() {
           <div className="space-y-4">
             <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">Example Inputs</h3>
             {challenge.testCases.slice(0, 2).map((tc) => (
-              <div key={tc.id} className="p-3 bg-background border border-border rounded-lg text-[11px] space-y-1">
+              <div key={tc.id} className="p-3 bg-background border border-border rounded-xl text-[11px] space-y-1">
                 <div><span className="text-muted-foreground">Input:</span> <code className="font-mono text-foreground">{tc.input}</code></div>
                 <div><span className="text-muted-foreground">Output:</span> <code className="font-mono text-success">{tc.expectedOutput}</code></div>
               </div>
@@ -771,7 +790,7 @@ export default function CodingChallengePage() {
 
             {/* Float ATS Alignment Notification Alert */}
             {atsAlerts.length > 0 && (
-              <div className="absolute bottom-4 left-4 right-4 bg-success/10 border border-success/20 backdrop-blur-md p-4 rounded-xl flex items-start gap-3 shadow-lg animate-in slide-in-from-bottom-2 duration-300">
+              <div className="absolute bottom-4 left-4 right-4 bg-success/10 border border-success/20 backdrop-blur-md p-4 rounded-xl flex items-start gap-3 shadow-md animate-in slide-in-from-bottom-2 duration-300">
                 <BrainCircuit className="w-5 h-5 text-success flex-shrink-0 mt-0.5 animate-pulse" />
                 <div className="text-[11px] text-success leading-relaxed">
                   <p className="font-extrabold uppercase tracking-wide">Confidence Boost Triggered</p>
@@ -782,11 +801,11 @@ export default function CodingChallengePage() {
           </div>
 
           {/* Action button bar */}
-          <div className="bg-card border-t border-border p-4 flex items-center justify-between z-10">
+          <div className="bg-card/60 backdrop-blur-xl border-t border-border/60 p-4 flex items-center justify-between z-10">
              <button
               onClick={runTests}
               disabled={isRunning || isSubmitting || !code}
-              className="cursor-pointer font-bold bg-muted hover:bg-muted-foreground/10 text-foreground py-2 px-6 rounded-lg text-xs disabled:opacity-50 transition-all flex items-center gap-1.5"
+              className="cursor-pointer font-bold bg-muted hover:bg-muted-foreground/10 text-foreground py-2 px-6 rounded-xl text-xs disabled:opacity-50 transition-all flex items-center gap-1.5"
             >
               <Cpu className="w-3.5 h-3.5" />
               {isRunning ? "Compiling..." : "Run Tests"}
@@ -795,7 +814,7 @@ export default function CodingChallengePage() {
             <button
               onClick={handleSubmitInterview}
               disabled={isSubmitting || isRunning || testResults.length === 0}
-              className="cursor-pointer font-bold bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-lg text-xs disabled:opacity-50 transition-all flex items-center gap-1.5 shadow-sm"
+              className="cursor-pointer font-bold bg-primary text-primary-foreground hover:bg-primary/90 py-2 px-6 rounded-xl text-xs disabled:opacity-50 transition-all flex items-center gap-1.5"
             >
               Submit & Proceed
               <ArrowRight className="w-3.5 h-3.5" />
@@ -804,29 +823,29 @@ export default function CodingChallengePage() {
         </div>
 
         {/* Right Column: Console/Results and Insights panel (span 3) */}
-        <div className="lg:col-span-3 border-l border-border bg-card flex flex-col h-full min-h-0">
+        <div className="lg:col-span-3 border-l border-border/60 bg-card/60 backdrop-blur-xl flex flex-col h-full min-h-0">
           
           {/* Upper Pane: Insights Metrics */}
-          <div className="p-4 border-b border-border space-y-4">
+          <div className="p-4 border-b border-border/60 space-y-4">
             <h3 className="text-xs font-bold text-foreground uppercase tracking-wider">Insights & Analytics</h3>
             
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-background border border-border p-3 rounded-lg flex flex-col gap-1 shadow-sm">
+              <div className="bg-background border border-border p-3 rounded-xl flex flex-col gap-1">
                 <span className="text-[9px] text-muted-foreground uppercase font-bold">Resume ATS</span>
                 <span className="text-lg font-black text-foreground">{atsScore || 78}/100</span>
               </div>
               
-              <div className="bg-background border border-border p-3 rounded-lg flex flex-col gap-1 shadow-sm">
+              <div className="bg-background border border-border p-3 rounded-xl flex flex-col gap-1">
                 <span className="text-[9px] text-muted-foreground uppercase font-bold">Code Quality</span>
                 <span className="text-lg font-black text-foreground">{codeQuality}</span>
               </div>
 
-              <div className="bg-background border border-border p-3 rounded-lg flex flex-col gap-1 shadow-sm">
+              <div className="bg-background border border-border p-3 rounded-xl flex flex-col gap-1">
                 <span className="text-[9px] text-muted-foreground uppercase font-bold">Execution Speed</span>
                 <span className="text-lg font-black text-foreground">{stats.executionTime} ms</span>
               </div>
 
-              <div className="bg-background border border-border p-3 rounded-lg flex flex-col gap-1 shadow-sm">
+              <div className="bg-background border border-border p-3 rounded-xl flex flex-col gap-1">
                 <span className="text-[9px] text-muted-foreground uppercase font-bold">Memory load</span>
                 <span className="text-lg font-black text-foreground">{stats.memoryUsed} MB</span>
               </div>

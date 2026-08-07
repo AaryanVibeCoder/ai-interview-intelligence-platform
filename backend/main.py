@@ -9,6 +9,8 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 
 from app.api.health import router as health_router
 from app.api.me import router as me_router
@@ -56,6 +58,11 @@ async def lifespan(app: FastAPI):
     for warning_msg in settings.get_startup_warnings():
         logger.warning(warning_msg)
 
+    # [DEBUG-STARTUP] Log resolved model name and API key prefix
+    api_key_to_log = settings.LLM_API_KEY or settings.NVIDIA_API_KEY or ""
+    key_prefix = api_key_to_log[:15] if api_key_to_log else "None"
+    logger.info(f"[DEBUG-STARTUP] Resolved LLM API Key Prefix: {key_prefix}... Model: {settings.NVIDIA_MODEL_NAME}")
+
     yield
 
     # Shutdown
@@ -67,6 +74,10 @@ async def lifespan(app: FastAPI):
         logger.warning(f"Database closure warning: {e}")
 
 
+from app.core.rate_limit import limiter
+
+
+
 # Create FastAPI application
 app = FastAPI(
     title=settings.API_TITLE,
@@ -75,6 +86,10 @@ app = FastAPI(
     debug=settings.DEBUG,
     lifespan=lifespan,
 )
+
+# Attach SlowAPI limiter state and its exception handler
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure CORS middleware
 app.add_middleware(
@@ -108,20 +123,38 @@ async def root():
     }
 
 
-# ── Global exception handlers ─────────────────────────────────────────────────
-# Every unhandled exception is converted into a structured JSON response so the
-# process never crashes with a raw traceback on the wire (which is what caused
-# the "Failed to fetch / server went away" escalation in the Start Interview
-# failure). HTTPExceptions keep their proper status code + detail.
+# Helper to dynamically retrieve and set CORS headers for error paths
+def _get_cors_headers(request: Request) -> dict[str, str]:
+    origin = request.headers.get("origin")
+    headers = {}
+    if origin:
+        origins = settings.cors_origins_list
+        if origin in origins or "*" in origins:
+            headers["Access-Control-Allow-Origin"] = origin
+            headers["Access-Control-Allow-Credentials"] = "true"
+            headers["Access-Control-Allow-Methods"] = "*"
+            headers["Access-Control-Allow-Headers"] = "*"
+    else:
+        # Fallback to first origin in settings
+        origins = settings.cors_origins_list
+        if origins and origins[0] != "*":
+            headers["Access-Control-Allow-Origin"] = origins[0]
+            headers["Access-Control-Allow-Credentials"] = "true"
+            headers["Access-Control-Allow-Methods"] = "*"
+            headers["Access-Control-Allow-Headers"] = "*"
+    return headers
 
 
 @app.exception_handler(HTTPException)
 async def http_exception_handler(request: Request, exc: HTTPException):
     """Structured JSON for expected HTTP errors (4xx/5xx with a real message)."""
+    cors_headers = _get_cors_headers(request)
+    exc_headers = getattr(exc, "headers", None) or {}
+    response_headers = {**cors_headers, **exc_headers}
     return JSONResponse(
         status_code=exc.status_code,
         content={"detail": exc.detail},
-        headers=getattr(exc, "headers", None),
+        headers=response_headers,
     )
 
 
@@ -129,10 +162,13 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 async def unhandled_exception_handler(request: Request, exc: Exception):
     """Structured JSON 500 for any unhandled exception — never a crash dump."""
     logger.exception("Unhandled exception on %s %s", request.method, request.url.path)
+    cors_headers = _get_cors_headers(request)
     return JSONResponse(
         status_code=500,
         content={"detail": f"Internal server error: {type(exc).__name__}: {exc}"},
+        headers=cors_headers,
     )
+
 
 
 if __name__ == "__main__":
@@ -154,4 +190,5 @@ app.include_router(interview.router)
 app.include_router(interview_mock.router)
 app.include_router(coding.router)
 app.include_router(nim_enrich.router)
+
 

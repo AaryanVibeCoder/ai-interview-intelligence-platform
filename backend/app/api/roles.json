@@ -81,52 +81,10 @@
     "reasoning_citation": "Combines frontend development expertise with machine learning model integration and deployment in user-facing applications."
   },
   {
-    "name": "Machine Learning Engineer",
-    "category": "Engineering",
-    "needs_review": true,
-    "reasoning_citation": "Input appears truncated ('f'), likely intended as Machine Learning Engineer, a standard engineering role focused on ML model development and deployment."
-  },
-  {
-    "name": "Machine Learning Frontend Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The input is a truncated form of a recognized hybrid engineering role combining frontend development with machine learning integration."
-  },
-  {
-    "name": "Machine Learning Frontend Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The input appears to be a truncated form of 'Machine Learning Frontend Engineer', a recognized hybrid engineering role combining frontend development with ML model integration."
-  },
-  {
-    "name": "Machine Learning Frontend Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The role combines frontend development with machine learning specialization, falling under the Engineering job family."
-  },
-  {
     "name": "Machine Learning Platform Engineer",
     "category": "Engineering",
     "needs_review": false,
     "reasoning_citation": "The term refers to an engineering role focused on building and maintaining infrastructure for machine learning workflows."
-  },
-  {
-    "name": "Machine Learning Platform Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The term 'Machine learning platform' refers to a technical domain; the corresponding engineering role is typically titled Machine Learning Platform Engineer."
-  },
-  {
-    "name": "Machine Learning Frontend Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The role combines machine learning expertise with frontend development, a recognized hybrid engineering specialization."
-  },
-  {
-    "name": "Machine Learning Platform Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "The input 'Machine learning plat' is an abbreviation for Machine Learning Platform Engineer, a standard engineering role focused on building ML infrastructure."
   },
   {
     "name": "Forward Deployed Engineer",
@@ -139,17 +97,5 @@
     "category": "Engineering",
     "needs_review": false,
     "reasoning_citation": "\"AI En\" is a common abbreviation for AI Engineer, a role focused on building and deploying artificial intelligence systems."
-  },
-  {
-    "name": "AI Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "\"AI Engi\" is a common abbreviation for AI Engineer, a recognized engineering role focused on building and deploying artificial intelligence systems."
-  },
-  {
-    "name": "AI Engineer",
-    "category": "Engineering",
-    "needs_review": false,
-    "reasoning_citation": "\"AI E\" is a common abbreviation for AI Engineer, a role focused on building, deploying, and maintaining artificial intelligence models and systems."
   }
 ]

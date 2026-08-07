@@ -88,17 +88,20 @@ export function ResumeUpload() {
 
   return (
     <div className="space-y-6 cursor-default select-none">
-      <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 rounded-lg max-w-md mx-auto bg-white shadow-sm cursor-default">
-        <h3 className="text-lg font-semibold text-gray-700 mb-2">
+      <div 
+        onClick={() => !isUploading && fileInputRef.current?.click()}
+        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border/60 hover:border-primary/40 hover:bg-primary/5 rounded-2xl max-w-md mx-auto bg-card/70 backdrop-blur-xl cursor-pointer transition-all duration-200 select-none"
+      >
+        <h3 className="text-lg font-semibold text-foreground mb-2">
           Upload your Resume
         </h3>
-        <p className="text-xs text-gray-500 mb-4">PDF/DOCX files only (Max 10MB)</p>
+        <p className="text-xs text-muted-foreground mb-4">PDF/DOCX files only (Max 10MB)</p>
 
         <button
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium py-2 px-4 rounded transition-colors duration-200 disabled:opacity-50"
+          className="cursor-pointer bg-primary hover:bg-primary/95 text-primary-foreground text-sm font-medium py-2 px-4 rounded-xl transition-colors duration-200 disabled:opacity-50"
         >
           {isUploading ? "Uploading & Syncing..." : "Choose PDF File"}
         </button>
@@ -112,40 +115,40 @@ export function ResumeUpload() {
         />
 
         {successMessage && (
-          <p className="text-sm text-green-600 mt-3 font-medium text-center">
+          <p className="text-sm text-success mt-3 font-medium text-center">
             {successMessage}
           </p>
         )}
 
         {error && (
-          <p className="text-sm text-red-500 mt-3 font-medium text-center">
+          <p className="text-sm text-destructive mt-3 font-medium text-center">
             {error}
           </p>
         )}
       </div>
 
       <div className="max-w-3xl mx-auto">
-        <h4 className="text-sm font-semibold text-gray-700 mb-3">Your resumes</h4>
+        <h4 className="text-sm font-semibold text-foreground mb-3">Your resumes</h4>
 
         {isLoadingResumes ? (
-          <p className="text-sm text-gray-500">Loading...</p>
+          <p className="text-sm text-muted-foreground">Loading...</p>
         ) : resumes.length === 0 ? (
-          <p className="text-sm text-gray-500">No resumes uploaded yet.</p>
+          <p className="text-sm text-muted-foreground">No resumes uploaded yet.</p>
         ) : (
           <div className="space-y-2">
             {resumes.map((r) => (
               <div
                 key={r.id}
-                className="flex items-center justify-between gap-4 p-4 border rounded-lg bg-white cursor-default select-none"
+                className="flex items-center justify-between gap-4 p-4 border border-border rounded-2xl bg-card/70 backdrop-blur-xl cursor-default select-none"
               >
                 <div className="min-w-0">
-                  <div className="font-medium text-gray-900 truncate">
+                  <div className="font-medium text-foreground truncate">
                     {r.file_name}
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     Uploaded: {new Date(r.created_at).toLocaleString()}
                   </div>
-                  <div className="text-xs text-gray-500">Status: {r.status}</div>
+                  <div className="text-xs text-muted-foreground">Status: {r.status}</div>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -153,7 +156,7 @@ export function ResumeUpload() {
                     type="button"
                     onClick={() => handleView(r.id)}
                     disabled={isOpeningId === r.id}
-                    className="shrink-0 inline-flex items-center justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
+                    className="shrink-0 inline-flex items-center justify-center rounded-xl bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/95 disabled:opacity-50"
                   >
                     {isOpeningId === r.id ? "Opening..." : "View"}
                   </button>
@@ -162,7 +165,7 @@ export function ResumeUpload() {
                     type="button"
                     onClick={() => deleteResume(r.id)}
                     disabled={isDeleting}
-                    className="shrink-0 inline-flex items-center justify-center rounded-md bg-red-600 px-3 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
+                    className="shrink-0 inline-flex items-center justify-center rounded-xl bg-destructive px-3 py-2 text-sm font-medium text-destructive-foreground hover:bg-destructive/95 disabled:opacity-50"
                   >
                     {isDeleting ? "Deleting..." : "Delete"}
                   </button>

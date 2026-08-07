@@ -72,22 +72,50 @@ async def _process_job(job: NIMEnrichmentJob) -> List[Tuple[int, Optional[str]]]
     from app.services.nim_transcription import transcribe_audio_bytes  # local import to avoid circular
 
     results: List[Tuple[int, Optional[str]]] = []
+    riva_failed = False
+
     for item in job.answers:
         logger.info(
             "[NIM-Queue] session=%s processing answer q=%s (%d bytes)",
             job.session_id, item.question_index, len(item.audio_bytes),
         )
-        transcript = await transcribe_audio_bytes(
-            item.audio_bytes,
-            session_id=job.session_id,
-            question_index=item.question_index,
-            mime_type=item.mime_type,
-        )
-        results.append((item.question_index, transcript))
+        if riva_failed:
+            logger.info(
+                "[NIM-Queue] session=%s skipping Riva gRPC call for q=%s due to previous failure — using browser transcript",
+                job.session_id, item.question_index,
+            )
+            results.append((item.question_index, item.browser_transcript))
+            continue
+
+        try:
+            transcript = await transcribe_audio_bytes(
+                item.audio_bytes,
+                session_id=job.session_id,
+                question_index=item.question_index,
+                mime_type=item.mime_type,
+            )
+        except Exception as exc:
+            logger.error(
+                "[NIM-Queue] session=%s unexpected error calling transcribe_audio_bytes for q=%s: %s",
+                job.session_id, item.question_index, type(exc).__name__,
+            )
+            transcript = None
+
+        if transcript is None:
+            logger.warning(
+                "[NIM-Queue] session=%s transcription failed for q=%s — falling back to browser transcript",
+                job.session_id, item.question_index,
+            )
+            riva_failed = True
+            results.append((item.question_index, item.browser_transcript))
+        else:
+            results.append((item.question_index, transcript))
+
         # Rate-limit: wait before next NIM call to avoid hitting free-tier limits
-        if item != job.answers[-1]:
+        if not riva_failed and item != job.answers[-1]:
             await asyncio.sleep(_INTER_REQUEST_DELAY_S)
     return results
+
 
 
 async def _write_nim_transcripts_to_db(

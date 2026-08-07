@@ -9,7 +9,10 @@ export function StartPracticeSection() {
 
   return (
     <>
-      <div className="rounded-lg border bg-card p-6 shadow-sm flex flex-col justify-between h-full hover:shadow-md transition-all duration-200">
+      <div 
+        onClick={() => setIsOpen(true)}
+        className="rounded-2xl border border-border bg-card/70 p-6 backdrop-blur-xl flex flex-col justify-between h-full hover:bg-card/90 hover:border-primary/40 cursor-pointer select-none transition-all duration-200"
+      >
         <div>
           <h3 className="font-semibold text-lg text-foreground flex items-center gap-2">
             Interview Practice Center
@@ -22,9 +25,9 @@ export function StartPracticeSection() {
         <div className="mt-6 flex justify-end">
           <button
             onClick={() => setIsOpen(true)}
-            className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm py-2.5 px-6 rounded-lg shadow-md transition-all flex items-center justify-center gap-2 group"
+            className="cursor-pointer bg-primary hover:bg-primary/95 text-primary-foreground font-semibold text-sm py-2.5 px-6 rounded-xl transition-all duration-200 flex items-center justify-center gap-2 group"
           >
-            <Play className="h-3.5 w-3.5 fill-white group-hover:scale-110 transition-transform" />
+            <Play className="h-3.5 w-3.5 fill-current group-hover:scale-110 transition-transform" />
             Start Practice Interview
           </button>
         </div>
