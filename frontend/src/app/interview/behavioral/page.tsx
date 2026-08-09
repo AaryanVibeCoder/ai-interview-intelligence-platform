@@ -73,6 +73,7 @@ export default function BehavioralPage() {
   const [activeHint, setActiveHint] = useState<string | null>(null);
   const [isLoadingHint, setIsLoadingHint] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
+  const [isInterviewStarted, setIsInterviewStarted] = useState(false);
 
   useEffect(() => {
     setHasMounted(true);
@@ -234,7 +235,6 @@ export default function BehavioralPage() {
         setQuestion(res.question);
         setCurrentQuestion(res.question);
         setQuestionSource(res.question_source || "fallback");
-        speakQuestion(res.question);
       } catch (err) {
         setErrorMessage("Failed to establish interview session. Verify connection.");
       } finally {
@@ -281,7 +281,9 @@ export default function BehavioralPage() {
               setQuestion(firstLlmQuestion);
               setCurrentQuestion(firstLlmQuestion);
               setQuestionSource("llm");
-              speakQuestion(firstLlmQuestion);
+              if (isInterviewStarted) {
+                speakQuestion(firstLlmQuestion);
+              }
               clearInterval(pollInterval);
             }
           }
@@ -311,7 +313,7 @@ export default function BehavioralPage() {
       clearInterval(pollInterval);
       clearTimeout(initialTimeout);
     };
-  }, [activeSessionId, questionSource, answers.length, eleanorSpeaking, question, getToken, setQuestionSource, setCurrentQuestion]);
+  }, [activeSessionId, questionSource, answers.length, eleanorSpeaking, question, getToken, setQuestionSource, setCurrentQuestion, isInterviewStarted]);
 
   const startAudioAnalysis = async () => {
     try {
@@ -762,102 +764,140 @@ export default function BehavioralPage() {
         </div>
 
         {/* Right pane: Question & Answer Workspace */}
-        <div className="md:col-span-2 bg-card border border-border rounded-2xl p-6 shadow-sm space-y-6 flex flex-col justify-between">
+        <div className="md:col-span-2 bg-card border border-border rounded-2xl p-6 shadow-sm space-y-6 flex flex-col justify-between min-h-[420px]">
 
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <h4 className="text-xs font-bold text-primary uppercase tracking-wider cursor-default select-none">Active Question</h4>
-              {hintsRemaining > 0 && (
-                <button
-                  type="button"
-                  onClick={handleRequestHint}
-                  disabled={isLoadingHint}
-                  className="cursor-pointer text-[11px] font-bold bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black py-1 px-3 rounded-lg flex items-center gap-1 transition-all"
-                >
-                  {isLoadingHint ? (
-                    <>
-                      <RefreshCw className="h-3 w-3 animate-spin" />
-                      Generating Hint...
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="h-3 w-3 fill-black" />
-                      Get Hint ({hintsRemaining} left)
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-            <div className="p-5 bg-muted/30 border border-border rounded-xl cursor-default select-none">
-              <p className="text-sm font-semibold text-foreground leading-relaxed cursor-default">
-                {question}
-              </p>
-            </div>
-
-            {/* Hint Box display */}
-            {activeHint && (
-              <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl relative animate-in fade-in slide-in-from-top-2 duration-200">
-                <button
-                  type="button"
-                  onClick={() => setActiveHint(null)}
-                  className="absolute right-3 top-3 p-0.5 rounded text-amber-500 hover:bg-amber-500/20 cursor-pointer"
-                >
-                  <X className="h-3.5 w-3.5" />
-                </button>
-                <div className="flex items-start gap-2 pr-6">
-                  <Sparkles className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Interviewer Hint</span>
-                    <p className="text-xs text-foreground leading-relaxed font-medium">{activeHint}</p>
-                  </div>
-                </div>
+          {!isInterviewStarted ? (
+            <div className="flex-1 flex flex-col items-center justify-center text-center p-8 space-y-6 animate-in fade-in duration-300">
+              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary animate-pulse">
+                <Volume2 className="w-8 h-8" />
               </div>
-            )}
-          </div>
-
-          {/* Answer details */}
-          <div className="space-y-4 pt-4">
-            <div className="flex justify-between items-center">
-              <h4 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
-                Your Answer
-              </h4>
-
-              {/* Mic toggle */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-bold text-foreground">Personalized Interview Loop Ready</h3>
+                <p className="text-xs text-muted-foreground max-w-sm leading-relaxed mx-auto">
+                  Eleanor is ready to conduct your session. Click below to begin the conversation. Make sure your speaker/headphone volume is turned up.
+                </p>
+              </div>
               <button
-                onClick={handleToggleRecord}
-                className={`py-1.5 px-3 rounded-lg border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${isRecording
-                    ? "bg-red-500/10 border-red-500/20 text-red-400"
-                    : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
-                  }`}
+                type="button"
+                onClick={() => {
+                  setIsInterviewStarted(true);
+                  speakQuestion(question);
+                }}
+                className="cursor-pointer font-bold bg-primary text-primary-foreground hover:bg-primary/90 py-3 px-8 rounded-xl transition-all shadow-md flex items-center gap-2"
               >
-                {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                {isRecording ? "Stop Dictation" : "Dictate Voice"}
+                <span>Begin Interview</span>
+                <ArrowRight className="w-4 h-4" />
               </button>
             </div>
+          ) : (
+            <>
+              <div className="space-y-4">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-xs font-bold text-primary uppercase tracking-wider cursor-default select-none">Active Question</h4>
+                  {hintsRemaining > 0 && (
+                    <button
+                      type="button"
+                      onClick={handleRequestHint}
+                      disabled={isLoadingHint || eleanorSpeaking}
+                      className={`cursor-pointer text-[11px] font-bold bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-black py-1 px-3 rounded-lg flex items-center gap-1 transition-all ${
+                        eleanorSpeaking ? "opacity-50 pointer-events-none" : ""
+                      }`}
+                    >
+                      {isLoadingHint ? (
+                        <>
+                          <RefreshCw className="h-3 w-3 animate-spin" />
+                          Generating Hint...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="h-3 w-3 fill-black" />
+                          Get Hint ({hintsRemaining} left)
+                        </>
+                      )}
+                    </button>
+                  )}
+                </div>
+                <div className="p-5 bg-muted/30 border border-border rounded-xl cursor-default select-none">
+                  <p className="text-sm font-semibold text-foreground leading-relaxed cursor-default">
+                    {question}
+                  </p>
+                </div>
 
-            {/* Answer textarea fallback */}
-            <textarea
-              value={userAnswerText}
-              onChange={(e) => setUserAnswerText(e.target.value)}
-              placeholder="Record your response or type here. Using the STAR model (Situation, Task, Action, Result) is highly encouraged."
-              className="w-full h-32 p-4 bg-background border border-border rounded-xl text-sm leading-relaxed outline-none focus:border-primary/40 resize-none font-sans"
-            />
-          </div>
+                {/* Hint Box display */}
+                {activeHint && (
+                  <div className="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl relative animate-in fade-in slide-in-from-top-2 duration-200">
+                    <button
+                      type="button"
+                      onClick={() => setActiveHint(null)}
+                      className="absolute right-3 top-3 p-0.5 rounded text-amber-500 hover:bg-amber-500/20 cursor-pointer"
+                    >
+                      <X className="h-3.5 w-3.5" />
+                    </button>
+                    <div className="flex items-start gap-2 pr-6">
+                      <Sparkles className="h-4 w-4 text-amber-500 shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <span className="text-[10px] font-bold text-amber-500 uppercase tracking-wider block">Interviewer Hint</span>
+                        <p className="text-xs text-foreground leading-relaxed font-medium">{activeHint}</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
 
-          {/* Submission and Action buttons */}
-          <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
-            <span className="text-[10px] text-muted-foreground">
-              {userAnswerText.split(/\s+/).filter(Boolean).length} words recorded
-            </span>
-            <button
-              onClick={handleSubmitAnswer}
-              disabled={!userAnswerText.trim() || isSubmitting}
-              className="cursor-pointer font-bold bg-primary text-primary-foreground hover:bg-primary/90 py-2.5 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-sm"
-            >
-              {isSubmitting ? "Evaluating..." : "Submit Answer"}
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
+              {/* Answer details */}
+              <div className="space-y-4 pt-4">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-xs font-bold text-foreground uppercase tracking-wider flex items-center gap-1.5">
+                    Your Answer
+                  </h4>
+
+                  {/* Mic toggle */}
+                  <button
+                    onClick={handleToggleRecord}
+                    disabled={eleanorSpeaking}
+                    className={`py-1.5 px-3 rounded-lg border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                      isRecording
+                        ? "bg-red-500/10 border-red-500/20 text-red-400"
+                        : "bg-primary/10 border-primary/20 text-primary hover:bg-primary/20"
+                    } ${eleanorSpeaking ? "opacity-50 cursor-not-allowed pointer-events-none" : ""}`}
+                  >
+                    {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                    {isRecording ? "Stop Dictation" : "Dictate Voice"}
+                  </button>
+                </div>
+
+                {/* Answer textarea fallback */}
+                <textarea
+                  value={userAnswerText}
+                  onChange={(e) => setUserAnswerText(e.target.value)}
+                  disabled={eleanorSpeaking || isSubmitting}
+                  placeholder={
+                    eleanorSpeaking
+                      ? "Please listen to the question..."
+                      : "Record your response or type here. Using the STAR model (Situation, Task, Action, Result) is highly encouraged."
+                  }
+                  className={`w-full h-32 p-4 bg-background border border-border rounded-xl text-sm leading-relaxed outline-none focus:border-primary/40 resize-none font-sans ${
+                    eleanorSpeaking ? "opacity-60 bg-muted/30 select-none pointer-events-none" : ""
+                  }`}
+                />
+              </div>
+
+              {/* Submission and Action buttons */}
+              <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+                <span className="text-[10px] text-muted-foreground">
+                  {userAnswerText.split(/\s+/).filter(Boolean).length} words recorded
+                </span>
+                <button
+                  onClick={handleSubmitAnswer}
+                  disabled={!userAnswerText.trim() || isSubmitting || eleanorSpeaking}
+                  className="cursor-pointer font-bold bg-primary text-primary-foreground hover:bg-primary/90 py-2.5 px-6 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 shadow-sm"
+                >
+                  {isSubmitting ? "Evaluating..." : "Submit Answer"}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+              </div>
+            </>
+          )}
 
         </div>
 

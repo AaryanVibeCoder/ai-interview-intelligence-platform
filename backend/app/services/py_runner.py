@@ -28,6 +28,48 @@ def normalize_compare(actual, expected):
     except Exception:
         return str(actual).strip() == str(expected).strip()
 
+def to_python_literal(raw):
+    """Convert JSON-style true/false/null to Python True/False/None outside strings."""
+    out = []
+    i = 0
+    n = len(raw)
+    in_string = None
+    while i < n:
+        c = raw[i]
+        if in_string:
+            out.append(c)
+            if c == "\\" and i + 1 < n:
+                out.append(raw[i + 1])
+                i += 2
+                continue
+            elif c == in_string:
+                in_string = None
+            i += 1
+            continue
+        if c in ('"', "'"):
+            in_string = c
+            out.append(c)
+            i += 1
+            continue
+        if c.isalpha():
+            j = i
+            while j < n and (raw[j].isalnum() or raw[j] == "_"):
+                j += 1
+            word = raw[i:j]
+            if word == "true":
+                out.append("True")
+            elif word == "false":
+                out.append("False")
+            elif word in ("null", "None"):
+                out.append("None")
+            else:
+                out.append(word)
+            i = j
+            continue
+        out.append(c)
+        i += 1
+    return "".join(out)
+
 def parse_input_to_python_statements(input_str):
     result = []
     current = []
@@ -69,7 +111,8 @@ def parse_input_to_python_statements(input_str):
         
     if current:
         result.append("".join(current).strip())
-    return "\n".join(result)
+    # Convert JSON booleans/null to Python equivalents
+    return "\n".join(to_python_literal(stmt) for stmt in result)
 
 def run():
     if len(sys.argv) < 2:

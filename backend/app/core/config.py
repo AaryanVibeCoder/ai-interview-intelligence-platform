@@ -64,6 +64,7 @@ class Settings(BaseSettings):
         default="poolside/laguna-s-2.1:free",
         description="OpenRouter/NVIDIA model used for interview generation and scoring",
     )
+    GROQ_API_KEY: str = Field(default="", description="Groq API Key")
 
     # ─── NVIDIA Parakeet ASR Configuration ────────────────────────────────────
     NVIDIA_PARAKEET_API_KEY: str = Field(

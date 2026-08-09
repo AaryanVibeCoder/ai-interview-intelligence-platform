@@ -27,6 +27,47 @@ function normalizeCompare(actual, expected) {
   }
 }
 
+function toJsLiteral(input) {
+  // Convert Python True/False/None to JS true/false/null outside string literals
+  let out = '';
+  let i = 0;
+  let inString = null;
+  while (i < input.length) {
+    const c = input[i];
+    if (inString) {
+      out += c;
+      if (c === '\\' && i + 1 < input.length) {
+        out += input[i + 1];
+        i += 2;
+        continue;
+      }
+      if (c === inString) inString = null;
+      i++;
+      continue;
+    }
+    if (c === '"' || c === "'") {
+      inString = c;
+      out += c;
+      i++;
+      continue;
+    }
+    if (/[A-Za-z_]/.test(c)) {
+      let j = i;
+      while (j < input.length && /[A-Za-z0-9_]/.test(input[j])) j++;
+      const word = input.slice(i, j);
+      if (word === 'True') out += 'true';
+      else if (word === 'False') out += 'false';
+      else if (word === 'None') out += 'null';
+      else out += word;
+      i = j;
+      continue;
+    }
+    out += c;
+    i++;
+  }
+  return out;
+}
+
 function run() {
   if (process.argv.length < 3) {
     console.error("Missing input JSON file path argument.");
@@ -73,8 +114,9 @@ function run() {
         throw new Error("No function solution found in submitted code.");
       }
 
-      // 3. Run testcase input to define the arguments
-      vm.runInContext(tc.input, context);
+      // 3. Normalize test input: convert Python True/False/None to JS true/false/null
+      const normalizedInput = toJsLiteral(tc.input);
+      vm.runInContext(normalizedInput, context);
 
       // 4. Map argument names to their values and run
       const targetFunc = sandbox[funcName];

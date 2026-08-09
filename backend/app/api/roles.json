@@ -97,5 +97,17 @@
     "category": "Engineering",
     "needs_review": false,
     "reasoning_citation": "\"AI En\" is a common abbreviation for AI Engineer, a role focused on building and deploying artificial intelligence systems."
+  },
+  {
+    "name": "Software Engineer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The input 'Software Engineerma' contains a typo ('Engineerma' instead of 'Engineer'), which is corrected to the standard title 'Software Engineer', a well-established role in the Engineering job family."
+  },
+  {
+    "name": "Machine Learning Engineer",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The role is normalized to the singular form 'Machine Learning Engineer' and categorized under 'Data' as it involves building data-driven models and algorithms."
   }
 ]

@@ -566,8 +566,12 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
       // Close Wizard
       onClose();
 
-      // Redirect user to preflight checks before starting the practice loop
-      window.location.href = "/interview/preflight";
+      // Redirect user directly to coding page if coding interview, otherwise preflight
+      if (selectedInterviewType === "coding") {
+        window.location.href = "/interview/coding";
+      } else {
+        window.location.href = "/interview/preflight";
+      }
     } catch (err: unknown) {
       if (err instanceof ApiError) {
         // Structured error from backend
@@ -1152,8 +1156,9 @@ onKeyDown={(e) => {
               <div className="flex justify-between pt-4 border-t border-border mt-auto">
                 <button
                   type="button"
+                  disabled={isSubmitting}
                   onClick={() => setCurrentStep(2)}
-                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5"
+                  className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all flex items-center gap-1.5 disabled:opacity-50"
                 >
                   <ChevronLeft className="h-4 w-4" />
                   Back
@@ -1161,43 +1166,65 @@ onKeyDown={(e) => {
                 <div className="flex gap-2">
                   <button
                     type="button"
+                    disabled={isSubmitting}
                     onClick={() => {
                       setSelectedCompany(null);
                       setSearchQuery("");
                       setRoleValidationError(null);
-                      setCurrentStep(4);
+                      if (selectedInterviewType === "coding") {
+                        handleStartInterview();
+                      } else {
+                        setCurrentStep(4);
+                      }
                     }}
-                    className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all"
+                    className="cursor-pointer bg-muted hover:bg-muted/80 text-foreground border border-border font-semibold text-sm py-2.5 px-5 rounded-xl transition-all disabled:opacity-50"
                   >
                     Skip this
                   </button>
                   <button
                     type="button"
-                    disabled={isLoadingRoles}
+                    disabled={isLoadingRoles || isSubmitting}
                     onClick={() => {
-                      if (!selectedCompany) {
-                        setCurrentStep(4);
-                        return;
-                      }
-                      if (!targetRole) {
+                      if (selectedCompany && !targetRole) {
                         setRoleValidationError("Please enter a target role to proceed.");
                         return;
                       }
                       // Allow free-text entry: warn if not in known roles but don't block
-                      const isValidRole = companyRoles.some((r) => {
-                        const formatted = formatRoleName(r, localJobType);
-                        return targetRole.toLowerCase() === formatted.toLowerCase();
-                      });
-                      if (!isValidRole) {
-                        setRoleValidationError("Role not in known list — proceeding with your input.");
-                        // Don't return; allow proceeding
+                      if (selectedCompany) {
+                        const isValidRole = companyRoles.some((r) => {
+                          const formatted = formatRoleName(r, localJobType);
+                          return targetRole.toLowerCase() === formatted.toLowerCase();
+                        });
+                        if (!isValidRole) {
+                          setRoleValidationError("Role not in known list — proceeding with your input.");
+                        }
                       }
-                      setCurrentStep(4);
+                      if (selectedInterviewType === "coding") {
+                        handleStartInterview();
+                      } else {
+                        setCurrentStep(4);
+                      }
                     }}
-                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-xl transition-all flex items-center gap-1.5"
+                    className="cursor-pointer bg-primary text-primary-foreground hover:bg-primary/95 disabled:opacity-50 font-semibold text-sm py-2.5 px-6 rounded-xl transition-all flex items-center gap-1.5 justify-center min-w-[140px]"
                   >
-                    Next Step
-                    <ChevronRight className="h-4 w-4" />
+                    {selectedInterviewType === "coding" ? (
+                      isSubmitting ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Initializing...
+                        </>
+                      ) : (
+                        <>
+                          <Play className="h-4 w-4 fill-current" />
+                          Start Interview
+                        </>
+                      )
+                    ) : (
+                      <>
+                        Next Step
+                        <ChevronRight className="h-4 w-4" />
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

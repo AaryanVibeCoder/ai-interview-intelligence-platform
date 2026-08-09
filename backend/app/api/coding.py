@@ -12,7 +12,7 @@ from app.core.rate_limit import limiter
 from app.models.interview_session import InterviewSession
 from app.models.resume import Resume
 from app.models.interview_profile import InterviewProfile
-from app.api.interview import settings, client, _model, _FAST_MODEL
+from app.api.interview import settings, client, _model, _tiered_chat
 import asyncio
 import json
 import os
@@ -96,15 +96,16 @@ Make sure all GeeksforGeeks and YouTube links are valid, fully formed, and worki
 Return ONLY this JSON list. Do not wrap in markdown code fences or include any explanation."""
 
     try:
-        response = await client.chat.completions.create(
-            model=_model,
+        response, tier = await _tiered_chat(
             messages=[
                 {"role": "system", "content": "You are a precise technical feedback generator that outputs strictly valid JSON lists."},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=2500,
             temperature=0.3,
+            call_site="corrections",
         )
+        logger.info("[Corrections] tier=%s", tier)
         content = response.choices[0].message.content.strip()
         if content.startswith("```"):
             lines = content.splitlines()
@@ -173,15 +174,46 @@ async def submit_coding_challenge(
     current_feedback = dict(session.feedback) if session.feedback else {}
     current_idx = current_feedback.get("current_challenge_index", 0)
     
+    challenges = current_feedback.get("coding_challenges", [])
+    if current_idx < len(challenges):
+        challenge = challenges[current_idx]
+    else:
+        challenge = FALLBACK_CODING_CHALLENGES[current_idx % len(FALLBACK_CODING_CHALLENGES)]
+    test_cases = challenge.get("testCases", [])
+
+    # Run the submitted code server-side using _execute_code
+    try:
+        real_results = _execute_code(payload.language.lower(), payload.code, test_cases)
+    except ValueError as ve:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(ve)
+        )
+    except Exception as run_err:
+        logger.error(f"Error running sandbox subprocess in submit: {run_err}")
+        real_results = [
+            {
+                "testCaseId": tc.get("id"),
+                "passed": False,
+                "expected": tc.get("expectedOutput"),
+                "actual": "Sandbox pipeline error",
+                "error": str(run_err),
+                "runtime": 0
+            } for tc in test_cases
+        ]
+
+    real_execution_time = sum(t.get("runtime", 0) for t in real_results)
+
     submissions = current_feedback.get("coding_submissions", [])
     new_submission = {
         "language": payload.language,
         "code": payload.code,
-        "test_results": payload.test_results,
-        "execution_time": payload.execution_time,
+        "test_results": real_results,
+        "execution_time": real_execution_time,
         "memory_used": payload.memory_used,
         "submitted_at": datetime.utcnow().isoformat(),
-        "question_index": current_idx
+        "question_index": current_idx,
+        "server_verified": True
     }
     submissions.append(new_submission)
     current_feedback["coding_submissions"] = submissions
@@ -234,7 +266,9 @@ async def submit_coding_challenge(
             "all_completed": True,
             "session_id": session.id,
             "stats": current_feedback["coding_stats"],
-            "corrections": corrections_report
+            "corrections": corrections_report,
+            "test_results": real_results,
+            "execution_time": real_execution_time
         }
     else:
         # Save state and return next index
@@ -246,7 +280,9 @@ async def submit_coding_challenge(
             "success": True,
             "all_completed": False,
             "session_id": session.id,
-            "next_question_index": next_idx
+            "next_question_index": next_idx,
+            "test_results": real_results,
+            "execution_time": real_execution_time
         }
 
 
@@ -353,6 +389,159 @@ def log_generation_attempt(session_id: int, attempt: int, outcome: str, duration
     except Exception as le:
         logger.error(f"[Coding-BgGen] Failed to write to log file: {le}")
 
+async def generate_challenges_for_session(
+    company: str,
+    role: str,
+    experience_level: str,
+    session_id: Optional[int] = None
+) -> List[Dict[str, Any]]:
+    """
+    Resolve Focus, Difficulty, check cache, and generate 3 custom challenges via LLM.
+    Raises exception on failure.
+    """
+    # 1. Focus Focus Focus
+    from app.api.interview import get_companies
+    companies = get_companies()
+    company_record = None
+    for c in companies:
+        if c.get("name", "").strip().lower() == company.strip().lower():
+            company_record = c
+            break
+            
+    industry = company_record.get("industry", "") if company_record else ""
+    style = company_record.get("interview_style", "") if company_record else ""
+    focus = get_company_engineering_focus(company, industry, style)
+
+    # 2. Difficulty
+    diff = "medium"
+    exp = experience_level.lower()
+    if "senior" in exp or "lead" in exp or "staff" in exp or "principal" in exp:
+        diff = "hard"
+    elif "junior" in exp or "intern" in exp or "entry" in exp:
+        diff = "medium"
+
+    # 3. Check Cache
+    cache_key = (company.strip().lower(), role.strip().lower(), diff)
+    now = datetime.utcnow()
+    cached = _coding_challenges_cache.get(cache_key)
+    
+    if cached and (now - cached["timestamp"]) < timedelta(hours=24):
+        logger.info(f"[Coding-Gen] Cache hit for key {cache_key}.")
+        if session_id is not None:
+            log_generation_attempt(session_id, 1, "success (cache hit)", 0.0)
+        return cached["challenges"]
+
+    logger.info(f"[Coding-Gen] Cache miss for key {cache_key}. Generating via LLM.")
+    prompt = f"""You are an elite technical interviewer. Generate exactly 3 personalized coding challenges for '{company}', role '{role}', difficulty '{diff}'.
+
+Engineering Focus: {focus}
+
+RULES:
+- Difficulty MUST be '{diff}'.
+- Tailor to company focus: FAANG=algorithmic/graphs/DP, fintech=systems/caches/schedulers, infra=parsers/queues/streaming, startup=practical/APIs.
+- Each question: 2 language starters ('javascript', 'python'). Signatures must match across languages.
+- test case "input" must use valid assignment syntax: e.g. "nums = [2,7,11,15], target = 9". Use JSON-compatible values (true/false/null not True/False/None).
+- Respond with ONLY a JSON object. No markdown fences, no explanation.
+
+Output format:
+{{
+  "challenges": [
+    {{
+      "id": "unique-slug",
+      "title": "Problem Title",
+      "description": "2-3 sentence problem statement.",
+      "difficulty": "{diff}",
+      "timeLimit": 30,
+      "languages": ["javascript", "python"],
+      "starterCode": {{
+        "javascript": "function solve(arg1, arg2) {{\\n  // solution\\n}}",
+        "python": "def solve(arg1, arg2):\\n    # solution\\n    pass"
+      }},
+      "testCases": [
+        {{ "id": "t1", "input": "arg1 = ..., arg2 = ...", "expectedOutput": "...", "isHidden": false }},
+        {{ "id": "t2", "input": "...", "expectedOutput": "...", "isHidden": false }},
+        {{ "id": "t3", "input": "...", "expectedOutput": "...", "isHidden": true }}
+      ],
+      "constraints": ["constraint"]
+    }}
+  ]
+}}
+
+Generate exactly 3 challenge objects in the "challenges" array."""
+
+    max_retries = 2
+    challenges_list = None
+    for attempt in range(max_retries + 1):
+        start_time = time.time()
+        try:
+            response, tier = await _tiered_chat(
+                messages=[
+                    {"role": "system", "content": "You are a coding challenge generator. Output ONLY raw JSON. No markdown, no backticks, no explanation."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=3000,
+                temperature=0.1,
+                call_site="coding_gen",
+            )
+            content_raw = response.choices[0].message.content
+            if not content_raw:
+                raise ValueError("Model returned empty content (None)")
+            content = content_raw.strip()
+
+            # Robust JSON extraction: try direct parse first, then regex fallback
+            challenges_list = None
+            try:
+                parsed = json.loads(content)
+                if isinstance(parsed, dict) and "challenges" in parsed:
+                    challenges_list = parsed["challenges"]
+                elif isinstance(parsed, list):
+                    challenges_list = parsed
+            except json.JSONDecodeError:
+                pass
+
+            if challenges_list is None:
+                # Regex fallback: extract JSON object or array from mixed output
+                obj_match = re.search(r'\{[^{}]*"challenges"\s*:\s*\[.*\]\s*\}', content, re.DOTALL)
+                if obj_match:
+                    parsed = json.loads(obj_match.group(0))
+                    challenges_list = parsed.get("challenges", [])
+                else:
+                    arr_match = re.search(r'\[\s*\{.*\}\s*\]', content, re.DOTALL)
+                    if arr_match:
+                        challenges_list = json.loads(arr_match.group(0))
+
+            if not challenges_list:
+                raise ValueError("Could not extract valid challenge JSON from model output")
+            duration = time.time() - start_time
+            logger.info(f"[Coding-Gen] Success on attempt {attempt + 1} tier={tier} duration={duration:.2f}s")
+            if session_id is not None:
+                log_generation_attempt(session_id, attempt + 1, f"success (tier={tier})", duration)
+            break
+        except Exception as e:
+            duration = time.time() - start_time
+            outcome_str = type(e).__name__
+            if "timeout" in outcome_str.lower() or "timeout" in str(e).lower():
+                outcome_str = "timeout"
+            else:
+                outcome_str = f"{outcome_str}: {str(e)[:300]}"
+            if session_id is not None:
+                log_generation_attempt(session_id, attempt + 1, outcome_str, duration)
+                
+            logger.warning(f"[Coding-Gen] Attempt {attempt + 1} failed: {e} duration={duration:.2f}s")
+            if attempt < max_retries:
+                backoff = 2 if attempt == 0 else 5
+                await asyncio.sleep(backoff)
+            else:
+                logger.error(f"[Coding-Gen] Coding challenge generation failed after all retries.")
+                raise e
+
+    _coding_challenges_cache[cache_key] = {
+        "challenges": challenges_list,
+        "timestamp": now
+    }
+    logger.info(f"[Coding-Gen] Cached new questions for key {cache_key}.")
+    return challenges_list
+
 async def _generate_coding_challenges_in_background(
     session_id: int,
     company: str,
@@ -360,9 +549,7 @@ async def _generate_coding_challenges_in_background(
     experience_level: str
 ) -> None:
     """
-    Background worker to resolve company focus, check question cache,
-    generate 3 customized practice questions (Part B) and swap them into the session feedback.
-    Never blocks session-start.
+    Background worker keeping backward compatibility, calling generate_challenges_for_session.
     """
     from app.core.database import SessionLocal
     db = SessionLocal()
@@ -372,148 +559,10 @@ async def _generate_coding_challenges_in_background(
             logger.error(f"[Coding-BgGen] Session {session_id} not found.")
             return
 
-        # 1. Determine company engineering focus
-        from app.api.interview import get_companies
-        companies = get_companies()
-        company_record = None
-        for c in companies:
-            if c.get("name", "").strip().lower() == company.strip().lower():
-                company_record = c
-                break
-                
-        industry = company_record.get("industry", "") if company_record else ""
-        style = company_record.get("interview_style", "") if company_record else ""
-        focus = get_company_engineering_focus(company, industry, style)
-        
-        # 2. Map difficulty level
-        diff = "medium"
-        exp = experience_level.lower()
-        if "senior" in exp or "lead" in exp or "staff" in exp or "principal" in exp:
-            diff = "hard"
-        elif "junior" in exp or "intern" in exp or "entry" in exp:
-            diff = "medium"
-            
-        # 3. Check Cache
-        cache_key = (company.strip().lower(), role.strip().lower(), diff)
-        now = datetime.utcnow()
-        cached = _coding_challenges_cache.get(cache_key)
-        
-        if cached and (now - cached["timestamp"]) < timedelta(hours=24):
-            logger.info(f"[Coding-BgGen] Cache hit for key {cache_key}. Swapping questions.")
-            challenges_list = cached["challenges"]
-        else:
-            logger.info(f"[Coding-BgGen] Cache miss for key {cache_key}. Generating via LLM.")
-            prompt = f"""You are an elite technical interviewer. Generate exactly 3 personalized coding challenges/practice questions in the typical style of '{company}' for a candidate interviewing for the position of '{role}' (Experience Level: '{diff}').
+        # Log startup to file so user can immediately see it in coding_generation.log
+        log_generation_attempt(session_id, 1, "generation_started (background)", 0.0)
 
-Engineering Focus profile of '{company}': {focus}
-
-CRITICAL REQUIREMENTS:
-- The difficulty of the generated questions MUST be '{diff}'.
-- Tailor the questions specifically to the company's focus/tier profile:
-  - FAANG-algorithmic: High difficulty algorithmic, graph, dynamic programming, or advanced tree/array questions.
-  - fintech-systems: Medium to Hard algorithmic or system-oriented coding questions (e.g. custom LRU cache, Rate Limiter, Trie search, concurrent schedulers).
-  - infrastructure-scale: Scale-oriented utility coding, custom parsers, networking, concurrent/async queues, or stream processing.
-  - startup-practical: Medium utility functions, practical algorithms, API clients, or structured text/data processing.
-- Make sure each question has exactly 3 language starters: 'javascript', 'python', 'cpp'.
-- Make sure starter code function signatures are synchronized and consistent across languages.
-- You MUST respond with a single, valid JSON list containing exactly 3 objects matching the structure below.
-- Do NOT wrap in markdown fences or include any explanation.
-
-Example JSON output structure:
-[
-  {{
-    "id": "a-unique-lowercase-slug-like-two-sum",
-    "title": "Title of the Question",
-    "description": "Complete problem statement. 2-3 sentences max.",
-    "difficulty": "{diff}",
-    "timeLimit": 30,
-    "languages": ["javascript", "python", "cpp"],
-    "starterCode": {{
-      "javascript": "function myFunctionName(arg1, arg2) {{\\n  // Write solution\\n  return ...;\\n}}",
-      "python": "def myFunctionName(arg1, arg2):\\n    # Write solution\\n    return ...",
-      "cpp": "class Solution {{\\npublic:\\n    ... myFunctionName(... arg1, ... arg2) {{\\n        // Write solution\\n        return ...;\\n    }}\\n}};"
-    }},
-    "testCases": [
-      {{
-        "id": "t1",
-        "input": "arg1 = ..., arg2 = ...",
-        "expectedOutput": "expected return value as string",
-        "isHidden": False
-      }},
-      {{
-        "id": "t2",
-        "input": "...",
-        "expectedOutput": "...",
-        "isHidden": False
-      }},
-      {{
-        "id": "t3",
-        "input": "...",
-        "expectedOutput": "...",
-        "isHidden": True
-      }}
-    ],
-    "constraints": [
-      "Constraint 1"
-    ]
-  }}
-]
-"""
-            max_retries = 2
-            challenges_list = None
-            for attempt in range(max_retries + 1):
-                start_time = time.time()
-                try:
-                    response = await client.chat.completions.create(
-                        model=_FAST_MODEL,
-                        messages=[
-                            {"role": "system", "content": "You are a precise coding challenge generator that outputs strictly valid JSON lists."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        max_tokens=3000,
-                        temperature=0.1,
-                    )
-                    content_raw = response.choices[0].message.content
-                    if not content_raw:
-                        raise ValueError("Model returned empty content (None)")
-                    content = content_raw.strip()
-                    
-                    # Extract robust JSON list using regex
-                    match = re.search(r'\[\s*\{.*\}\s*\]', content, re.DOTALL)
-                    if not match:
-                        match = re.search(r'\[.*\]', content, re.DOTALL)
-                        
-                    if match:
-                        content_json = match.group(0)
-                    else:
-                        content_json = content
-                        
-                    challenges_list = json.loads(content_json)
-                    duration = time.time() - start_time
-                    log_generation_attempt(session_id, attempt + 1, "success", duration)
-                    break
-                except Exception as e:
-                    duration = time.time() - start_time
-                    outcome_str = type(e).__name__
-                    if "timeout" in outcome_str.lower() or "timeout" in str(e).lower():
-                        outcome_str = "timeout"
-                    else:
-                        outcome_str = f"{outcome_str}: {str(e)[:300]}"
-                    log_generation_attempt(session_id, attempt + 1, outcome_str, duration)
-                    
-                    if attempt < max_retries:
-                        backoff = 3 if attempt == 0 else 8
-                        logger.warning(f"[Coding-BgGen] Generation attempt {attempt + 1} failed: {e}. Retrying in {backoff}s...")
-                        await asyncio.sleep(backoff)
-                    else:
-                        logger.error(f"[Coding-BgGen] Coding challenge generation failed after all retries. Falling back to static challenges. Exception: {e}")
-                        raise e
-            
-            _coding_challenges_cache[cache_key] = {
-                "challenges": challenges_list,
-                "timestamp": now
-            }
-            logger.info(f"[Coding-BgGen] Cached new questions for key {cache_key}.")
+        challenges_list = await generate_challenges_for_session(company, role, experience_level, session_id=session_id)
 
         current_feedback = dict(session.feedback) if session.feedback else {}
         current_feedback["coding_challenges"] = challenges_list
@@ -524,7 +573,6 @@ Example JSON output structure:
         db.commit()
         db.refresh(session)
         logger.info(f"[Coding-BgGen] Session {session_id} questions swapped successfully.")
-        
     except Exception as e:
         logger.error(f"[Coding-BgGen] Failed to generate/swap coding questions: {e}")
     finally:
@@ -635,13 +683,29 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
         # C++ compilation happens inside cpp_runner.py; give it extra headroom.
         timeout_secs = 15.0 if lang == "cpp" else 4.0
 
+        # Build stdin data from test inputs for solutions that use input()
+        stdin_lines = []
+        for tc in test_cases:
+            raw_input = tc.get("input", "")
+            # Extract just the values from "name = value" assignments
+            import re as _re
+            for part in raw_input.split(","):
+                part = part.strip()
+                m = _re.match(r"^\s*\w+\s*=\s*(.+)$", part)
+                if m:
+                    stdin_lines.append(m.group(1).strip())
+                elif part:
+                    stdin_lines.append(part)
+        stdin_data = "\n".join(stdin_lines) + "\n" if stdin_lines else ""
+
         # Execute subprocess
         try:
             proc = subprocess.run(
                 cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout_secs
+                timeout=timeout_secs,
+                input=stdin_data
             )
 
             # Check stderr or crash
@@ -663,6 +727,7 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
             return results_list
 
         except subprocess.TimeoutExpired:
+            timeout_int = int(timeout_secs)
             logger.warning(f"Code execution timed out for language {lang}")
             return [
                 {
@@ -670,8 +735,8 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
                     "passed": False,
                     "expected": tc.get("expectedOutput"),
                     "actual": "Time Limit Exceeded",
-                    "error": "Execution timed out after 4 seconds (infinite loop protection).",
-                    "runtime": 4000
+                    "error": f"Execution timed out after {timeout_int}s. Possible infinite loop, or solution reads stdin (input()) but test data was insufficient.",
+                    "runtime": timeout_int * 1000
                 } for tc in test_cases
             ]
         except Exception as run_err:

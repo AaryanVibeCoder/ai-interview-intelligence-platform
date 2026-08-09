@@ -672,7 +672,7 @@ export default function CodingChallengePage() {
               disabled={isRunning || isSubmitting}
               className="py-1 px-3 bg-background border border-border rounded-xl text-foreground font-semibold outline-none disabled:opacity-50"
             >
-              {challenge.languages.map((lang) => (
+              {challenge.languages.filter((lang) => lang !== "cpp").map((lang) => (
                 <option key={lang} value={lang}>{lang.charAt(0).toUpperCase() + lang.slice(1)}</option>
               ))}
             </select>
@@ -699,6 +699,18 @@ export default function CodingChallengePage() {
         
         {/* Left Column: Problem statement (span 3) */}
         <div className="lg:col-span-3 border-r border-border/60 bg-card/60 backdrop-blur-xl p-5 overflow-y-auto space-y-6">
+          {challenge.questionSource === "fallback" && (
+            <div className="p-3.5 bg-primary/10 border border-primary/20 rounded-2xl flex flex-col gap-1.5 animate-pulse text-[11px] text-primary">
+              <div className="flex items-center gap-2 font-extrabold uppercase tracking-wider text-[10px]">
+                <span className="w-2.5 h-2.5 rounded-full bg-primary animate-ping"></span>
+                Generating Custom Profile Challenges...
+              </div>
+              <p className="text-muted-foreground font-semibold leading-relaxed">
+                We are generating personalized questions based on your resume and target company in the background. They will swap in automatically when ready!
+              </p>
+            </div>
+          )}
+
           <div>
             <h2 className="text-sm font-bold text-foreground uppercase tracking-wider mb-2">Description</h2>
             <p className="text-xs text-muted-foreground leading-relaxed">
