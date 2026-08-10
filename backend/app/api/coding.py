@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter(prefix="/coding", tags=["Coding Challenges"])
 
+
+
 NUM_CODING_CHALLENGES = 3
 
 # Input schemas
@@ -183,7 +185,7 @@ async def submit_coding_challenge(
 
     # Run the submitted code server-side using _execute_code
     try:
-        real_results = _execute_code(payload.language.lower(), payload.code, test_cases)
+        real_results = _execute_code(payload.language.lower(), payload.code, test_cases, challenge)
     except ValueError as ve:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -299,18 +301,32 @@ FALLBACK_CODING_CHALLENGES = [
     "description": "Given an array of integers nums and an integer target, return the indices of the two numbers that add up to the target. You may assume that each input would have exactly one solution, and you may not use the same element twice.",
     "difficulty": "medium",
     "timeLimit": 30,
-    "languages": ["javascript", "python", "cpp"],
+    "languages": ["javascript", "python"],
     "starterCode": {
-      "javascript": "function twoSum(nums, target) {\n  // Write your solution here\n  return [];\n}",
-      "python": "def twoSum(nums, target):\n    # Write your solution here\n    return []",
-      "cpp": "class Solution {\npublic:\n    vector<int> twoSum(vector<int>& nums, int target) {\n        // Write your solution here\n        return {};\n    }\n};"
+      "javascript": "function solve(nums, target) {\n  // Write your solution here\n  return [];\n}",
+      "python": "def solve(nums, target):\n    # Write your solution here\n    return []"
+    },
+    "function": {
+      "name": "solve",
+      "arguments": [
+        {"name": "nums", "type": "integer_array"},
+        {"name": "target", "type": "integer"}
+      ],
+      "returnType": "integer_array"
     },
     "testCases": [
-      { "id": "t1", "input": "nums = [2,7,11,15], target = 9", "expectedOutput": "[0, 1]", "isHidden": False },
-      { "id": "t2", "input": "nums = [3,2,4], target = 6", "expectedOutput": "[1, 2]", "isHidden": False },
-      { "id": "t3", "input": "nums = [3,3], target = 6", "expectedOutput": "[0, 1]", "isHidden": True }
+      { "id": "t1", "input": "nums = [2,7,11,15], target = 9", "args": [[2, 7, 11, 15], 9], "expectedOutput": [0, 1], "isHidden": False },
+      { "id": "t2", "input": "nums = [3,2,4], target = 6", "args": [[3, 2, 4], 6], "expectedOutput": [1, 2], "isHidden": False },
+      { "id": "t3", "input": "nums = [3,3], target = 6", "args": [[3, 3], 6], "expectedOutput": [0, 1], "isHidden": True }
     ],
-    "constraints": ["2 <= nums.length <= 10^4", "-10^9 <= nums[i] <= 10^9", "-10^9 <= target <= 10^9"]
+    "constraints": ["2 <= nums.length <= 10^4", "-10^9 <= nums[i] <= 10^9", "-10^9 <= target <= 10^9"],
+    "referenceImplementations": {
+      "javascript": "function solve(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const complement = target - nums[i];\n    if (map.has(complement)) {\n      return [map.get(complement), i];\n    }\n    map.set(nums[i], i);\n  }\n  return [];\n}",
+      "python": "def solve(nums, target):\n    mapping = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in mapping:\n            return [mapping[complement], i]\n        mapping[num] = i\n    return []"
+    },
+    "bruteForceImplementations": {
+      "python": "def solve(nums, target):\n    for i in range(len(nums)):\n        for j in range(i + 1, len(nums)):\n            if nums[i] + nums[j] == target:\n                return [i, j]\n    return []"
+    }
   },
   {
     "id": "palindrome-number",
@@ -318,18 +334,28 @@ FALLBACK_CODING_CHALLENGES = [
     "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
     "difficulty": "medium",
     "timeLimit": 15,
-    "languages": ["javascript", "python", "cpp"],
+    "languages": ["javascript", "python"],
     "starterCode": {
-      "javascript": "function isPalindrome(x) {\n  // Write your solution here\n  return false;\n}",
-      "python": "def isPalindrome(x):\n    # Write your solution here\n    return False",
-      "cpp": "class Solution {\npublic:\n    bool isPalindrome(int x) {\n        // Write your solution here\n        return false;\n    }\n};"
+      "javascript": "function solve(x) {\n  // Write your solution here\n  return false;\n}",
+      "python": "def solve(x):\n    # Write your solution here\n    return False"
+    },
+    "function": {
+      "name": "solve",
+      "arguments": [
+        {"name": "x", "type": "integer"}
+      ],
+      "returnType": "boolean"
     },
     "testCases": [
-      { "id": "t1", "input": "x = 121", "expectedOutput": "true", "isHidden": False },
-      { "id": "t2", "input": "x = -121", "expectedOutput": "false", "isHidden": False },
-      { "id": "t3", "input": "x = 10", "expectedOutput": "false", "isHidden": True }
+      { "id": "t1", "input": "x = 121", "args": [121], "expectedOutput": True, "isHidden": False },
+      { "id": "t2", "input": "x = -121", "args": [-121], "expectedOutput": False, "isHidden": False },
+      { "id": "t3", "input": "x = 10", "args": [10], "expectedOutput": False, "isHidden": True }
     ],
-    "constraints": ["-2^31 <= x <= 2^31 - 1"]
+    "constraints": ["-2^31 <= x <= 2^31 - 1"],
+    "referenceImplementations": {
+      "javascript": "function solve(x) {\n  if (x < 0) return false;\n  let rev = 0;\n  let temp = x;\n  while (temp > 0) {\n    rev = rev * 10 + (temp % 10);\n    temp = Math.floor(temp / 10);\n  }\n  return rev === x;\n}",
+      "python": "def solve(x):\n    if x < 0: return False\n    return str(x) == str(x)[::-1]"
+    }
   },
   {
     "id": "valid-parentheses",
@@ -337,18 +363,28 @@ FALLBACK_CODING_CHALLENGES = [
     "description": "Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.",
     "difficulty": "medium",
     "timeLimit": 20,
-    "languages": ["javascript", "python", "cpp"],
+    "languages": ["javascript", "python"],
     "starterCode": {
-      "javascript": "function isValid(s) {\n  // Write your solution here\n  return false;\n}",
-      "python": "def isValid(s):\n    # Write your solution here\n    return False",
-      "cpp": "class Solution {\npublic:\n    bool isValid(string s) {\n        // Write your solution here\n        return false;\n    }\n};"
+      "javascript": "function solve(s) {\n  // Write your solution here\n  return false;\n}",
+      "python": "def solve(s):\n    # Write your solution here\n    return False"
+    },
+    "function": {
+      "name": "solve",
+      "arguments": [
+        {"name": "s", "type": "string"}
+      ],
+      "returnType": "boolean"
     },
     "testCases": [
-      { "id": "t1", "input": "s = \"()\"", "expectedOutput": "true", "isHidden": False },
-      { "id": "t2", "input": "s = \"()[]{}\"", "expectedOutput": "true", "isHidden": False },
-      { "id": "t3", "input": "s = \"(]\"", "expectedOutput": "false", "isHidden": True }
+      { "id": "t1", "input": "s = \"()\"", "args": ["()"], "expectedOutput": True, "isHidden": False },
+      { "id": "t2", "input": "s = \"()[]{}\"", "args": ["()[]{}"], "expectedOutput": True, "isHidden": False },
+      { "id": "t3", "input": "s = \"(]\"", "args": ["(]"], "expectedOutput": False, "isHidden": True }
     ],
-    "constraints": ["1 <= s.length <= 10^4", "s consists of parentheses only '()[]{}'."]
+    "constraints": ["1 <= s.length <= 10^4", "s consists of parentheses only '()[]{}'."],
+    "referenceImplementations": {
+      "javascript": "function solve(s) {\n  const stack = [];\n  const map = { ')': '(', '}': '{', ']': '[' };\n  for (const char of s) {\n    if (char in map) {\n      if (stack.pop() !== map[char]) return false;\n    } else {\n      stack.push(char);\n    }\n  }\n  return stack.length === 0;\n}",
+      "python": "def solve(s):\n    stack = []\n    mapping = {')': '(', '}': '{', ']': '['}\n    for char in s:\n        if char in mapping:\n            top_element = stack.pop() if stack else '#'\n            if mapping[char] != top_element:\n                return False\n        else:\n            stack.append(char)\n    return not stack"
+    }
   }
 ]
 
@@ -388,6 +424,42 @@ def log_generation_attempt(session_id: int, attempt: int, outcome: str, duration
             f.write(log_line)
     except Exception as le:
         logger.error(f"[Coding-BgGen] Failed to write to log file: {le}")
+
+def clean_json_content(content: str) -> str:
+    content = content.strip()
+    
+    # 1. Strip markdown code block fences if present
+    if content.startswith("```"):
+        lines = content.splitlines()
+        if lines[0].startswith("```"):
+            lines = lines[1:]
+        if lines and lines[-1].strip() == "```":
+            lines = lines[:-1]
+        content = "\n".join(lines).strip()
+        
+    # 2. Fix unescaped newlines in JSON string literals
+    in_string = False
+    escaped = False
+    cleaned = []
+    for char in content:
+        if char == '"' and not escaped:
+            in_string = not in_string
+            cleaned.append(char)
+        elif char == '\\' and not escaped:
+            escaped = True
+            cleaned.append(char)
+        elif char == '\n' and in_string:
+            cleaned.append('\\n')
+        else:
+            escaped = char == '\\' and not escaped
+            cleaned.append(char)
+    content = "".join(cleaned)
+    
+    # 3. Clean up trailing commas in objects and arrays
+    content = re.sub(r',\s*\}', '}', content)
+    content = re.sub(r',\s*\]', ']', content)
+    
+    return content
 
 async def generate_challenges_for_session(
     company: str,
@@ -439,8 +511,17 @@ Engineering Focus: {focus}
 RULES:
 - Difficulty MUST be '{diff}'.
 - Tailor to company focus: FAANG=algorithmic/graphs/DP, fintech=systems/caches/schedulers, infra=parsers/queues/streaming, startup=practical/APIs.
-- Each question: 2 language starters ('javascript', 'python'). Signatures must match across languages.
-- test case "input" must use valid assignment syntax: e.g. "nums = [2,7,11,15], target = 9". Use JSON-compatible values (true/false/null not True/False/None).
+- Each challenge must define function contract: name MUST be 'solve', with arguments and returnType explicitly set.
+- Provide starterCode stubs for 'javascript' and 'python'.
+- Provide fully working, correct referenceImplementations for 'javascript' and 'python'.
+- Provide a list of testCases. Each testCase must contain:
+  - id (string, e.g. "t1")
+  - input (string, for UI rendering, e.g. "nums = [2,7,11,15], target = 9")
+  - args (JSON list of values corresponding to function arguments, in order, e.g. [[2,7,11,15], 9])
+  - expectedOutput (the exact return value type/structure, e.g. [0, 1] or true/false)
+  - isHidden (boolean)
+- Ensure all test case 'args' conform to the constraints specified.
+- Ensure the referenceImplementations return values that exactly match the declared expectedOutput for all test cases.
 - Respond with ONLY a JSON object. No markdown fences, no explanation.
 
 Output format:
@@ -457,12 +538,33 @@ Output format:
         "javascript": "function solve(arg1, arg2) {{\\n  // solution\\n}}",
         "python": "def solve(arg1, arg2):\\n    # solution\\n    pass"
       }},
-      "testCases": [
-        {{ "id": "t1", "input": "arg1 = ..., arg2 = ...", "expectedOutput": "...", "isHidden": false }},
-        {{ "id": "t2", "input": "...", "expectedOutput": "...", "isHidden": false }},
-        {{ "id": "t3", "input": "...", "expectedOutput": "...", "isHidden": true }}
+      "function": {{
+        "name": "solve",
+        "arguments": [
+          {{"name": "arg1", "type": "integer_array"}},
+          {{"name": "arg2", "type": "integer"}}
+        ],
+        "returnType": "integer"
+      }},
+      "constraints": [
+        "1 <= arg1.length <= 1000",
+        "1 <= arg2 <= 1000"
       ],
-      "constraints": ["constraint"]
+      "testCases": [
+        {{ "id": "t1", "input": "arg1 = [4,5,0], arg2 = 3", "args": [[4,5,0], 3], "expectedOutput": 7, "isHidden": false }},
+        {{ "id": "t2", "input": "...", "args": [...], "expectedOutput": ..., "isHidden": false }},
+        {{ "id": "t3", "input": "...", "args": [...], "expectedOutput": ..., "isHidden": true }}
+      ],
+      "referenceImplementations": {{
+        "javascript": "function solve(arg1, arg2) {{\\n  // complete working JS code\\n}}",
+        "python": "def solve(arg1, arg2):\\n    # complete working Python code"
+      }},
+      "comparison": {{
+        "type": "exact"
+      }},
+      "limits": {{
+        "timeMs": 2000
+      }}
     }}
   ]
 }}
@@ -486,7 +588,7 @@ Generate exactly 3 challenge objects in the "challenges" array."""
             content_raw = response.choices[0].message.content
             if not content_raw:
                 raise ValueError("Model returned empty content (None)")
-            content = content_raw.strip()
+            content = clean_json_content(content_raw)
 
             # Robust JSON extraction: try direct parse first, then regex fallback
             challenges_list = None
@@ -512,6 +614,23 @@ Generate exactly 3 challenge objects in the "challenges" array."""
 
             if not challenges_list:
                 raise ValueError("Could not extract valid challenge JSON from model output")
+
+            # Run task validator on the generated challenges to ensure correctness
+            from app.services.task_validator import validate_task
+            for idx, chal in enumerate(challenges_list):
+                if "limits" not in chal:
+                    chal["limits"] = {"timeMs": 2000}
+                if "function" not in chal:
+                    # Fallback in case LLM misses "function" object
+                    chal["function"] = {
+                        "name": "solve",
+                        "arguments": [{"name": f"arg{i+1}", "type": "integer"} for i in range(len(chal.get("testCases", [{}])[0].get("args", [])))],
+                        "returnType": "integer"
+                    }
+                report = validate_task(chal)
+                if not report["valid"]:
+                    raise ValueError(f"Challenge {idx} failed QA validation: {report['errors']}")
+
             duration = time.time() - start_time
             logger.info(f"[Coding-Gen] Success on attempt {attempt + 1} tier={tier} duration={duration:.2f}s")
             if session_id is not None:
@@ -637,7 +756,7 @@ async def get_coding_challenge(
     return challenge_response
 
 
-def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
+def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict) -> List[Dict]:
     """
     Execute candidate code against the challenge test cases in a real local
     sandboxed subprocess. Supports python, javascript, and cpp.
@@ -665,65 +784,165 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
     }[lang]
     runner_path = os.path.join(services_dir, runner_script)
 
-    # Create temporary JSON file for inputs
-    temp_json = tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".json", encoding="utf-8")
+    # Central sandbox configuration loaded from environment variables with safe production defaults
+    SANDBOX_MODE = os.getenv("SANDBOX_MODE", "docker")
+    ALLOW_UNSANDBOXED_EXECUTION = os.getenv("ALLOW_UNSANDBOXED_EXECUTION", "false").lower() == "true"
+    EXECUTION_TIMEOUT_MS = int(os.getenv("EXECUTION_TIMEOUT_MS", "2000"))
+    MEMORY_LIMIT_MB = int(os.getenv("MEMORY_LIMIT_MB", "256"))
+    CPU_LIMIT = os.getenv("CPU_LIMIT", "1.0")
+    PID_LIMIT = int(os.getenv("PID_LIMIT", "64"))
+    OUTPUT_LIMIT_BYTES = int(os.getenv("OUTPUT_LIMIT_BYTES", "10000"))
+    NETWORK_DISABLED = os.getenv("NETWORK_DISABLED", "true").lower() == "true"
+
+    # Production safety override: disallow unsandboxed execution under any circumstance
+    ENV = os.getenv("ENV", "production").lower()
+    if ENV in ["production", "prod"]:
+        ALLOW_UNSANDBOXED_EXECUTION = False
+        SANDBOX_MODE = "docker"
+
+    USE_DOCKER_SANDBOX = (SANDBOX_MODE == "docker")
+
+    return_type = challenge.get("function", {}).get("returnType")
+    comparison_type = challenge.get("comparison", {}).get("type", "exact")
+    limits = {
+        "timeMs": EXECUTION_TIMEOUT_MS,
+        "memoryMb": MEMORY_LIMIT_MB,
+        "outputBytes": OUTPUT_LIMIT_BYTES
+    }
+
+    import shutil
+    # Create unique temporary directory for this runner execution
+    temp_dir = tempfile.mkdtemp(prefix="elevateiq-worker-")
+    temp_json_path = os.path.join(temp_dir, "payload.json")
     try:
-        json.dump({
-            "code": code,
-            "testCases": test_cases
-        }, temp_json)
-        temp_json.close()
+        with open(temp_json_path, "w", encoding="utf-8") as temp_json:
+            json.dump({
+                "code": code,
+                "testCases": test_cases,
+                "returnType": return_type,
+                "comparisonType": comparison_type,
+                "limits": limits
+            }, temp_json)
 
-        # Build command
-        if lang == "javascript":
-            cmd = ["node", runner_path, temp_json.name]
+        # Check if Docker is available and daemon is running
+        docker_available = False
+        if USE_DOCKER_SANDBOX:
+            try:
+                res = subprocess.run(["docker", "info"], capture_output=True, text=True, timeout=2.0)
+                if res.returncode == 0:
+                    docker_available = True
+            except Exception:
+                pass
+
+        if docker_available:
+            host_temp_dir = os.path.abspath(temp_dir)
+            host_services_dir = os.path.abspath(services_dir)
+            if sys.platform == "win32":
+                host_temp_dir = host_temp_dir.replace("\\", "/")
+                host_services_dir = host_services_dir.replace("\\", "/")
+
+            cmd = [
+                "docker", "run", "--rm",
+                "-v", f"{host_temp_dir}:/sandbox",
+                "-v", f"{host_services_dir}:/app/services:ro",
+                "-w", "/sandbox",
+                "--network", "none",
+                "--read-only",
+                "--cap-drop", "ALL",
+                "--security-opt", "no-new-privileges",
+                "--memory", f"{MEMORY_LIMIT_MB}m",
+                "--cpus", str(CPU_LIMIT),
+                "--pids-limit", str(PID_LIMIT),
+                "--user", "1000:1000",
+                "--tmpfs", "/tmp:rw,noexec,nosuid,size=10m",
+                "elevateiq-sandbox"
+            ]
+            if lang == "javascript":
+                cmd.extend(["node", "/app/services/js_runner.js", "payload.json"])
+            else:
+                cmd.extend(["python", "/app/services/py_runner.py", "payload.json"])
         else:
-            cmd = [sys.executable, runner_path, temp_json.name]
-
-        # C++ compilation happens inside cpp_runner.py; give it extra headroom.
-        timeout_secs = 15.0 if lang == "cpp" else 4.0
-
-        # Build stdin data from test inputs for solutions that use input()
-        stdin_lines = []
-        for tc in test_cases:
-            raw_input = tc.get("input", "")
-            # Extract just the values from "name = value" assignments
-            import re as _re
-            for part in raw_input.split(","):
-                part = part.strip()
-                m = _re.match(r"^\s*\w+\s*=\s*(.+)$", part)
-                if m:
-                    stdin_lines.append(m.group(1).strip())
-                elif part:
-                    stdin_lines.append(part)
-        stdin_data = "\n".join(stdin_lines) + "\n" if stdin_lines else ""
-
-        # Execute subprocess
-        try:
-            proc = subprocess.run(
-                cmd,
-                capture_output=True,
-                text=True,
-                timeout=timeout_secs,
-                input=stdin_data
-            )
-
-            # Check stderr or crash
-            if proc.returncode != 0:
-                logger.error(f"Runner subprocess failed: stdout={proc.stdout}, stderr={proc.stderr}")
+            # Fallback is allowed ONLY in dev environment if ALLOW_UNSANDBOXED_EXECUTION is explicitly True
+            if ALLOW_UNSANDBOXED_EXECUTION:
+                if lang == "javascript":
+                    cmd = ["node", runner_path, temp_json_path]
+                else:
+                    cmd = [sys.executable, runner_path, temp_json_path]
+            else:
+                logger.error("Docker is unavailable and unsandboxed execution is disallowed. Failing closed.")
                 return [
                     {
                         "testCaseId": tc.get("id"),
+                        "status": "SANDBOX_UNAVAILABLE",
                         "passed": False,
                         "expected": tc.get("expectedOutput"),
-                        "actual": "Execution crash or compile error",
-                        "error": proc.stderr.strip() or f"Runner exited with code {proc.returncode}",
+                        "actual": "Sandbox environment is offline",
+                        "error": "Execution service is temporarily unavailable (Docker sandbox not running).",
                         "runtime": 0
                     } for tc in test_cases
                 ]
 
+        # C++ compilation happens inside cpp_runner.py; give it extra headroom.
+        timeout_secs = 15.0 if lang == "cpp" else (EXECUTION_TIMEOUT_MS / 1000.0) + 2.0
+
+        # Execute subprocess with Popen to guarantee clean timeout termination
+        try:
+            proc = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True
+            )
+            try:
+                stdout, stderr = proc.communicate(timeout=timeout_secs)
+            except subprocess.TimeoutExpired as te:
+                proc.kill()
+                stdout, stderr = proc.communicate()
+                raise subprocess.TimeoutExpired(cmd, timeout_secs, output=stdout, stderr=stderr)
+
+            # Check stderr or crash
+            if proc.returncode != 0:
+                logger.error(f"Runner subprocess failed: stdout={stdout}, stderr={stderr}")
+                if docker_available:
+                    # Docker container itself failed or was OOM killed
+                    if proc.returncode == 137 or "oom" in stderr.lower():
+                        status = "MEMORY_LIMIT_EXCEEDED"
+                        err_msg = "Memory Limit Exceeded: Container resource limits reached."
+                    else:
+                        status = "SANDBOX_UNAVAILABLE"
+                        err_msg = f"Docker execution failed (exit code {proc.returncode}). Stderr: {stderr}"
+                    
+                    return [
+                        {
+                            "testCaseId": tc.get("id"),
+                            "status": status,
+                            "passed": False,
+                            "expected": tc.get("expectedOutput"),
+                            "actual": "Sandbox resource limit triggered" if status == "MEMORY_LIMIT_EXCEEDED" else "Sandbox environment offline",
+                            "error": err_msg,
+                            "runtime": 0
+                        } for tc in test_cases
+                    ]
+                else:
+                    status = "RUNTIME_ERROR"
+                    if "SyntaxError" in stderr:
+                        status = "COMPILE_ERROR"
+                    elif "out of memory" in stderr.lower() or "heap limit allocation failed" in stderr.lower():
+                        status = "MEMORY_LIMIT_EXCEEDED"
+                    return [
+                        {
+                            "testCaseId": tc.get("id"),
+                            "status": status,
+                            "passed": False,
+                            "expected": tc.get("expectedOutput"),
+                            "actual": "Execution crash or compile error",
+                            "error": stderr.strip() or f"Runner exited with code {proc.returncode}",
+                            "runtime": 0
+                        } for tc in test_cases
+                    ]
+
             # Parse stdout
-            results_list = json.loads(proc.stdout.strip())
+            results_list = json.loads(stdout.strip())
             return results_list
 
         except subprocess.TimeoutExpired:
@@ -732,10 +951,11 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
             return [
                 {
                     "testCaseId": tc.get("id"),
+                    "status": "TIME_LIMIT_EXCEEDED",
                     "passed": False,
                     "expected": tc.get("expectedOutput"),
                     "actual": "Time Limit Exceeded",
-                    "error": f"Execution timed out after {timeout_int}s. Possible infinite loop, or solution reads stdin (input()) but test data was insufficient.",
+                    "error": f"Execution timed out after {timeout_int}s. Possible infinite loop.",
                     "runtime": timeout_int * 1000
                 } for tc in test_cases
             ]
@@ -744,6 +964,7 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
             return [
                 {
                     "testCaseId": tc.get("id"),
+                    "status": "INTERNAL_RUNNER_ERROR",
                     "passed": False,
                     "expected": tc.get("expectedOutput"),
                     "actual": "Sandbox pipeline error",
@@ -753,12 +974,11 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict]) -> List[Dict]:
             ]
 
     finally:
-        # Clean up temporary JSON file
-        if os.path.exists(temp_json.name):
-            try:
-                os.remove(temp_json.name)
-            except Exception as rm_err:
-                logger.warning(f"Failed to remove temporary file {temp_json.name}: {rm_err}")
+        # Clean up unique temporary directory recursively
+        try:
+            shutil.rmtree(temp_dir, ignore_errors=True)
+        except Exception as rm_err:
+            logger.warning(f"Failed to remove temporary directory {temp_dir}: {rm_err}")
 
 
 @router.post("/run", status_code=status.HTTP_200_OK)
@@ -804,7 +1024,7 @@ async def run_coding_challenge(
     lang = payload.language.lower()
 
     try:
-        results_list = _execute_code(lang, payload.code, test_cases)
+        results_list = _execute_code(lang, payload.code, test_cases, challenge)
     except ValueError as ve:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

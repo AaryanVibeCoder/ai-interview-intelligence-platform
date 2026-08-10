@@ -478,8 +478,20 @@ export default function CodingChallengePage() {
       setTestResults(results);
 
       const passed = results.filter((r) => r.passed).length;
-      
-      // Fetch code quality recommendations
+
+      setStats((s) => ({
+        ...s,
+        totalTestsPassed: passed,
+        submissionCount: s.submissionCount + 1,
+        language: selectedLanguage,
+        executionTime: results.reduce((a, b) => a + (b.runtime || 0), 0),
+        memoryUsed: Math.floor(Math.random() * 24) + 12
+      }));
+
+      // Hide compiling overlay since test execution is complete and results are rendered
+      setIsRunning(false);
+
+      // Fetch code quality recommendations in the background
       try {
         const token = await getToken();
         const headers: Record<string, string> = {
@@ -507,14 +519,6 @@ export default function CodingChallengePage() {
         // Non-critical: don't fail the whole run if feedback fails
       }
 
-      setStats((s) => ({
-        ...s,
-        totalTestsPassed: passed,
-        submissionCount: s.submissionCount + 1,
-        language: selectedLanguage,
-        executionTime: results.reduce((a, b) => a + (b.runtime || 0), 0),
-        memoryUsed: Math.floor(Math.random() * 24) + 12
-      }));
 
     } catch (e: any) {
       console.error("Run tests error:", e);
@@ -732,7 +736,7 @@ export default function CodingChallengePage() {
             {challenge.testCases.slice(0, 2).map((tc) => (
               <div key={tc.id} className="p-3 bg-background border border-border rounded-xl text-[11px] space-y-1">
                 <div><span className="text-muted-foreground">Input:</span> <code className="font-mono text-foreground">{tc.input}</code></div>
-                <div><span className="text-muted-foreground">Output:</span> <code className="font-mono text-success">{tc.expectedOutput}</code></div>
+                <div><span className="text-muted-foreground">Output:</span> <code className="font-mono text-success">{typeof tc.expectedOutput === 'object' ? JSON.stringify(tc.expectedOutput) : String(tc.expectedOutput)}</code></div>
               </div>
             ))}
           </div>
@@ -767,13 +771,22 @@ export default function CodingChallengePage() {
                 <RefreshCw className="w-8 h-8" />
               </div>
               <div className="text-xs font-bold text-foreground uppercase tracking-widest animate-pulse">
-                {isRunning ? "Compiling & Executing Code..." : "Submitting Challenge..."}
+                {isRunning 
+                  ? "Compiling & Executing Code..." 
+                  : (questionIndex === ((challenge as any)?.totalChallenges || 3) - 1 
+                      ? "Generating Scorecard & Feedback..." 
+                      : "Submitting Challenge...")}
               </div>
               <p className="text-[10px] text-muted-foreground max-w-xs text-center leading-relaxed">
-                Please wait while we evaluate your solution against the test cases.
+                {isRunning 
+                  ? "Please wait while we evaluate your solution against the test cases." 
+                  : (questionIndex === ((challenge as any)?.totalChallenges || 3) - 1 
+                      ? "Generating your personalized feedback and scorecard. This may take a moment..." 
+                      : "Saving your submission and preparing the next challenge.")}
               </p>
             </div>
           )}
+
 
           {/* Main textarea custom editor */}
           <div className="flex-1 relative min-h-0 p-4 flex gap-3">
@@ -918,8 +931,8 @@ export default function CodingChallengePage() {
                       </pre>
                     ) : (
                       <div className="space-y-0.5 font-mono text-muted-foreground">
-                        <div>Got: <span className="text-foreground">{res.actual}</span></div>
-                        <div>Expected: <span className="text-foreground">{res.expected}</span></div>
+                        <div>Got: <span className="text-foreground">{typeof res.actual === 'object' ? JSON.stringify(res.actual) : String(res.actual)}</span></div>
+                        <div>Expected: <span className="text-foreground">{typeof res.expected === 'object' ? JSON.stringify(res.expected) : String(res.expected)}</span></div>
                       </div>
                     )}
                   </div>

@@ -1,0 +1,14 @@
+FROM python:3.11-alpine
+
+# Install Node.js
+RUN apk add --no-cache nodejs
+
+# Create non-root user and group
+RUN addgroup -S sandbox && adduser -S -G sandbox sandbox
+
+# Set working directory and switch to non-root user
+WORKDIR /sandbox
+USER sandbox
+
+# Default entry point
+CMD ["python", "--version"]

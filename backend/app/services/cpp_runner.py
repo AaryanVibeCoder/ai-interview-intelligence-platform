@@ -26,9 +26,29 @@ import tempfile
 
 def normalize_compare(actual, expected):
     try:
-        act_str = json.dumps(actual).replace(" ", "")
-        exp_str = str(expected).strip().replace(" ", "")
+        # If they are float/int, check mathematical equality directly
+        try:
+            if isinstance(actual, (int, float)):
+                if isinstance(expected, (int, float)):
+                    return float(actual) == float(expected)
+                if isinstance(expected, str):
+                    return float(actual) == float(expected)
+        except Exception:
+            pass
 
+        # Standardize representation by serializing to JSON and stripping whitespace
+        act_str = json.dumps(actual).replace(" ", "")
+        if isinstance(expected, str):
+            try:
+                # If expected is a string containing JSON, normalize it
+                parsed = json.loads(expected)
+                exp_str = json.dumps(parsed).replace(" ", "")
+            except Exception:
+                exp_str = expected.strip().replace(" ", "")
+        else:
+            exp_str = json.dumps(expected).replace(" ", "")
+
+        # Check booleans
         if act_str == "true" and exp_str.lower() == "true":
             return True
         if act_str == "false" and exp_str.lower() == "false":
@@ -37,6 +57,7 @@ def normalize_compare(actual, expected):
         return act_str == exp_str
     except Exception:
         return str(actual).strip() == str(expected).strip()
+
 
 
 class RunnerError(Exception):

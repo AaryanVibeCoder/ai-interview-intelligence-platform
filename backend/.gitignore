@@ -141,3 +141,8 @@ alembic/versions/__pycache__/
 # Local development
 .env.local
 .env.*.local
+
+# Candidate data and runtime logs
+uploads/
+logs/
+*.log

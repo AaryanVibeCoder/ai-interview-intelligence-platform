@@ -34,25 +34,19 @@ export async function POST(req: NextRequest) {
         const codePath = path.join(tempDir, "solution.js");
         
         for (const tc of testCases) {
-          let testRunnerCode = `
+          const testRunnerCode = `
 ${code}
 
-// Parse inputs & invoke solution
+// Invoke solution
 try {
-  const inputStr = "${tc.input.replace(/"/g, '\\"')}";
-`;
-
-          if (activeChallengeId === "palindrome-number") {
-            testRunnerCode += `
-  const xMatch = inputStr.match(/x\\s*=\\s*(-?\\d+)/);
-  const x = xMatch ? parseInt(xMatch[1], 10) : 0;
-  
+  const args = ${(tc as any).args ? JSON.stringify((tc as any).args) : '[]'};
   let result;
   if (typeof Solution !== 'undefined') {
     const sol = new Solution();
-    result = sol.isPalindrome(x);
+    const solveFunc = sol.solve || sol.twoSum || sol.isPalindrome || sol.isValid;
+    result = solveFunc.apply(sol, args);
   } else {
-    result = isPalindrome(x);
+    result = solve(...args);
   }
   console.log(JSON.stringify(result));
 } catch (err) {
@@ -60,53 +54,11 @@ try {
   process.exit(1);
 }
 `;
-          } else if (activeChallengeId === "valid-parentheses") {
-            testRunnerCode += `
-  const sMatch = inputStr.match(/s\\s*=\\s*"([^"]*)"/);
-  const s = sMatch ? sMatch[1] : "";
-  
-  let result;
-  if (typeof Solution !== 'undefined') {
-    const sol = new Solution();
-    result = sol.isValid(s);
-  } else {
-    result = isValid(s);
-  }
-  console.log(JSON.stringify(result));
-} catch (err) {
-  console.error(err.message);
-  process.exit(1);
-}
-`;
-          } else {
-            // two-sum
-            testRunnerCode += `
-  const numsMatch = inputStr.match(/nums\\s*=\\s*(\\[[^\\]]*\\])/);
-  const targetMatch = inputStr.match(/target\\s*=\\s*(-?\\d+)/);
-  let nums = numsMatch ? JSON.parse(numsMatch[1]) : [2,7,11,15];
-  let target = targetMatch ? parseInt(targetMatch[2], 10) : 9;
-  
-  let result;
-  if (typeof Solution !== 'undefined') {
-    const sol = new Solution();
-    result = sol.twoSum(nums, target);
-  } else {
-    result = twoSum(nums, target);
-  }
-  console.log(JSON.stringify(result));
-} catch (err) {
-  console.error(err.message);
-  process.exit(1);
-}
-`;
-          }
           fs.writeFileSync(codePath, testRunnerCode);
 
           const start = performance.now();
           const executionPromise = new Promise<{ passed: boolean; actual: string; error?: string }>((resolve) => {
             exec(`node "${codePath}"`, { timeout: 4000 }, (error, stdout, stderr) => {
-              const runtime = Math.round(performance.now() - start);
-              
               if (error) {
                 resolve({
                   passed: false,
@@ -117,7 +69,7 @@ try {
               }
 
               const actualOutput = stdout.trim();
-              const expectedNormalized = tc.expectedOutput.replace(/\s+/g, "");
+              const expectedNormalized = String(tc.expectedOutput).replace(/\s+/g, "");
               const actualNormalized = actualOutput.replace(/\s+/g, "");
               const passed = expectedNormalized === actualNormalized;
               
@@ -143,85 +95,38 @@ try {
         const codePath = path.join(tempDir, "solution.py");
 
         for (const tc of testCases) {
-          let testRunnerCode = `
+          const testRunnerCode = `
 import json
-import re
+import sys
 
 ${code}
 
-input_str = """${tc.input}"""
-`;
-
-          if (activeChallengeId === "palindrome-number") {
-            testRunnerCode += `
-x_match = re.search(r'x\\s*=\\s*(-?\\d+)', input_str)
-x = int(x_match.group(1)) if x_match else 0
+args = ${(tc as any).args ? JSON.stringify((tc as any).args) : '[]'}
 
 try:
     if 'class Solution' in """${code}""":
         sol = Solution()
-        res = sol.isPalindrome(x)
+        solve_func = getattr(sol, 'solve', None)
+        if not solve_func:
+            for m in ['twoSum', 'isPalindrome', 'isValid']:
+                if hasattr(sol, m):
+                    solve_func = getattr(sol, m)
+                    break
+        res = solve_func(*args)
     else:
-        res = isPalindrome(x)
+        res = solve(*args)
     print(json.dumps(res))
 except Exception as e:
-    import sys
     print(str(e), file=sys.stderr)
     sys.exit(1)
 `;
-          } else if (activeChallengeId === "valid-parentheses") {
-            testRunnerCode += `
-s_match = re.search(r's\\s*=\\s*"([^"]*)"', input_str)
-s = s_match.group(1) if s_match else ""
-
-try:
-    if 'class Solution' in """${code}""":
-        sol = Solution()
-        res = sol.isValid(s)
-    else:
-        res = isValid(s)
-    print(json.dumps(res))
-except Exception as e:
-    import sys
-    print(str(e), file=sys.stderr)
-    sys.exit(1)
-`;
-          } else {
-            // two-sum
-            testRunnerCode += `
-nums_match = re.search(r'nums\\s*=\\s*(\\[[^\\]]*\\])', input_str)
-target_match = re.search(r'target\\s*=\\s*(-?\\d+)', input_str)
-
-if nums_match and target_match:
-    nums = json.loads(nums_match.group(1))
-    target = int(target_match.group(2))
-else:
-    nums = [2, 7, 11, 15]
-    target = 9
-
-try:
-    if 'class Solution' in """${code}""":
-        sol = Solution()
-        res = sol.twoSum(nums, target)
-    else:
-        res = twoSum(nums, target)
-    print(json.dumps(res))
-except Exception as e:
-    import sys
-    print(str(e), file=sys.stderr)
-    sys.exit(1)
-`;
-          }
           fs.writeFileSync(codePath, testRunnerCode);
 
           const start = performance.now();
-          // Attempt python3 first, then python fallback
           const executionPromise = new Promise<{ passed: boolean; actual: string; error?: string }>((resolve) => {
             exec(`python "${codePath}"`, { timeout: 4000 }, (error, stdout, stderr) => {
               if (error) {
-                // Try python3 if python failed due to lack of command
                 exec(`python3 "${codePath}"`, { timeout: 4000 }, (err3, stdout3, stderr3) => {
-                  const runtime = Math.round(performance.now() - start);
                   if (err3) {
                     resolve({
                       passed: false,
@@ -230,7 +135,7 @@ except Exception as e:
                     });
                   } else {
                     const actualOutput = stdout3.trim();
-                    const expectedNormalized = tc.expectedOutput.replace(/\s+/g, "");
+                    const expectedNormalized = String(tc.expectedOutput).replace(/\s+/g, "");
                     const actualNormalized = actualOutput.replace(/\s+/g, "");
                     const passed = expectedNormalized === actualNormalized;
                     resolve({ passed, actual: actualOutput });
@@ -238,7 +143,7 @@ except Exception as e:
                 });
               } else {
                 const actualOutput = stdout.trim();
-                const expectedNormalized = tc.expectedOutput.replace(/\s+/g, "");
+                const expectedNormalized = String(tc.expectedOutput).replace(/\s+/g, "");
                 const actualNormalized = actualOutput.replace(/\s+/g, "");
                 const passed = expectedNormalized === actualNormalized;
                 resolve({
