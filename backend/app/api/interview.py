@@ -136,6 +136,7 @@ async def _tiered_chat(
             max_tokens=max_tokens,
             temperature=temperature,
             timeout=timeout_s,
+            extra_body={"reasoning_effort": "low"},
         )
         content = resp.choices[0].message.content
         if content and content.strip():
@@ -359,17 +360,13 @@ async def get_interview_setup(
     return profile
 
 @router.post("/interviews/setup", response_model=InterviewProfileResponse)
-
 @router.post("/api/interview/setup", response_model=InterviewProfileResponse)
-
+@limiter.limit("10/minute")
 async def upsert_interview_setup(
-
+    request: Request,
     payload: InterviewProfileCreate,
-
     db: Session = Depends(get_db),
-
     current_user=Depends(get_current_user),
-
 ):
 
     profile = (
@@ -599,17 +596,13 @@ Begin the interview by introducing yourself briefly as the {target_company} inte
         session_db.close()
 
 @router.post("/interviews/start", response_model=InterviewStartResponse)
-
 @router.post("/api/interview/start", response_model=InterviewStartResponse)
-
+@limiter.limit("5/minute")
 async def start_interview(
-
+    request: Request,
     payload: InterviewStartRequest,
-
     db: Session = Depends(get_db),
-
     current_user=Depends(get_current_user),
-
 ):
 
     try:
@@ -914,17 +907,13 @@ async def get_session_status(
     )
 
 @router.post("/interviews/answer", response_model=InterviewAnswerResponse)
-
 @router.post("/api/interview/answer", response_model=InterviewAnswerResponse)
-
+@limiter.limit("40/minute")
 async def answer_question(
-
+    request: Request,
     payload: InterviewAnswerRequest,
-
     db: Session = Depends(get_db),
-
     current_user=Depends(get_current_user),
-
 ):
 
     session = (
@@ -2197,17 +2186,13 @@ class HintRequest(BaseModel):
     user_transcript: str
 
 @router.post("/api/interview/hint")
-
 @router.post("/interviews/hint")
-
+@limiter.limit("20/minute")
 async def generate_hint(
-
+    request: Request,
     payload: HintRequest,
-
     db: Session = Depends(get_db),
-
     current_user = Depends(get_current_user)
-
 ):
 
     session = (
@@ -2293,15 +2278,12 @@ class RoleValidationRequest(BaseModel):
     role: str
 
 @router.post("/api/interview/validate-role")
-
 @router.post("/interviews/validate-role")
-
+@limiter.limit("20/minute")
 async def validate_role(
-
+    request: Request,
     payload: RoleValidationRequest,
-
     current_user = Depends(get_current_user),
-
 ):
 
     company = payload.company.strip()
@@ -2411,17 +2393,13 @@ class CompanyRolesRequest(BaseModel):
     resume_id: Optional[int] = None
 
 @router.post("/api/interview/company-roles")
-
 @router.post("/interviews/company-roles")
-
+@limiter.limit("20/minute")
 async def get_company_roles(
-
+    request: Request,
     payload: CompanyRolesRequest,
-
     db: Session = Depends(get_db),
-
     current_user = Depends(get_current_user)
-
 ):
 
     company = payload.company.strip()
@@ -2787,15 +2765,12 @@ class RoleResolveRequest(BaseModel):
     name: str
 
 @router.post("/api/interview/companies/resolve")
-
 @router.post("/interviews/companies/resolve")
-
+@limiter.limit("20/minute")
 async def resolve_company(
-
+    request: Request,
     payload: ResolveRequest,
-
     current_user = Depends(get_current_user)
-
 ):
 
     name = payload.name.strip()
@@ -2809,15 +2784,12 @@ async def resolve_company(
     return resolved
 
 @router.post("/api/interview/roles/resolve")
-
 @router.post("/interviews/roles/resolve")
-
+@limiter.limit("20/minute")
 async def resolve_role(
-
+    request: Request,
     payload: RoleResolveRequest,
-
     current_user = Depends(get_current_user)
-
 ):
 
     name = payload.name.strip()

@@ -10,18 +10,9 @@ import json as _json
 
 
 def _rate_limit_key(request: Request) -> str:
-    auth = request.headers.get("Authorization", "")
-    if auth.startswith("Bearer "):
-        try:
-            token = auth.split(" ", 1)[1]
-            payload_b64 = token.split(".")[1]
-            payload_b64 += "==" * (-len(payload_b64) % 4)
-            claims = _json.loads(base64.urlsafe_b64decode(payload_b64))
-            user_id = claims.get("sub") or claims.get("user_id")
-            if user_id:
-                return str(user_id)
-        except Exception:
-            pass
+    user = getattr(request.state, "user", None)
+    if user and hasattr(user, "clerk_user_id"):
+        return str(user.clerk_user_id)
     return get_remote_address(request)
 
 

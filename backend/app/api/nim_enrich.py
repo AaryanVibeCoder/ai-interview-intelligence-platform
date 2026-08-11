@@ -23,7 +23,8 @@ from datetime import datetime
 from pathlib import Path
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status, Request
+from app.core.rate_limit import limiter
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.attributes import flag_modified
@@ -51,7 +52,9 @@ class EnrichRequest(BaseModel):
 
 @router.post("/api/interview/upload-answer-audio")
 @router.post("/interviews/upload-answer-audio")
+@limiter.limit("20/minute")
 async def upload_answer_audio(
+    request: Request,
     session_id: int = Form(...),
     question_index: int = Form(...),
     audio: UploadFile = File(...),
@@ -104,7 +107,9 @@ async def upload_answer_audio(
 
 @router.post("/api/interview/enrich", status_code=status.HTTP_202_ACCEPTED)
 @router.post("/interviews/enrich", status_code=status.HTTP_202_ACCEPTED)
+@limiter.limit("20/minute")
 async def enrich_interview(
+    request: Request,
     payload: EnrichRequest,
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),

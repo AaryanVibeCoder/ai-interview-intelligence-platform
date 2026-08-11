@@ -58,10 +58,7 @@ async def lifespan(app: FastAPI):
     for warning_msg in settings.get_startup_warnings():
         logger.warning(warning_msg)
 
-    # [DEBUG-STARTUP] Log resolved model name and API key prefix
-    api_key_to_log = settings.LLM_API_KEY or settings.NVIDIA_API_KEY or ""
-    key_prefix = api_key_to_log[:15] if api_key_to_log else "None"
-    logger.info(f"[DEBUG-STARTUP] Resolved LLM API Key Prefix: {key_prefix}... Model: {settings.NVIDIA_MODEL_NAME}")
+
 
     yield
 
@@ -190,5 +187,7 @@ app.include_router(interview.router)
 app.include_router(interview_mock.router)
 app.include_router(coding.router)
 app.include_router(nim_enrich.router)
+
+
 
 

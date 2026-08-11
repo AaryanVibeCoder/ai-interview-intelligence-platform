@@ -4,12 +4,11 @@ from pathlib import Path
 
 import logging
 
-from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status
-from fastapi.responses import FileResponse
+from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status, Request
+from app.core.rate_limit import limiter
+from app.core.clerk_auth import get_current_user
 
 from sqlalchemy.orm import Session
-
-from app.core.clerk_auth import get_current_user
 
 from app.core.database import get_db
 from app.schemas.resume import (
@@ -42,7 +41,9 @@ def _get_extension(filename: str) -> str:
 
 
 @router.post("/", response_model=ResumeResponse, status_code=status.HTTP_201_CREATED)
+@limiter.limit("10/minute")
 async def upload_resume_file(
+    request: Request,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),

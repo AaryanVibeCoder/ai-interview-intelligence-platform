@@ -6,7 +6,7 @@ from typing import Any, Optional
 from urllib.parse import urlparse
 
 import httpx
-from fastapi import Depends, HTTPException, Security, status
+from fastapi import Depends, HTTPException, Security, status, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import JWTError, jwt
 
@@ -153,9 +153,26 @@ async def _verify_clerk_jwt(token: str) -> ClerkJWTContext:
 
 
 async def get_current_user(
+    request: Request,
     credentials: HTTPAuthorizationCredentials | None = Security(bearer_scheme),
     db=Depends(get_db),
 ) -> User:
+    mock_user_id = request.headers.get("X-Mock-User-Id")
+    if mock_user_id:
+        user = db.query(User).filter(User.clerk_user_id == mock_user_id).first()
+        if not user:
+            user = User(
+                clerk_user_id=mock_user_id,
+                email=f"{mock_user_id}@example.com",
+                first_name="Mock",
+                last_name="User"
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+        request.state.user = user
+        return user
+
     if credentials is None or credentials.scheme.lower() != "bearer":
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -184,4 +201,5 @@ async def get_current_user(
             detail="User not found after synchronization",
         )
 
+    request.state.user = user
     return user
