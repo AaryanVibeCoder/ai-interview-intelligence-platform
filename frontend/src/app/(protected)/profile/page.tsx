@@ -75,13 +75,6 @@ export default async function ProfilePage() {
             </div>
 
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground">User ID</h3>
-              <p className="mt-1 text-sm font-mono text-xs">
-                {user.id}
-              </p>
-            </div>
-
-            <div>
               <h3 className="text-sm font-medium text-muted-foreground">Account Created</h3>
               <p className="mt-1 text-sm font-medium">
                 {user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "Unknown"}

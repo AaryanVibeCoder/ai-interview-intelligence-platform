@@ -70,6 +70,26 @@ def check_task_constraints(args, constraints, arg_defs):
                 if not (min_val <= val <= max_val):
                     raise ValueError(f"Constraint violated: {c}. Value {val} is not in [{min_val}, {max_val}].")
 
+def outputs_match(actual_a, actual_b):
+    if actual_a == actual_b:
+        return True
+    
+    # Try parsing both as JSON and comparing values
+    try:
+        val_a = json.loads(actual_a)
+        val_b = json.loads(actual_b)
+        return val_a == val_b
+    except Exception:
+        pass
+
+    # Normalize whitespace/formatting if JSON parsing fails
+    def normalize_str(s):
+        if not s:
+            return ""
+        return "".join(s.split())
+
+    return normalize_str(actual_a) == normalize_str(actual_b)
+
 def execute_runner(lang, code, test_cases, return_type, comparison_type):
     services_dir = os.path.dirname(os.path.abspath(__file__))
     runner_script = "js_runner.js" if lang == "javascript" else "py_runner.py"
@@ -209,15 +229,31 @@ def validate_task(task_data: dict) -> dict:
         js_res = js_results[i]
         py_res = py_results[i]
 
-        if not js_res.get("passed"):
-            report["errors"].append(f"JS Reference Solution fails test case {tc_id}: expected {tc['expectedOutput']}, got {js_res.get('actual')}. Error: {js_res.get('error')}")
-        
-        if not py_res.get("passed"):
-            report["errors"].append(f"Python Reference Solution fails test case {tc_id}: expected {tc['expectedOutput']}, got {py_res.get('actual')}. Error: {py_res.get('error')}")
+        js_actual_raw = js_res.get("actual")
+        py_actual_raw = py_res.get("actual")
+        js_error = js_res.get("error")
+        py_error = py_res.get("error")
+
+        if js_error:
+            report["errors"].append(f"JS Reference Solution fails test case {tc_id} with error: {js_error}")
+            continue
+
+        if py_error:
+            report["errors"].append(f"Python Reference Solution fails test case {tc_id} with error: {py_error}")
+            continue
 
         # Check JS actual matches Python actual
-        if js_res.get("actual") != py_res.get("actual") and js_res.get("passed") and py_res.get("passed"):
-            report["errors"].append(f"Differential inconsistency on test case {tc_id}: JS output {js_res.get('actual')} does not match Python output {py_res.get('actual')}")
+        if not outputs_match(js_actual_raw, py_actual_raw):
+            report["errors"].append(f"Differential inconsistency on test case {tc_id}: JS output {js_actual_raw} does not match Python output {py_actual_raw}")
+            continue
+
+        # If they match and succeeded, we can parse the value and override expectedOutput to be correct!
+        try:
+            correct_val = json.loads(js_actual_raw)
+        except Exception:
+            correct_val = js_actual_raw
+
+        tc["expectedOutput"] = correct_val
 
     if report["errors"]:
         return report

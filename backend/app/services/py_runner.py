@@ -248,22 +248,32 @@ def run():
             "runtime": runtime,
             "memory": memory_used
         }))
+        sys.stdout.flush()
         sys.exit(0)
 
     # ----------------------------------------------------
     # PARENT RUNNER MODE
     # ----------------------------------------------------
+    payload = None
     if len(sys.argv) < 2:
-        print("Missing input JSON file path argument.", file=sys.stderr)
-        sys.exit(1)
-
-    input_file_path = sys.argv[1]
-    try:
-        with open(input_file_path, "r", encoding="utf-8") as f:
-            payload = json.load(f)
-    except Exception as e:
-        print(f"Failed to read/parse input JSON file: {e}", file=sys.stderr)
-        sys.exit(1)
+        try:
+            payload_str = sys.stdin.read()
+            try:
+                sys.stdin.close()
+            except Exception:
+                pass
+            payload = json.loads(payload_str)
+        except Exception as e:
+            print(f"Failed to read/parse input JSON from stdin: {e}", file=sys.stderr)
+            sys.exit(1)
+    else:
+        input_file_path = sys.argv[1]
+        try:
+            with open(input_file_path, "r", encoding="utf-8") as f:
+                payload = json.load(f)
+        except Exception as e:
+            print(f"Failed to read/parse input JSON file: {e}", file=sys.stderr)
+            sys.exit(1)
 
     code = payload.get("code", "")
     test_cases = payload.get("testCases", [])
@@ -363,6 +373,7 @@ def run():
         })
 
     print(json.dumps(results))
+    sys.stdout.flush()
 
 if __name__ == "__main__":
     run()

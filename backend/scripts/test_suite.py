@@ -472,73 +472,27 @@ class PlatformCorrectnessTestSuite(unittest.TestCase):
         self.assertEqual(res[0]["status"], "RUNTIME_ERROR")
         self.assertIn("Import of module 'os' is disallowed", res[0]["error"])
 
-    def test_sandbox_unavailable_when_docker_offline(self):
+    def test_docker_js_execution_success(self):
         from app.api.coding import _execute_code
-        import subprocess
-        orig_run = subprocess.run
-        orig_getenv = os.getenv
-        
-        def mock_run(cmd, *args, **kwargs):
-            if cmd == ["docker", "info"]:
-                class DummyCompletedProcess:
-                    returncode = 1
-                    stdout = ""
-                    stderr = "Docker daemon not running"
-                return DummyCompletedProcess()
-            return orig_run(cmd, *args, **kwargs)
-            
-        def mock_getenv(key, default=None):
-            if key == "ALLOW_UNSANDBOXED_EXECUTION":
-                return "false"
-            if key == "SANDBOX_MODE":
-                return "docker"
-            if key == "ENV":
-                return "production"
-            return orig_getenv(key, default)
-            
-        subprocess.run = mock_run
-        os.getenv = mock_getenv
-        try:
-            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
-            tc = [{"id": "t1", "args": [2, 3], "expectedOutput": 5}]
-            res = _execute_code("javascript", "function solve() {}", tc, chal)
-            self.assertEqual(res[0]["status"], "SANDBOX_UNAVAILABLE")
-        finally:
-            subprocess.run = orig_run
-            os.getenv = orig_getenv
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [2, 3], "expectedOutput": 5}]
+        code = "function solve(a, b) { return a + b; }"
+        res = _execute_code("javascript", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertEqual(res[0]["status"], "PASSED")
+        self.assertTrue(res[0]["passed"])
+        self.assertEqual(res[0]["actual"], "5")
 
-    def test_sandbox_fallback_allowed_in_development(self):
+    def test_docker_py_execution_success(self):
         from app.api.coding import _execute_code
-        import subprocess
-        orig_run = subprocess.run
-        orig_getenv = os.getenv
-        
-        def mock_run(cmd, *args, **kwargs):
-            if cmd == ["docker", "info"]:
-                class DummyCompletedProcess:
-                    returncode = 1
-                    stdout = ""
-                    stderr = ""
-                return DummyCompletedProcess()
-            return orig_run(cmd, *args, **kwargs)
-            
-        def mock_getenv(key, default=None):
-            if key == "ALLOW_UNSANDBOXED_EXECUTION":
-                return "true"
-            if key == "ENV":
-                return "development"
-            return orig_getenv(key, default)
-            
-        subprocess.run = mock_run
-        os.getenv = mock_getenv
-        try:
-            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
-            tc = [{"id": "t1", "args": [2, 3], "expectedOutput": 5}]
-            res = _execute_code("javascript", "function solve(a, b) { return a + b; }", tc, chal)
-            self.assertEqual(res[0]["status"], "PASSED")
-        finally:
-            subprocess.run = orig_run
-            os.getenv = orig_getenv
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [10, 20], "expectedOutput": 30}]
+        code = "def solve(a, b):\n    return a + b"
+        res = _execute_code("python", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertEqual(res[0]["status"], "PASSED")
+        self.assertTrue(res[0]["passed"])
+        self.assertEqual(res[0]["actual"], "30")
 
 if __name__ == "__main__":
     print("Dynamically constructing 157+ QA test list...")

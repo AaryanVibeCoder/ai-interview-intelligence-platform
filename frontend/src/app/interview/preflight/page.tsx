@@ -58,6 +58,50 @@ export default function PreflightPage() {
   const speakerResolveRef = useRef<((val: boolean) => void) | null>(null);
   const [requiresSpeakerConfirmation, setRequiresSpeakerConfirmation] = useState(false);
 
+  const [isBuiltInMic, setIsBuiltInMic] = useState<boolean>(true);
+
+  const updateDeviceList = async () => {
+    if (typeof window === "undefined" || !navigator.mediaDevices) return;
+    try {
+      const devices = await navigator.mediaDevices.enumerateDevices();
+      const inputs = devices.filter((d) => d.kind === "audioinput");
+
+      let hasExternalMic = false;
+      for (const d of inputs) {
+        const label = d.label ? d.label.toLowerCase() : "";
+        if (!label) continue;
+
+        // ponytail: check if labeled device indicates an external mic or headset
+        const isExternal = label.includes("usb") || 
+                           label.includes("headset") || 
+                           label.includes("headphone") || 
+                           label.includes("bluetooth") || 
+                           label.includes("airpods") || 
+                           label.includes("external") || 
+                           label.includes("hands-free") ||
+                           (label.includes("mic") && !label.includes("built-in") && !label.includes("internal") && !label.includes("integrated") && !label.includes("realtek") && !label.includes("conexant") && !label.includes("intel"));
+
+        if (isExternal) {
+          hasExternalMic = true;
+          break;
+        }
+      }
+
+      setIsBuiltInMic(!hasExternalMic);
+    } catch (err) {
+      console.warn("Failed to enumerate audio input devices:", err);
+      setIsBuiltInMic(true);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !navigator.mediaDevices) return;
+    navigator.mediaDevices.addEventListener("devicechange", updateDeviceList);
+    return () => {
+      navigator.mediaDevices.removeEventListener("devicechange", updateDeviceList);
+    };
+  }, []);
+
   // If already completed in the store, redirect or show options
   useEffect(() => {
     if (preflightCompleted) {
@@ -120,12 +164,14 @@ export default function PreflightPage() {
     }));
     try {
       await audioSession.initialize();
+      await updateDeviceList();
       setState((s) => ({
         ...s,
         statuses: { ...s.statuses, mic: "passed" },
         step: "internet"
       }));
-    } catch {
+    } catch (err) {
+      console.error("Microphone access denied or error during initialization:", err);
       setState((s) => ({
         ...s,
         statuses: { ...s.statuses, mic: "failed" }
@@ -141,7 +187,7 @@ export default function PreflightPage() {
       statuses: { ...s.statuses, internet: "checking" }
     }));
     const speed = await checkInternetSpeed();
-    if (speed >= 1.0) {
+    if (speed >= 0.1) {
       maxPeakRef.current = -100;
       setState((s) => ({
         ...s,
@@ -155,7 +201,7 @@ export default function PreflightPage() {
         internetSpeed: speed,
         statuses: { ...s.statuses, internet: "failed" }
       }));
-      setErrorMessage(`Internet speed is too slow (${speed.toFixed(1)} Mbps). Minimum requirement is 1.0 Mbps.`);
+      setErrorMessage(`Internet speed is too slow (${speed.toFixed(1)} Mbps). Minimum requirement is 0.1 Mbps.`);
       return;
     }
 
@@ -255,17 +301,26 @@ export default function PreflightPage() {
   async function checkInternetSpeed(): Promise<number> {
     try {
       const startTime = performance.now();
-      // Fetch health endpoint to measure latency/speed
-      await fetch(`${apiConfig.baseUrl || "http://127.0.0.1:8000"}/health/`, { cache: "no-store" });
+      const response = await fetch(`${apiConfig.baseUrl}/health/test-1mb?t=${Date.now()}`, { cache: "no-store" });
+      if (!response.ok) throw new Error("Network speed test endpoint failed");
+      await response.json();
       const endTime = performance.now();
-      const elapsed = endTime - startTime;
+      const duration = (endTime - startTime) / 1000;
       
-      // Simulate/approximate bandwidth based on response delay
-      // Since it's a small payload, map it between 5 - 15 Mbps for local, or scaled down on slow network
-      if (elapsed > 400) return 0.8; // Slow response
-      return Math.random() * 8 + 6; // Simulate 6-14 Mbps
-    } catch {
-      return 0;
+      // 1MB is 8.388608 Megabits
+      const speed = 8.388608 / duration;
+      return speed;
+    } catch (err) {
+      console.warn("Real network throughput check failed, falling back to latency estimation:", err);
+      try {
+        const startTime = performance.now();
+        await fetch(`${apiConfig.baseUrl}/health/`, { cache: "no-store" });
+        const elapsed = performance.now() - startTime;
+        if (elapsed > 400) return 0.8;
+        return 5.0;
+      } catch {
+        return 0;
+      }
     }
   }
 
@@ -331,7 +386,7 @@ export default function PreflightPage() {
   async function checkLatency(): Promise<number> {
     const start = performance.now();
     try {
-      await fetch(`${apiConfig.baseUrl || "http://127.0.0.1:8000"}/health/live`, { cache: "no-store" });
+      await fetch(`${apiConfig.baseUrl || "http://127.0.0.1:8500"}/health/live`, { cache: "no-store" });
       return Math.round(performance.now() - start);
     } catch {
       return 600; // fail limit
@@ -356,7 +411,7 @@ export default function PreflightPage() {
         </div>
 
         {/* Bypass check if already complete */}
-        {preflightCompleted && (
+        {preflightCompleted && interviewType === "coding" && (
           <div className="p-4 bg-success/10 border border-success/20 rounded-xl flex items-center justify-between">
             <div className="flex items-center gap-3 text-success">
               <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
@@ -485,6 +540,25 @@ export default function PreflightPage() {
                 }`}
                 style={{ width: `${Math.max(5, Math.min(100, ((peakDb - 30) / 70) * 100))}%` }}
               ></div>
+            </div>
+
+            {/* Recommendation Banner */}
+            <div className="pt-4 border-t border-border/60">
+              {isBuiltInMic ? (
+                <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl text-[10px] text-amber-500 leading-normal flex gap-2 animate-in fade-in duration-200">
+                  <span className="text-sm shrink-0">⚠️</span>
+                  <p className="font-semibold">
+                    For best results, we recommend using headphones or an external microphone to ensure optimal voice recognition quality.
+                  </p>
+                </div>
+              ) : (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-[10px] text-emerald-500 leading-normal flex gap-2 animate-in fade-in duration-200">
+                  <span className="text-sm shrink-0">✨</span>
+                  <p className="font-semibold">
+                    External microphone or headset detected. Ready for optimal voice capture!
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}

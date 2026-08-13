@@ -8,7 +8,7 @@ cd backend
 python main.py
 ```
 
-Visit: **http://localhost:8000/docs**
+Visit: **http://localhost:8500/docs**
 
 ## Database Setup
 
@@ -64,10 +64,10 @@ alembic downgrade -1
 alembic downgrade base
 
 # View API docs
-http://localhost:8000/docs
+http://localhost:8500/docs
 
 # Health check
-curl http://localhost:8000/health/
+curl http://localhost:8500/health/
 
 # Verify setup
 python verify_setup.py

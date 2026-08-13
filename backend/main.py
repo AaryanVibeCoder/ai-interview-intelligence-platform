@@ -92,6 +92,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins_list,
+    allow_origin_regex="https://.*\\.vercel\\.app",
     allow_credentials=settings.CORS_ALLOW_CREDENTIALS,
     allow_methods=settings.cors_methods_list,
     allow_headers=settings.cors_headers_list,
@@ -101,7 +102,6 @@ app.add_middleware(
 app.include_router(health_router)
 app.include_router(me_router)
 app.include_router(protected_example_router)
-
 
 @app.get("/", tags=["root"])
 async def root():
@@ -174,7 +174,7 @@ if __name__ == "__main__":
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
-        port=8000,
+        port=8500,
         reload=settings.DEBUG,
         log_level="info",
     )

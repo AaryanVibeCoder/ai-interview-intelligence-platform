@@ -624,13 +624,31 @@ async def search_mock_roles(
         return roles[:15]
         
     local_results = []
+    query_words = [w for w in query_clean.split() if len(w) >= 2]
+    seen_roles = set()
+    
+    # Tier 1: Exact Match
     for r in roles:
         r_name = r.get("name", "").lower()
         if r_name == query_clean:
-            local_results.insert(0, r)
-        elif query_clean in r_name:
             local_results.append(r)
+            seen_roles.add(r_name)
             
+    # Tier 2: Substring Match
+    for r in roles:
+        r_name = r.get("name", "").lower()
+        if r_name not in seen_roles and query_clean in r_name:
+            local_results.append(r)
+            seen_roles.add(r_name)
+            
+    # Tier 3: All words matching
+    if query_words:
+        for r in roles:
+            r_name = r.get("name", "").lower()
+            if r_name not in seen_roles and all(w in r_name for w in query_words):
+                local_results.append(r)
+                seen_roles.add(r_name)
+
     if local_results or cache_only:
         return local_results[:15]
         

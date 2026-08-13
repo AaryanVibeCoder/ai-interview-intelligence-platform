@@ -132,7 +132,8 @@ export default function CodingChallengePage() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Helper to determine question timer duration (in seconds)
-  const getTimerDuration = (difficulty: string): number => {
+  const getTimerDuration = (difficulty?: string): number => {
+    if (!difficulty) return 30 * 60; // default
     const diff = difficulty.toLowerCase();
     if (diff === "easy") return 15 * 60;   // 15 mins
     if (diff === "medium") return 30 * 60; // 30 mins
@@ -223,7 +224,7 @@ export default function CodingChallengePage() {
         const token = await getToken();
         const headers: Record<string, string> = {};
         if (token) headers["Authorization"] = `Bearer ${token}`;
-        const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8000";
+        const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8500";
 
         // Always query backend challenge endpoint; backend resolves latest session automatically
         const url = activeSessionId 
@@ -309,7 +310,7 @@ export default function CodingChallengePage() {
         const token = await getToken();
         const headers: Record<string, string> = {};
         if (token) headers["Authorization"] = `Bearer ${token}`;
-        const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8000";
+        const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8500";
 
         const res = await fetch(`${baseUrl}/api/interview/session/${activeSessionId}`, { headers });
         if (res.ok) {
@@ -435,7 +436,7 @@ export default function CodingChallengePage() {
         "Content-Type": "application/json"
       };
       if (token) reqHeaders["Authorization"] = `Bearer ${token}`;
-      const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8000";
+      const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8500";
 
       let results: TestResult[] = [];
 
@@ -544,7 +545,7 @@ export default function CodingChallengePage() {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {})
       };
-      const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8000";
+      const baseUrl = apiConfig.baseUrl || "http://127.0.0.1:8500";
       
       const payload = {
         session_id: activeSessionId || 1001,

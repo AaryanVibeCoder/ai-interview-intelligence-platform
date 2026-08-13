@@ -4,6 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
 import { useResumeUpload } from "../hooks/use-resume-upload";
+import { apiConfig } from "@/services/api/config";
 
 export function ResumeUpload() {
   const { getToken } = useAuth();
@@ -38,8 +39,7 @@ export function ResumeUpload() {
           throw new Error("Not authenticated");
         }
 
-        const apiBase =
-          process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+        const apiBase = apiConfig.baseUrl;
 
         const response = await fetch(
           `${apiBase}/resumes/${resumeId}/download`,
@@ -90,7 +90,7 @@ export function ResumeUpload() {
     <div className="space-y-6 cursor-default select-none">
       <div 
         onClick={() => !isUploading && fileInputRef.current?.click()}
-        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border/60 hover:border-primary/40 hover:bg-primary/5 rounded-2xl max-w-md mx-auto bg-card/70 backdrop-blur-xl cursor-pointer transition-all duration-200 select-none"
+        className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-border/60 hover:border-primary/40 hover:bg-primary/5 rounded-2xl max-w-md mx-auto bg-card/70 backdrop-blur-xl transition-all duration-200 select-none"
       >
         <h3 className="text-lg font-semibold text-foreground mb-2">
           Upload your Resume
@@ -101,7 +101,7 @@ export function ResumeUpload() {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={isUploading}
-          className="cursor-pointer bg-primary hover:bg-primary/95 text-primary-foreground text-sm font-medium py-2 px-4 rounded-xl transition-colors duration-200 disabled:opacity-50"
+          className="interactive-target bg-primary hover:bg-primary/95 text-primary-foreground text-sm font-medium py-2 px-4 rounded-xl transition-colors duration-200 disabled:opacity-50"
         >
           {isUploading ? "Uploading & Syncing..." : "Choose PDF File"}
         </button>

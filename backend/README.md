@@ -98,7 +98,7 @@ python -c "from app.core.database import init_db; init_db()"
 python main.py
 
 # Production mode
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+uvicorn main:app --host 0.0.0.0 --port 8500 --workers 4
 ```
 
 ## API Endpoints

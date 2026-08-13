@@ -10,7 +10,7 @@ export function DocumentationCard() {
     <>
       <div
         onClick={() => setIsOpen(true)}
-        className="rounded-2xl border border-border bg-card/70 p-6 backdrop-blur-xl flex flex-col justify-between h-full hover:bg-card/90 hover:border-primary/40 cursor-pointer select-none transition-all duration-200"
+        className="rounded-2xl border border-border bg-card/70 p-6 backdrop-blur-xl flex flex-col justify-between h-full hover:bg-card/90 hover:border-primary/40 select-none transition-all duration-200"
       >
         <div>
           <h3 className="font-semibold text-lg text-foreground flex items-center gap-2">
@@ -22,7 +22,7 @@ export function DocumentationCard() {
           </p>
         </div>
         <div className="mt-6 flex justify-end">
-          <span className="text-xs font-semibold text-primary flex items-center gap-1">
+          <span className="text-xs font-semibold text-primary flex items-center gap-1 interactive-target">
             Open Guide
             <ArrowRight className="h-3 w-3" />
           </span>

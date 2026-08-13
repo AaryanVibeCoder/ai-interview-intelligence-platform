@@ -103,10 +103,17 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
   const [isRoleDropdownOpen, setIsRoleDropdownOpen] = useState(false);
   const [roleHighlightedIndex, setRoleHighlightedIndex] = useState(-1);
   const roleDropdownRef = useRef<HTMLDivElement>(null);
+  const lastFetchedCompanyQueryRef = useRef("");
+  const lastFetchedRoleQueryRef = useRef("");
 
   const [companyRoles, setCompanyRoles] = useState<string[]>([]);
   const [recommendedRoles, setRecommendedRoles] = useState<string[]>([]);
   const [isLoadingRoles, setIsLoadingRoles] = useState(false);
+
+  const targetRoleRef = useRef(targetRole);
+  targetRoleRef.current = targetRole;
+  const localJobTypeRef = useRef(localJobType);
+  localJobTypeRef.current = localJobType;
 
   useEffect(() => {
     if (!selectedCompany) {
@@ -115,10 +122,12 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
       return;
     }
 
+    let active = true;
     const fetchCompanyRoles = async () => {
       setIsLoadingRoles(true);
       try {
         const token = await getToken();
+        if (!active) return;
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
         const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
         const API_BASE = useMock ? "/api/interview/mock" : "/api/interview";
@@ -132,26 +141,14 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
           { headers } as never
         );
 
+        if (!active) return;
+
         const fetchedRoles = res.roles || [];
         setCompanyRoles(fetchedRoles);
         setRecommendedRoles(res.recommended || []);
-
-        // Only set a default role if user hasn't entered one yet
-        if (!targetRole) {
-          let initialRole = "Software Engineer";
-          if (res.recommended && res.recommended.length > 0) {
-            initialRole = res.recommended[0];
-          } else if (fetchedRoles.length > 0) {
-            initialRole = fetchedRoles[0];
-          }
-          const formatted = formatRoleName(initialRole, localJobType);
-          setTargetRole(formatted);
-          setRoleSearchQuery(formatted);
-        }
       } catch (err) {
+        if (!active) return;
         console.warn("Failed to fetch company roles", err);
-        // Don't silently overwrite user's role input with a hardcoded default.
-        // Keep any existing targetRole, or leave empty for free-text entry.
         const fallback = [
           "Software Engineer",
           "Frontend Engineer",
@@ -164,18 +161,18 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
           "QA Engineer"
         ];
         setCompanyRoles(fallback);
-        // Only set a default if targetRole is currently empty
-        if (!targetRole) {
-          setTargetRole(fallback[0]);
-          setRoleSearchQuery(fallback[0]);
-        }
       } finally {
-        setIsLoadingRoles(false);
+        if (active) {
+          setIsLoadingRoles(false);
+        }
       }
     };
 
     fetchCompanyRoles();
-  }, [selectedCompany, selectedResumeId, getToken]);
+    return () => {
+      active = false;
+    };
+  }, [selectedCompany, selectedResumeId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Search & Recommendations States
   const [searchQuery, setSearchQuery] = useState("");
@@ -312,15 +309,21 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
   useEffect(() => {
     if (!debouncedQuery.trim()) {
       setApiCompanies([]);
+      lastFetchedCompanyQueryRef.current = "";
+      return;
+    }
+    if (debouncedQuery === lastFetchedCompanyQueryRef.current) {
       return;
     }
     let active = true;
     const fetchCompanies = async () => {
       setIsSearching(true);
+      lastFetchedCompanyQueryRef.current = debouncedQuery;
       try {
         const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
         const API_BASE = useMock ? "/api/interview/mock" : "/api/interview";
         const token = await getToken();
+        if (!active) return;
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
         // Cache-first lookup (cache_only=true)
@@ -349,8 +352,10 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
         if (err?.name === "AbortError" || err?.name === "TimeoutError") {
           return;
         }
-        console.error("Failed to fetch companies from API", err);
-        setIsSearching(false);
+        if (active) {
+          console.error("Failed to fetch companies from API", err);
+          setIsSearching(false);
+        }
       }
     };
 
@@ -358,23 +363,30 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
     return () => {
       active = false;
     };
-  }, [debouncedQuery, getToken]);
+  }, [debouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch roles matching query (Part A - Cache-first, hybrid lookup)
   useEffect(() => {
     if (!roleDebouncedQuery.trim()) {
       setApiRoles([]);
+      lastFetchedRoleQueryRef.current = "";
+      return;
+    }
+    if (roleDebouncedQuery === lastFetchedRoleQueryRef.current) {
       return;
     }
     let active = true;
     const fetchRoles = async () => {
       setIsSearchingRoles(true);
+      lastFetchedRoleQueryRef.current = roleDebouncedQuery;
       try {
         const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
         const API_BASE = useMock ? "/api/interview/mock" : "/api/interview";
         const token = await getToken();
+        if (!active) return;
         const headers = token ? { Authorization: `Bearer ${token}` } : {};
 
+        console.log(`[RoleSearch] Firing API search for: "${roleDebouncedQuery}"`);
         // Cache-first lookup (cache_only=true)
         const cacheResults = await apiClient.get<any[]>(
           `${API_BASE}/roles/search?q=${encodeURIComponent(roleDebouncedQuery)}&cache_only=true`,
@@ -384,23 +396,29 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
         if (!active) return;
 
         const roleNames = cacheResults.map(r => r.name);
+        console.log(`[RoleSearch] Cache results for "${roleDebouncedQuery}":`, roleNames);
         if (roleNames.length > 0) {
           setApiRoles(roleNames);
           setIsSearchingRoles(false);
         } else {
+          console.log(`[RoleSearch] Cache miss. Firing LLM query for: "${roleDebouncedQuery}"`);
           // Cache miss: Show searching spinner and query LLM resolution pipeline
           const resolveResults = await apiClient.get<any[]>(
             `${API_BASE}/roles/search?q=${encodeURIComponent(roleDebouncedQuery)}&cache_only=false`,
             { headers } as never
           );
           if (active) {
-            setApiRoles(resolveResults.map(r => r.name));
+            const resolvedNames = resolveResults.map(r => r.name);
+            console.log(`[RoleSearch] LLM resolved names for "${roleDebouncedQuery}":`, resolvedNames);
+            setApiRoles(resolvedNames);
             setIsSearchingRoles(false);
           }
         }
       } catch (err: any) {
-        console.error("Failed to fetch roles from API", err);
-        setIsSearchingRoles(false);
+        if (active) {
+          console.error("Failed to fetch roles from API", err);
+          setIsSearchingRoles(false);
+        }
       }
     };
 
@@ -408,7 +426,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
     return () => {
       active = false;
     };
-  }, [roleDebouncedQuery, getToken]);
+  }, [roleDebouncedQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fetch recommended companies when resume selection changes
   useEffect(() => {
@@ -449,7 +467,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
     return () => {
       active = false;
     };
-  }, [selectedResumeId, getToken]);
+  }, [selectedResumeId]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Compute filtered companies list for dropdown display
   const filteredCompanies = useMemo(() => {
@@ -1029,6 +1047,7 @@ export function InterviewSetupWizard({ isOpen, onClose }: InterviewSetupWizardPr
                         onFocus={() => setIsRoleDropdownOpen(true)}
                         onChange={(e) => {
                           setRoleSearchQuery(e.target.value);
+                          setTargetRole(e.target.value);
                           setIsRoleDropdownOpen(true);
                           setRoleHighlightedIndex(-1);
                         }}
@@ -1188,16 +1207,6 @@ onKeyDown={(e) => {
                       if (selectedCompany && !targetRole) {
                         setRoleValidationError("Please enter a target role to proceed.");
                         return;
-                      }
-                      // Allow free-text entry: warn if not in known roles but don't block
-                      if (selectedCompany) {
-                        const isValidRole = companyRoles.some((r) => {
-                          const formatted = formatRoleName(r, localJobType);
-                          return targetRole.toLowerCase() === formatted.toLowerCase();
-                        });
-                        if (!isValidRole) {
-                          setRoleValidationError("Role not in known list — proceeding with your input.");
-                        }
                       }
                       if (selectedInterviewType === "coding") {
                         handleStartInterview();

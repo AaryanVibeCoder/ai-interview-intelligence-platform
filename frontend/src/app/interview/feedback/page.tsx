@@ -54,8 +54,13 @@ export default function InterviewFeedbackPage() {
   }, [activeSessionId]);
 
   const handleRestart = () => {
+    const currentType = interviewType;
     resetSession();
-    router.push("/interview/preflight");
+    if (currentType === "coding") {
+      router.push("/dashboard?start=true");
+    } else {
+      router.push("/interview/preflight");
+    }
   };
 
   const handleReturnToDashboard = () => {

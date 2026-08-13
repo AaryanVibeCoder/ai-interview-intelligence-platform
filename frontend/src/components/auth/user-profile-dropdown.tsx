@@ -31,7 +31,7 @@ export async function UserProfileDropdown() {
         <Button
           variant="ghost"
           size="icon"
-          className="h-10 w-10 rounded-full"
+          className="h-10 w-10 rounded-full interactive-target"
         >
           <Avatar className="h-10 w-10">
             {user.imageUrl && (

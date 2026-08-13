@@ -223,19 +223,18 @@
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    cursor: default;
+    user-select: none;
   }
 
-  /* Force pointer cursor for interactive elements */
-  select,
-  select option,
-  button,
-  input[type="radio"],
-  input[type="checkbox"],
-  label,
-  [role="combobox"],
-  [role="listbox"],
-  [role="option"],
-  .cursor-pointer {
+  input,
+  textarea,
+  [contenteditable="true"] {
+    cursor: text;
+    user-select: text;
+  }
+
+  .interactive-target {
     cursor: pointer !important;
   }
 

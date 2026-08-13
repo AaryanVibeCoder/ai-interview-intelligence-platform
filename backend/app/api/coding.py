@@ -24,7 +24,6 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/coding", tags=["Coding Challenges"])
 
 
-
 NUM_CODING_CHALLENGES = 3
 
 # Input schemas
@@ -773,6 +772,31 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
     if lang not in ["python", "javascript", "cpp"]:
         raise ValueError(f"Language {lang} is not supported for local sandboxed execution.")
 
+    # Check if user did not write any code / submitted empty/starter code
+    stripped_code = code.strip()
+    is_empty = not stripped_code
+    
+    starter_code = challenge.get("starterCode", {}).get(lang, "")
+    is_starter = False
+    if starter_code:
+        normalized_submitted = "".join(stripped_code.split())
+        normalized_starter = "".join(starter_code.strip().split())
+        if normalized_submitted == normalized_starter:
+            is_starter = True
+            
+    if is_empty or is_starter:
+        return [
+            {
+                "testCaseId": tc.get("id"),
+                "status": "WRONG_ANSWER",
+                "passed": False,
+                "expected": tc.get("expectedOutput"),
+                "actual": "No output",
+                "error": "No code submitted or starter code not modified. Please write your solution.",
+                "runtime": 0
+            } for tc in test_cases
+        ]
+
     # Paths to runner scripts
     api_dir = os.path.dirname(os.path.abspath(__file__))
     services_dir = os.path.join(os.path.dirname(api_dir), "services")
@@ -809,20 +833,22 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
         "memoryMb": MEMORY_LIMIT_MB,
         "outputBytes": OUTPUT_LIMIT_BYTES
     }
+    payload_data = {
+        "code": code,
+        "testCases": test_cases,
+        "returnType": return_type,
+        "comparisonType": comparison_type,
+        "limits": limits
+    }
+    payload_str = json.dumps(payload_data)
 
     import shutil
-    # Create unique temporary directory for this runner execution
+    # Create unique temporary directory for fallback runner execution (if fallback happens)
     temp_dir = tempfile.mkdtemp(prefix="elevateiq-worker-")
     temp_json_path = os.path.join(temp_dir, "payload.json")
     try:
         with open(temp_json_path, "w", encoding="utf-8") as temp_json:
-            json.dump({
-                "code": code,
-                "testCases": test_cases,
-                "returnType": return_type,
-                "comparisonType": comparison_type,
-                "limits": limits
-            }, temp_json)
+            json.dump(payload_data, temp_json)
 
         # Check if Docker is available and daemon is running
         docker_available = False
@@ -835,17 +861,13 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
                 pass
 
         if docker_available:
-            host_temp_dir = os.path.abspath(temp_dir)
             host_services_dir = os.path.abspath(services_dir)
             if sys.platform == "win32":
-                host_temp_dir = host_temp_dir.replace("\\", "/")
                 host_services_dir = host_services_dir.replace("\\", "/")
 
             cmd = [
-                "docker", "run", "--rm",
-                "-v", f"{host_temp_dir}:/sandbox",
+                "docker", "run", "--rm", "-i",
                 "-v", f"{host_services_dir}:/app/services:ro",
-                "-w", "/sandbox",
                 "--network", "none",
                 "--read-only",
                 "--cap-drop", "ALL",
@@ -858,9 +880,9 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
                 "elevateiq-sandbox"
             ]
             if lang == "javascript":
-                cmd.extend(["node", "/app/services/js_runner.js", "payload.json"])
+                cmd.extend(["node", "/app/services/js_runner.js"])
             else:
-                cmd.extend(["python", "/app/services/py_runner.py", "payload.json"])
+                cmd.extend(["python", "/app/services/py_runner.py"])
         else:
             # Fallback is allowed ONLY in dev environment if ALLOW_UNSANDBOXED_EXECUTION is explicitly True
             if ALLOW_UNSANDBOXED_EXECUTION:
@@ -886,18 +908,43 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
         timeout_secs = 15.0 if lang == "cpp" else (EXECUTION_TIMEOUT_MS / 1000.0) + 2.0
 
         # Execute subprocess with Popen to guarantee clean timeout termination
+        debug_log_path = os.path.join(os.path.dirname(os.path.dirname(api_dir)), "logs", "docker_debug.log")
+        try:
+            with open(debug_log_path, "a", encoding="utf-8") as df:
+                df.write(f"\n--- [{datetime.now().isoformat()}] START EXECUTION ---\n")
+                df.write(f"Lang: {lang}\n")
+                df.write(f"Cmd: {cmd}\n")
+                df.write(f"Code: {code}\n")
+        except Exception:
+            pass
+
         try:
             proc = subprocess.Popen(
                 cmd,
+                stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True
             )
             try:
-                stdout, stderr = proc.communicate(timeout=timeout_secs)
+                stdout, stderr = proc.communicate(input=payload_str, timeout=timeout_secs)
+                try:
+                    with open(debug_log_path, "a", encoding="utf-8") as df:
+                        df.write(f"Proc completed. returncode={proc.returncode}\n")
+                        df.write(f"Stdout:\n{stdout}\n")
+                        df.write(f"Stderr:\n{stderr}\n")
+                except Exception:
+                    pass
             except subprocess.TimeoutExpired as te:
                 proc.kill()
                 stdout, stderr = proc.communicate()
+                try:
+                    with open(debug_log_path, "a", encoding="utf-8") as df:
+                        df.write(f"Proc timed out after {timeout_secs}s.\n")
+                        df.write(f"Stdout on timeout:\n{stdout}\n")
+                        df.write(f"Stderr on timeout:\n{stderr}\n")
+                except Exception:
+                    pass
                 raise subprocess.TimeoutExpired(cmd, timeout_secs, output=stdout, stderr=stderr)
 
             # Check stderr or crash
@@ -960,6 +1007,11 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
                 } for tc in test_cases
             ]
         except Exception as run_err:
+            try:
+                with open(debug_log_path, "a", encoding="utf-8") as df:
+                    df.write(f"Exception: {run_err}\n")
+            except Exception:
+                pass
             logger.error(f"Error running sandbox subprocess: {run_err}")
             return [
                 {
@@ -967,7 +1019,7 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
                     "status": "INTERNAL_RUNNER_ERROR",
                     "passed": False,
                     "expected": tc.get("expectedOutput"),
-                    "actual": "Sandbox pipeline error",
+                    "actual": "Internal runner error",
                     "error": str(run_err),
                     "runtime": 0
                 } for tc in test_cases

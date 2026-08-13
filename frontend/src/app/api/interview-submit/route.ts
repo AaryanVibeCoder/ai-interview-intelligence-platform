@@ -5,7 +5,7 @@ export async function POST(req: NextRequest) {
     const payload = await req.json();
     
     // In production, we forward to the FastAPI backend API:
-    // const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8000";
+    // const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL || "http://127.0.0.1:8500";
     // await fetch(`${apiBase}/api/coding/submit`, { ... });
     
     return NextResponse.json({

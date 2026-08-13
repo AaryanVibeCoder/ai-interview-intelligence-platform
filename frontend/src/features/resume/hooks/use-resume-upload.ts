@@ -3,6 +3,7 @@ import { useCallback, useMemo, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 
 import { apiClient } from "@/services/api/client";
+import { apiConfig } from "@/services/api/config";
 
 import type { ResumeResponse, ResumeDeleteResponse } from "../types";
 
@@ -37,7 +38,7 @@ export function useResumeUpload() {
         return;
       }
 
-      const data = await apiClient.get<ResumeListResponse>("/resumes/", {
+      const data = await apiClient.get<ResumeListResponse>("/resumes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -66,9 +67,9 @@ export function useResumeUpload() {
       const token = await getToken();
       if (!token) throw new Error("Not authenticated");
 
-      const apiBase = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://127.0.0.1:8000";
+      const apiBase = apiConfig.baseUrl;
 
-      const response = await fetch(`${apiBase}/resumes/`, {
+      const response = await fetch(`${apiBase}/resumes`, {
         method: "POST",
         body: formData,
         headers: {

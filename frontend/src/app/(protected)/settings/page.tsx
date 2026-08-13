@@ -19,6 +19,7 @@ import {
   Sparkles
 } from "lucide-react";
 import { useInterviewStore } from "@/store/interview-store";
+import { apiConfig } from "@/services/api/config";
 
 interface ResumeItem {
   id: number;
@@ -32,7 +33,7 @@ export default function SettingsPage() {
   const store = useInterviewStore();
   const { theme, setTheme } = useTheme();
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000";
+  const baseUrl = apiConfig.baseUrl;
 
   // Mounted and theme calculation
   const [mounted, setMounted] = useState(false);
@@ -205,7 +206,7 @@ export default function SettingsPage() {
         }
 
         // 1. Fetch Resumes
-        const resumeRes = await fetch(`${baseUrl}/resumes/`, { headers });
+        const resumeRes = await fetch(`${baseUrl}/resumes`, { headers });
         if (resumeRes.ok) {
           const data = await resumeRes.json();
           setResumes(data.resumes || []);

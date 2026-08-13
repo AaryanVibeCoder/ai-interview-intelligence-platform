@@ -109,5 +109,77 @@
     "category": "Data",
     "needs_review": false,
     "reasoning_citation": "The role is normalized to the singular form 'Machine Learning Engineer' and categorized under 'Data' as it involves building data-driven models and algorithms."
+  },
+  {
+    "name": "AI Engineer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The input 'Ai directed engineer' is normalized to 'AI Engineer', a recognized role in the Engineering family focused on developing artificial intelligence systems."
+  },
+  {
+    "name": "Developer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The input appears to be a misspelling of the common tech role 'Developer', which falls under the Engineering family."
+  },
+  {
+    "name": "Developer Advocate",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The input \"Developer ad\" is a common abbreviation for \"Developer Advocate\", a technical developer relations role."
+  },
+  {
+    "name": "Solutions Architect",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The abbreviation \"Sol\" commonly refers to \"Solutions Architect\" in tech industry contexts."
+  },
+  {
+    "name": "Solutions Architect",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The abbreviation \"Solu\" is commonly used to refer to a Solutions Architect, a real-world tech role that falls under the Engineering family."
+  },
+  {
+    "name": "AI QA Engineer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The term \"AI QA\" refers to quality assurance work focused on AI systems, which is a specialized engineering role."
+  },
+  {
+    "name": "MERN Stack Developer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The term \"mern\" refers to the MERN stack (MongoDB, Express, React, Node.js), indicating a full‑stack JavaScript developer role."
+  },
+  {
+    "name": "Data Scientist",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The role \"Data Scientist Intern\" is a junior version of a Data Scientist, which falls under the Data job family."
+  },
+  {
+    "name": "Frontend Engineer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The role is a junior-level position focused on front-end development, which falls under the Engineering family."
+  },
+  {
+    "name": "DevOps Engineer",
+    "category": "Operations",
+    "needs_review": false,
+    "reasoning_citation": "The role \"DevOps Engineer Intern\" is a junior version of a DevOps Engineer, which falls under the Operations job family."
+  },
+  {
+    "name": "Data Scientist",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The role \"Data Scientist Intern\" is a junior version of a Data Scientist, which falls under the Data job family."
+  },
+  {
+    "name": "Software Engineer Intern",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The role is a junior-level software development position, fitting within the Engineering family."
   }
 ]

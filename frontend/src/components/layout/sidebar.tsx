@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ChevronLeft, Sparkles } from "lucide-react";
@@ -16,6 +17,8 @@ type SidebarProps = {
 
 export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
   const pathname = usePathname();
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => { setHasMounted(true); }, []);
 
   return (
     <motion.aside
@@ -86,18 +89,22 @@ export function Sidebar({ isCollapsed, onToggle }: SidebarProps) {
                       href={item.href}
                       aria-current={isActive ? "page" : undefined}
                       className={cn(
-                        "group/tooltip relative flex h-10 items-center rounded-xl px-3 text-sm font-medium text-muted-foreground transition-all duration-150 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+                        "group/tooltip relative flex h-10 items-center rounded-xl px-3 text-sm font-medium text-muted-foreground transition-all duration-150 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring interactive-target",
                         isActive && "text-sidebar-accent-foreground",
                         isCollapsed && "justify-center px-0"
                       )}
                     >
-                      {/* Active Indicator Sliding Animation */}
+                      {/* Active Indicator – static on SSR, animated after hydration */}
                       {isActive && (
-                        <motion.span
-                          layoutId="sidebar-active-pill"
-                          className="absolute inset-0 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground shadow-elevate-xs"
-                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                        />
+                        hasMounted ? (
+                          <motion.span
+                            layoutId="sidebar-active-pill"
+                            className="absolute inset-0 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground shadow-elevate-xs"
+                            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                          />
+                        ) : (
+                          <span className="absolute inset-0 rounded-xl bg-sidebar-accent text-sidebar-accent-foreground shadow-elevate-xs" />
+                        )
                       )}
 
                       {/* Tooltip for Collapsed Sidebar */}

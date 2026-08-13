@@ -713,28 +713,33 @@ async def start_interview(
 
         db.refresh(session)
 
-        # If it is a coding interview, set up fallback challenges instantly and generate custom ones in background
+        # If it is a coding interview, generate custom challenges inline to avoid temporary fallback UI swaps
         if "coding" in interview_type.lower().strip():
             from sqlalchemy.orm.attributes import flag_modified
-            from app.api.coding import FALLBACK_CODING_CHALLENGES, _generate_coding_challenges_in_background
-            session.feedback = {
-                "coding_challenges": FALLBACK_CODING_CHALLENGES,
-                "current_challenge_index": 0,
-                "question_source": "fallback"
-            }
-            session.question_source = "fallback"
-            flag_modified(session, "feedback")
-            db.commit()
-            
-            # Spawn background task for generating customized coding challenges
-            asyncio.create_task(
-                _generate_coding_challenges_in_background(
-                    session.id,
+            from app.api.coding import FALLBACK_CODING_CHALLENGES, generate_challenges_for_session
+            try:
+                challenges_list = await generate_challenges_for_session(
                     target_company,
                     role,
-                    experience_level
+                    experience_level,
+                    session_id=session.id
                 )
-            )
+                session.feedback = {
+                    "coding_challenges": challenges_list,
+                    "current_challenge_index": 0,
+                    "question_source": "generator"
+                }
+                session.question_source = "generator"
+            except Exception as e:
+                logger.error(f"Failed to generate custom coding challenges: {e}")
+                session.feedback = {
+                    "coding_challenges": FALLBACK_CODING_CHALLENGES,
+                    "current_challenge_index": 0,
+                    "question_source": "fallback"
+                }
+                session.question_source = "fallback"
+            flag_modified(session, "feedback")
+            db.commit()
 
         # 3) Fire-and-forget personalized opener generation. Bounded and isolated:
 
@@ -2619,14 +2624,14 @@ async def resolve_and_cache_new_role(role_name: str) -> Optional[Dict[str, Any]]
             
 
     # Resolve role via LLM
-
     prompt = f"""You are a tech industry job classification assistant.
 
 A user has typed the following target job role: "{query_clean}"
 
 Perform the following tasks:
 
-1. Normalize this role name to a standard professional title (e.g. "Senior Backend Developer" -> "Backend Engineer", "pm" -> "Product Manager").
+1. Normalize this role name to a standard professional title (e.g. "Senior Backend Developer" -> "Backend Engineer", "pm" -> "Product Manager", "Developer Advocate" -> "Developer Advocate").
+   Accept a broad range of real-world technology industry roles, including Software Engineering, DevRel/Developer Relations (e.g., Developer Advocate, DevRel Engineer), Product Management, Project/Program Management, DevOps/Infrastructure, QA/Testing, Data Science/Analytics, Design, and Solutions Architecture.
 
 2. Categorize it into one of these standard job families: Engineering, Product, Design, Data, Management, Operations, Sales, Marketing, Other.
 
@@ -2635,65 +2640,45 @@ Perform the following tasks:
 You MUST respond strictly in the following JSON format:
 
 {{
-
   "name": "Normalized Standard Role Title",
-
   "category": "Job Family Category",
-
   "needs_review": false,
-
   "reasoning_citation": "Brief sentence explaining the mapping."
-
 }}
 
-If the input is gibberish, fake, or not a real job role, set "needs_review": true.
-
+Set "needs_review": true ONLY if the input is actual gibberish (e.g., "asdf", "qwerty"), completely fake/made-up roles (e.g., "Code Wizard"), or entirely unrelated non-tech roles (e.g., "Doctor", "Chef"). For any valid, real-world tech industry title (like "Developer Advocate", "Product Manager", "Solutions Architect", "Technical Program Manager", "DevRel Engineer"), set "needs_review": false.
 """
 
     try:
-
-        response = await client.chat.completions.create(
-
-            model=_model,
-
+        response, tier = await _tiered_chat(
             messages=[
-
                 {"role": "system", "content": "You are a precise job roles normalization engine. Respond ONLY in valid JSON format."},
-
                 {"role": "user", "content": prompt}
-
             ],
-
             max_tokens=200,
-
             temperature=0.1,
-
+            call_site="role_resolve"
         )
 
         content = response.choices[0].message.content.strip()
-
         if content.startswith("```"):
-
             lines = content.splitlines()
-
             if lines[0].startswith("```"):
-
                 lines = lines[1:]
-
             if lines and lines[-1].strip() == "```":
-
                 lines = lines[:-1]
-
             content = "\n".join(lines).strip()
 
-            
-
-        resolved = json.loads(content)
-
+        # Robust JSON extraction
+        start_idx = content.find('{')
+        end_idx = content.rfind('}')
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            json_str = content[start_idx:end_idx+1]
+            resolved = json.loads(json_str)
+        else:
+            resolved = json.loads(content)
         
-
         if not resolved.get("name") or not resolved.get("category"):
-
             raise ValueError("Missing name or category in resolved role")
 
             
@@ -2829,35 +2814,38 @@ async def search_roles(
         
 
     local_results = []
-
+    query_words = [w for w in query_clean.split() if len(w) >= 2]
+    seen_roles = set()
+    
+    # Tier 1: Exact Match
     for r in roles:
-
         r_name = r.get("name", "").lower()
-
         if r_name == query_clean:
-
-            local_results.insert(0, r)
-
-        elif query_clean in r_name:
-
             local_results.append(r)
-
+            seen_roles.add(r_name)
             
+    # Tier 2: Substring Match
+    for r in roles:
+        r_name = r.get("name", "").lower()
+        if r_name not in seen_roles and query_clean in r_name:
+            local_results.append(r)
+            seen_roles.add(r_name)
+            
+    # Tier 3: All words matching
+    if query_words:
+        for r in roles:
+            r_name = r.get("name", "").lower()
+            if r_name not in seen_roles and all(w in r_name for w in query_words):
+                local_results.append(r)
+                seen_roles.add(r_name)
 
     if local_results or cache_only:
-
         return local_results[:15]
-
         
-
     resolved = await resolve_and_cache_new_role(q)
-
     if resolved:
-
         return [resolved]
-
         
-
     return []
 
 def send_email_notification(subject: str, html_content: str):

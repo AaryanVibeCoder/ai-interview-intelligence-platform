@@ -35,7 +35,7 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border bg-card/70 p-6 backdrop-blur-xl">
           <h3 className="font-semibold">Getting Started</h3>
           <p className="mt-2 text-sm text-muted-foreground">
-            Explore the dashboard and customize your workspace.
+            You&apos;re one of the first to try ElevateIQ. Upload your resume below, then launch a mock interview &mdash; voice or coding &mdash; matched to the company and role you&apos;re preparing for.
           </p>
         </div>
 

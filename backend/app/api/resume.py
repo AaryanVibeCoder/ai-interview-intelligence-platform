@@ -5,6 +5,7 @@ from pathlib import Path
 import logging
 
 from fastapi import APIRouter, Depends, File, HTTPException, UploadFile, status, Request
+from fastapi.responses import FileResponse
 from app.core.rate_limit import limiter
 from app.core.clerk_auth import get_current_user
 
@@ -40,7 +41,7 @@ def _get_extension(filename: str) -> str:
     return ext.lower()
 
 
-@router.post("/", response_model=ResumeResponse, status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=ResumeResponse, status_code=status.HTTP_201_CREATED)
 @limiter.limit("10/minute")
 async def upload_resume_file(
     request: Request,
@@ -165,7 +166,7 @@ async def upload_resume_file(
     return db_resume
 
 
-@router.get("/", response_model=ResumeListResponse)
+@router.get("", response_model=ResumeListResponse)
 async def list_my_resumes(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
@@ -238,10 +239,10 @@ async def download_my_resume(
     )
 
     return FileResponse(
-        path=local_path,
+        path=str(local_path),
         media_type=media_type,
         filename=resume.file_name,
-        headers={"Content-Disposition": f"inline; filename={resume.file_name}"},
+        content_disposition_type="inline",
     )
 
 

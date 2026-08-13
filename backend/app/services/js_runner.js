@@ -107,20 +107,42 @@ function compareValues(a, b) {
   return strA.localeCompare(strB);
 }
 
-function run() {
-  if (process.argv.length < 3) {
-    console.error("Missing input JSON file path argument.");
-    process.exit(1);
-  }
+function readStdin() {
+  return new Promise((resolve, reject) => {
+    let content = '';
+    process.stdin.setEncoding('utf-8');
+    process.stdin.on('data', chunk => {
+      content += chunk;
+    });
+    process.stdin.on('end', () => {
+      resolve(content);
+    });
+    process.stdin.on('error', err => {
+      reject(err);
+    });
+  });
+}
 
-  const inputFilePath = process.argv[2];
+async function run() {
   let payload;
-  try {
-    const fileContent = fs.readFileSync(inputFilePath, 'utf8');
-    payload = JSON.parse(fileContent);
-  } catch (err) {
-    console.error("Failed to read/parse input JSON file:", err.message);
-    process.exit(1);
+  if (process.argv.length < 3) {
+    try {
+      const stdinContent = await readStdin();
+      process.stdin.pause();
+      payload = JSON.parse(stdinContent);
+    } catch (err) {
+      console.error("Failed to read/parse input JSON from stdin:", err.message);
+      process.exit(1);
+    }
+  } else {
+    const inputFilePath = process.argv[2];
+    try {
+      const fileContent = fs.readFileSync(inputFilePath, 'utf8');
+      payload = JSON.parse(fileContent);
+    } catch (err) {
+      console.error("Failed to read/parse input JSON file:", err.message);
+      process.exit(1);
+    }
   }
 
   const { code, testCases, returnType, comparisonType, limits } = payload;
@@ -212,7 +234,7 @@ function run() {
       
       if (err.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT' || error.includes('script execution timed out')) {
         status = "TIME_LIMIT_EXCEEDED";
-        error = `Execution timed out after {timeLimitMs}ms.`;
+        error = `Execution timed out after ${timeLimitMs}ms.`;
       } else if (error.includes("Output Limit Exceeded")) {
         status = "OUTPUT_LIMIT_EXCEEDED";
       } else if (error.includes("Expected return type")) {
@@ -238,6 +260,7 @@ function run() {
   }
 
   console.log(JSON.stringify(results));
+  process.exit(0);
 }
 
 run();

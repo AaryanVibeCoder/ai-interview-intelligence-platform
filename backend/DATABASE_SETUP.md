@@ -391,7 +391,7 @@ The health check endpoints will verify the database is ready:
 
 ```bash
 # Test database connection
-curl http://localhost:8000/health/
+curl http://localhost:8500/health/
 
 # Response:
 # {"status":"healthy","database":"connected","message":"..."}

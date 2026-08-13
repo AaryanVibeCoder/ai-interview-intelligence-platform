@@ -1289,12 +1289,12 @@ export function InterviewSetup() {
       const speed = 8.388608 / duration;
       setSpeedMbps(speed);
 
-      if (speed >= 1.0) {
+      if (speed >= 0.1) {
         speedPassed = true;
         setChecks(prev => ({ ...prev, internet: "success" }));
       } else {
         setChecks(prev => ({ ...prev, internet: "failed" }));
-        setError("❌ Internet speed too slow. Requirement: Min 1Mbps for voice practice.");
+        setError("❌ Internet speed too slow. Requirement: Min 0.1Mbps for voice practice.");
       }
     } catch (err) {
       setChecks(prev => ({ ...prev, internet: "failed" }));

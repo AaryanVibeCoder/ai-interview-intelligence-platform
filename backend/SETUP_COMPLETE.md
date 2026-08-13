@@ -108,16 +108,16 @@ GRANT ALL PRIVILEGES ON DATABASE elevateiq_db TO elevateiq_user;
 python main.py
 
 # Production mode
-uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+uvicorn main:app --host 0.0.0.0 --port 8500 --workers 4
 ```
 
 ### 5. Test the API
 
 Open your browser and visit:
-- **API Root**: http://localhost:8000/
-- **API Docs (Swagger)**: http://localhost:8000/docs
-- **ReDoc**: http://localhost:8000/redoc
-- **Health Check**: http://localhost:8000/health/
+- **API Root**: http://localhost:8500/
+- **API Docs (Swagger)**: http://localhost:8500/docs
+- **ReDoc**: http://localhost:8500/redoc
+- **Health Check**: http://localhost:8500/health/
 
 ---
 
@@ -140,7 +140,7 @@ GET  /health/ready       - Kubernetes readiness probe
 ### Test Health Endpoint
 
 ```bash
-curl http://localhost:8000/health/
+curl http://localhost:8500/health/
 ```
 
 Response:
@@ -384,12 +384,12 @@ python -c "from main import app; print('✓ App loaded successfully')"
 ### Test 2: Test Health Endpoint
 
 ```bash
-curl http://localhost:8000/health/
+curl http://localhost:8500/health/
 ```
 
 ### Test 3: Check API Documentation
 
-Visit: http://localhost:8000/docs
+Visit: http://localhost:8500/docs
 
 ---
 

@@ -52,7 +52,13 @@ export class AudioSession {
     }
 
     this.source = this.audioContext.createMediaStreamSource(this.mediaStream);
+    
+    // ponytail: connect to destination via muted gain node to prevent browser from optimizing away processing
+    const gainNode = this.audioContext.createGain();
+    gainNode.gain.value = 0;
     this.source.connect(this.analyser);
+    this.analyser.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
 
     // Global reference so it survives the entire session
     (window as any).audioSession = this;
@@ -77,20 +83,28 @@ export class AudioSession {
     if (this.audioContext.state === "suspended") {
       this.audioContext.resume().catch(() => {});
     }
-    if (this.audioContext.state !== "running") return -100;
+    if (this.audioContext.state === "closed") return -100;
 
-    const dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-    this.analyser.getByteFrequencyData(dataArray);
-    const avg = dataArray.reduce((a, b) => a + b) / dataArray.length;
-    if (avg === 0) return -100;
+    // Use time-domain data as it is more robust than frequency domain for measuring sound amplitude/peak level.
+    const dataArray = new Uint8Array(this.analyser.fftSize);
+    this.analyser.getByteTimeDomainData(dataArray);
     
-    // Convert to relative amplitude value
-    const db = 20 * Math.log10(avg / 255);
+    let maxDeviation = 0;
+    for (let i = 0; i < dataArray.length; i++) {
+      const deviation = Math.abs(dataArray[i] - 128);
+      if (deviation > maxDeviation) {
+        maxDeviation = deviation;
+      }
+    }
     
-    // Scale it to decibel values matching the 60-70 dB SPL target range
-    // Since math log results in negative dBFS, we map it:
-    // -100 dBFS is silence (~30 dB SPL)
-    // 0 dBFS is clipping (~100 dB SPL)
+    // Normalized to [0, 1]
+    const normalized = maxDeviation / 128;
+    if (normalized === 0) return -100;
+    
+    // Convert to relative amplitude value (dBFS)
+    const db = 20 * Math.log10(normalized);
+    
+    // Scale to positive dB SPL range matching the 30 - 100 dB SPL target
     const dbSpl = 100 + db;
     return Math.round(dbSpl);
   }
@@ -137,6 +151,10 @@ export class AudioSession {
       this.audioContext = null;
     }
     this.analyser = null;
+  }
+
+  getMediaStream(): MediaStream | null {
+    return this.mediaStream;
   }
 }
 
