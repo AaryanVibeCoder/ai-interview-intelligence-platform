@@ -301,25 +301,37 @@ export default function PreflightPage() {
   async function checkInternetSpeed(): Promise<number> {
     try {
       const startTime = performance.now();
-      const response = await fetch(`${apiConfig.baseUrl}/health/test-1mb?t=${Date.now()}`, { cache: "no-store" });
+      // Fetch a public asset from a highly reliable CDN that supports CORS to test real internet throughput
+      const response = await fetch("https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js?t=" + Date.now(), { cache: "no-store" });
       if (!response.ok) throw new Error("Network speed test endpoint failed");
-      await response.json();
+      const blob = await response.blob();
       const endTime = performance.now();
       const duration = (endTime - startTime) / 1000;
       
-      // 1MB is 8.388608 Megabits
-      const speed = 8.388608 / duration;
+      // Calculate Mbps based on actual downloaded blob size
+      const sizeInMb = (blob.size * 8) / 1000000;
+      const speed = sizeInMb / duration;
       return speed;
     } catch (err) {
-      console.warn("Real network throughput check failed, falling back to latency estimation:", err);
+      console.warn("Real network throughput check failed, falling back to local backend loopback:", err);
       try {
         const startTime = performance.now();
-        await fetch(`${apiConfig.baseUrl}/health/`, { cache: "no-store" });
-        const elapsed = performance.now() - startTime;
-        if (elapsed > 400) return 0.8;
-        return 5.0;
+        const response = await fetch(`${apiConfig.baseUrl}/health/test-1mb?t=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) throw new Error("Loopback speed test failed");
+        await response.json();
+        const endTime = performance.now();
+        const duration = (endTime - startTime) / 1000;
+        return 8.388608 / duration;
       } catch {
-        return 0;
+        try {
+          const startTime = performance.now();
+          await fetch(`${apiConfig.baseUrl}/health/`, { cache: "no-store" });
+          const elapsed = performance.now() - startTime;
+          if (elapsed > 400) return 0.8;
+          return 5.0;
+        } catch {
+          return 0;
+        }
       }
     }
   }

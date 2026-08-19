@@ -574,14 +574,18 @@ def generate_ats_score(
     skills_soft: list,
     years_exp: float,
     education: list,
-    sections: dict
+    sections: dict,
+    raw_text: str = ""
 ) -> dict:
     
     target_keywords = ["system design", "microservices", "api", "cloud", "scaling", "database", "ci/cd", "docker", "optimization", "agile"]
     keywords_found_count = 0
-    all_skills_lower = [s.lower() for s in skills_tech]
+    
+    clean_text = " " + re.sub(r'\s+', ' ', raw_text).lower() + " "
     for kw in target_keywords:
-        if kw in all_skills_lower:
+        kw_lower = kw.lower()
+        pattern = r'\b' + re.escape(kw_lower) + r'\b'
+        if re.search(pattern, clean_text):
             keywords_found_count += 1
             
     keyword_score = min(20, 10 + (keywords_found_count * 2))
@@ -893,7 +897,7 @@ def analyze_resume(extracted_text: str) -> dict:
     gaps = calculate_gaps(jobs)
     
     # 9. Score ATS
-    ats_score_data = generate_ats_score(skills_tech, skills_soft, years_exp, education, sections)
+    ats_score_data = generate_ats_score(skills_tech, skills_soft, years_exp, education, sections, extracted_text)
     
     # 10. Extract interview intelligence and profile
     intelligence = generate_interview_intelligence(skills_tech, skills_soft, jobs, gaps)

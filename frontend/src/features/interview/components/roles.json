@@ -181,5 +181,29 @@
     "category": "Engineering",
     "needs_review": false,
     "reasoning_citation": "The role is a junior-level software development position, fitting within the Engineering family."
+  },
+  {
+    "name": "Data Analyst",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The input \"data an\" is a truncated form of the common tech role \"Data Analyst\"."
+  },
+  {
+    "name": "Data Analyst",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The input \"data ana\" is a truncated form of the common tech role \"Data Analyst\"."
+  },
+  {
+    "name": "Data Analyst",
+    "category": "Data",
+    "needs_review": false,
+    "reasoning_citation": "The input \"Dta\" appears to be a truncated or misspelled form of \"Data\", a common tech role; the most typical entry-level title for such a role is Data Analyst."
+  },
+  {
+    "name": "Machine Learning Engineer",
+    "category": "Engineering",
+    "needs_review": false,
+    "reasoning_citation": "The role is a technical engineering position focused on machine learning, fitting the Engineering job family."
   }
 ]

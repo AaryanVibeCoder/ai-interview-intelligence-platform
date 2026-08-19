@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useInterviewStore } from "@/store/interview-store";
+import { useUiStore } from "@/store/ui-store";
 import { 
   Award, 
   Cpu, 
@@ -30,6 +31,19 @@ export default function InterviewFeedbackPage() {
   } = useInterviewStore();
 
   const [corrections, setCorrections] = useState<any[]>([]);
+
+  // Congrats notification on first completed interview
+  useEffect(() => {
+    const congratsDone = localStorage.getItem("first_interview_notified");
+    if (!congratsDone) {
+      const addNotification = useUiStore.getState().addNotification;
+      addNotification(
+        "First Interview Completed! 🎉",
+        "Congratulations on successfully completing your first interview! Keep up the momentum and have a great time elevating your skills!"
+      );
+      localStorage.setItem("first_interview_notified", "true");
+    }
+  }, []);
 
   useEffect(() => {
     let stored = null;

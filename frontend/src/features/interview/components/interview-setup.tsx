@@ -797,7 +797,12 @@ export function InterviewSetup() {
     // that happen immediately after cancel().
     await new Promise(resolve => setTimeout(resolve, 150));
 
-    const utterance = new SpeechSynthesisUtterance(verbalText);
+    const cleanVerbalText = verbalText
+      .replace(/[#*`_~[\]()]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
+    const utterance = new SpeechSynthesisUtterance(cleanVerbalText);
     const targetVoice = voices.find(
       (v) => v.lang.startsWith("en-US") && v.name.includes("Natural")
     ) || voices.find(
@@ -1279,14 +1284,24 @@ export function InterviewSetup() {
 
     // Check internet speed
     try {
-      const healthCheck = await fetch(`${apiConfig.baseUrl}/health`, { cache: "no-store" });
-      if (!healthCheck.ok) throw new Error("Health check failed");
-
       const testStart = Date.now();
-      const speedCheck = await fetch(`${apiConfig.baseUrl}/health/test-1mb?t=${Date.now()}`, { cache: "no-store" });
-      await speedCheck.json();
-      const duration = (Date.now() - testStart) / 1000;
-      const speed = 8.388608 / duration;
+      let speed = 0;
+      try {
+        const response = await fetch("https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js?t=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("Public speed test failed");
+        const blob = await response.blob();
+        const duration = (Date.now() - testStart) / 1000;
+        const sizeInMb = (blob.size * 8) / 1000000;
+        speed = sizeInMb / duration;
+      } catch (e) {
+        console.warn("Real network throughput check failed, falling back to local backend loopback:", e);
+        const testStartLocal = Date.now();
+        const speedCheck = await fetch(`${apiConfig.baseUrl}/health/test-1mb?t=${Date.now()}`, { cache: "no-store" });
+        await speedCheck.json();
+        const duration = (Date.now() - testStartLocal) / 1000;
+        speed = 8.388608 / duration;
+      }
+
       setSpeedMbps(speed);
 
       if (speed >= 0.1) {

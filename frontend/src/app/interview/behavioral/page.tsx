@@ -215,6 +215,17 @@ export default function BehavioralPage() {
         const token = await getToken();
         const headers = { Authorization: `Bearer ${token}` };
 
+        // Fetch setup profile first to get the correct interview_type (e.g. system design or behavioral)
+        let resolvedInterviewType = "behavioral";
+        try {
+          const profileRes = await apiClient.get<{ interview_type: string }>("/api/interview/setup", { headers } as never);
+          if (profileRes && profileRes.interview_type) {
+            resolvedInterviewType = profileRes.interview_type;
+          }
+        } catch (e) {
+          console.warn("Failed to fetch setup profile, falling back to behavioral:", e);
+        }
+
         // Fallback to mock session if mock environment is set
         const useMock = process.env.NEXT_PUBLIC_USE_MOCK === "true";
         const apiPath = useMock ? "/api/interview/mock/start" : "/api/interview/start";
@@ -223,7 +234,7 @@ export default function BehavioralPage() {
           apiPath,
           {
             target_company: targetCompany || "Google",
-            interview_type: "behavioral",
+            interview_type: resolvedInterviewType,
             experience_level: experienceLevel || "Mid-level",
             role: role || "Software Engineer",
             job_type: jobType || "full time job"
@@ -500,6 +511,12 @@ export default function BehavioralPage() {
   const speakQuestion = async (text: string) => {
     if (typeof window === "undefined" || !window.speechSynthesis) return;
 
+    // Clean markdown symbols (##, **, etc.) so the speech engine doesn't read them
+    const cleanText = text
+      .replace(/[#*`_~[\]()]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+
     window.speechSynthesis.cancel();
     setEleanorSpeaking(true);
 
@@ -521,7 +538,7 @@ export default function BehavioralPage() {
     // that happen immediately after cancel().
     await new Promise(resolve => setTimeout(resolve, 150));
 
-    const utterance = new SpeechSynthesisUtterance(text);
+    const utterance = new SpeechSynthesisUtterance(cleanText);
     // Choose natural sounding default female voice
     const voice = voices.find((v) => v.lang.startsWith("en-US") && v.name.includes("Natural")) ||
       voices.find((v) => v.lang.startsWith("en-US")) ||

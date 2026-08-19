@@ -173,17 +173,17 @@
   color-scheme: light;
 
   --background: oklch(0.98 0.004 260);
-  --foreground: oklch(0.18 0.02 260);
+  --foreground: oklch(0.12 0.015 260);
   --card: oklch(1 0 0 / 0.75);
-  --card-foreground: oklch(0.18 0.02 260);
+  --card-foreground: oklch(0.12 0.015 260);
   --popover: oklch(1 0 0 / 0.88);
-  --popover-foreground: oklch(0.18 0.02 260);
+  --popover-foreground: oklch(0.12 0.015 260);
   --primary: oklch(0.54 0.16 230);
   --primary-foreground: oklch(0.98 0.004 260);
   --secondary: oklch(0.95 0.01 260);
-  --secondary-foreground: oklch(0.22 0.02 260);
+  --secondary-foreground: oklch(0.18 0.02 260);
   --muted: oklch(0.95 0.01 260);
-  --muted-foreground: oklch(0.48 0.025 260);
+  --muted-foreground: oklch(0.35 0.02 260);
   --accent: oklch(0.55 0.15 280);
   --accent-foreground: oklch(0.98 0.004 280);
   --destructive: oklch(0.55 0.2 25);

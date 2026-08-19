@@ -4,6 +4,7 @@ import { MobileNavigation } from "@/components/layout/mobile-navigation";
 import { Navbar } from "@/components/layout/navbar";
 import { Sidebar } from "@/components/layout/sidebar";
 import { useUiStore } from "@/store";
+import { usePathname } from "next/navigation";
 
 type AppShellProps = {
   children: React.ReactNode;
@@ -11,6 +12,7 @@ type AppShellProps = {
 };
 
 export function AppShell({ children, userMenu }: AppShellProps) {
+  const pathname = usePathname();
   const isMobileNavigationOpen = useUiStore(
     (state) => state.isMobileNavigationOpen,
   );
@@ -22,6 +24,12 @@ export function AppShell({ children, userMenu }: AppShellProps) {
     (state) => state.setMobileNavigationOpen,
   );
   const toggleSidebar = useUiStore((state) => state.toggleSidebar);
+
+  const isAuthOrLanding = pathname === "/" || pathname?.startsWith("/sign-in") || pathname?.startsWith("/sign-up");
+
+  if (isAuthOrLanding) {
+    return <div className="min-h-screen bg-background text-foreground flex flex-col">{children}</div>;
+  }
 
   return (
     <div className="min-h-screen bg-background text-foreground">

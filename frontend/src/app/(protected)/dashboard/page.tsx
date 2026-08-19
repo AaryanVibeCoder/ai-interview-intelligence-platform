@@ -1,5 +1,6 @@
 import { ResumeUpload } from "@/features/resume/components/resume-upload";
 import { StartPracticeSection } from "@/features/interview/components/StartPracticeSection";
+import { GettingStartedCard } from "@/components/dashboard/GettingStartedCard";
 import { DocumentationCard } from "@/components/dashboard/DocumentationCard";
 import { SupportCard } from "@/components/dashboard/SupportCard";
 import { Metadata } from "next";
@@ -31,13 +32,7 @@ export default async function DashboardPage() {
       </div>
 
       <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-        {/* Dashboard cards will go here */}
-        <div className="rounded-2xl border bg-card/70 p-6 backdrop-blur-xl">
-          <h3 className="font-semibold">Getting Started</h3>
-          <p className="mt-2 text-sm text-muted-foreground">
-            You&apos;re one of the first to try ElevateIQ. Upload your resume below, then launch a mock interview &mdash; voice or coding &mdash; matched to the company and role you&apos;re preparing for.
-          </p>
-        </div>
+        <GettingStartedCard />
 
         <DocumentationCard />
 
@@ -47,7 +42,7 @@ export default async function DashboardPage() {
           <StartPracticeSection />
         </div>
 
-        <div className="md:col-span-2 lg:col-span-3">
+        <div className="md:col-span-2 lg:col-span-3" id="resume-upload-section">
           <ResumeUpload />
         </div>
       </div>

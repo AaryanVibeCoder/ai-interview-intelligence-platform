@@ -473,13 +473,13 @@ async def _generate_opener_in_background(
 
             return
 
-        system_prompt = f"""You are an elite technical interviewer at {target_company} conducting a {experience_level} {interview_type} interview for a {job_type or "full time job"} {role or "Software Engineer"} position.
+        system_prompt = f"""You are an elite technical interviewer named Eleanor at {target_company} conducting a {experience_level} {interview_type} interview for a {job_type or "full time job"} {role or "Software Engineer"} position.
 
 Your job is to conduct a realistic, high-quality interview by asking exactly one question at a time.
 
 Do not ask multiple questions at once. Keep the tone professional, encouraging yet rigorous.
 
-Begin the interview by introducing yourself briefly as the {target_company} interviewer and asking the first question appropriate for a {experience_level} candidate applying for a {job_type or "full time job"} {role or "Software Engineer"} position in a {interview_type} loop."""
+Begin the interview by introducing yourself briefly as Eleanor, the interviewer from {target_company}, and asking the first question appropriate for a {experience_level} candidate applying for a {job_type or "full time job"} {role or "Software Engineer"} position in a {interview_type} loop. You must always introduce yourself using the name Eleanor, and never use any other name."""
 
         # Hard bounded wait. The per-request SDK `timeout` is only a safety
 
@@ -683,38 +683,27 @@ async def start_interview(
 
         job_type = payload.job_type or (profile.job_type if profile else "full time job")
 
-        # 2) CREATE the session row FIRST — a fast DB-only write. No LLM here.
-
+        # 2) CREATE the session row.
         fallback_opener = _pick_fallback_opener(interview_type)
-
-        session = InterviewSession(
-
-            user_id=current_user.clerk_user_id,
-
-            interview_profile_id=profile.id if profile else None,
-
-            conversation_history=[
-
-                {"role": "assistant", "content": fallback_opener}
-
-            ],
-
-            status="in_progress",
-
-            question_source="fallback",
-
-            feedback={"fallback_set_index": random.randint(0, 3)},
-
-        )
-
-        db.add(session)
-
-        db.commit()
-
-        db.refresh(session)
+        opener = fallback_opener
+        q_source = "fallback"
 
         # If it is a coding interview, generate custom challenges inline to avoid temporary fallback UI swaps
         if "coding" in interview_type.lower().strip():
+            session = InterviewSession(
+                user_id=current_user.clerk_user_id,
+                interview_profile_id=profile.id if profile else None,
+                conversation_history=[
+                    {"role": "assistant", "content": fallback_opener}
+                ],
+                status="in_progress",
+                question_source="fallback",
+                feedback={"fallback_set_index": random.randint(0, 3)},
+            )
+            db.add(session)
+            db.commit()
+            db.refresh(session)
+
             from sqlalchemy.orm.attributes import flag_modified
             from app.api.coding import FALLBACK_CODING_CHALLENGES, generate_challenges_for_session
             try:
@@ -740,57 +729,64 @@ async def start_interview(
                 session.question_source = "fallback"
             flag_modified(session, "feedback")
             db.commit()
+            
+            opener = fallback_opener
+            q_source = session.question_source
 
-        # 3) Fire-and-forget personalized opener generation. Bounded and isolated:
+        else:
+            # Inline generate opener for system design and behavioral
+            try:
+                system_prompt = f"""You are an elite technical interviewer named Eleanor at {target_company} conducting a {experience_level} {interview_type} interview for a {job_type or "full time job"} {role or "Software Engineer"} position.
 
-        #    failures never crash the request or the process.
+Your job is to conduct a realistic, high-quality interview by asking exactly one question at a time.
 
-        if "coding" not in interview_type.lower().strip():
+Do not ask multiple questions at once. Keep the tone professional, encouraging yet rigorous.
 
-            asyncio.create_task(
+Begin the interview by introducing yourself briefly as Eleanor, the interviewer from {target_company}, and asking the first question appropriate for a {experience_level} candidate applying for a {job_type or "full time job"} {role or "Software Engineer"} position in a {interview_type} loop. You must always introduce yourself using the name Eleanor, and never use any other name."""
 
-                _generate_opener_in_background(
-
-                    session.id,
-
-                    target_company=target_company,
-
-                    interview_type=interview_type,
-
-                    experience_level=experience_level,
-
-                    role=role,
-
-                    job_type=job_type,
-
+                response, tier = await _tiered_chat(
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": "Begin the interview."},
+                    ],
+                    max_tokens=150,
+                    temperature=0.7,
+                    timeout_s=6.0,
+                    call_site="opener_inline",
                 )
+                generated_opener = (response.choices[0].message.content or "").strip()
+                if generated_opener:
+                    opener = generated_opener
+                    q_source = tier
+            except Exception as e:
+                logger.error(f"Failed to generate custom opener inline: {e}")
 
+            session = InterviewSession(
+                user_id=current_user.clerk_user_id,
+                interview_profile_id=profile.id if profile else None,
+                conversation_history=[
+                    {"role": "assistant", "content": opener}
+                ],
+                status="in_progress",
+                question_source=q_source,
+                feedback={"fallback_set_index": random.randint(0, 3)},
             )
+            db.add(session)
+            db.commit()
+            db.refresh(session)
 
-        # 4) Return immediately — the session is usable with the fallback opener.
-
+        # 4) Return immediately
         return InterviewStartResponse(
-
             session_id=session.id,
-
-            question=fallback_opener,
-
-            question_source="fallback",
-
+            question=opener,
+            question_source=q_source,
             interview_config={
-
                 "target_company": target_company,
-
                 "interview_type": interview_type,
-
                 "experience_level": experience_level,
-
                 "role": role,
-
                 "job_type": job_type,
-
             },
-
         )
 
     except HTTPException:
@@ -1039,7 +1035,7 @@ async def answer_question(
 
     # System evaluation prompt
 
-    system_prompt = f"""You are an elite technical interviewer at {profile.target_company} conducting a {profile.experience_level} {profile.interview_type} interview for a {profile.job_type or "full time job"} {profile.role or "Software Engineer"} position.
+    system_prompt = f"""You are an elite technical interviewer named Eleanor at {profile.target_company} conducting a {profile.experience_level} {profile.interview_type} interview for a {profile.job_type or "full time job"} {profile.role or "Software Engineer"} position. You must always maintain the persona of Eleanor (and only Eleanor, never use any other name).
 
 You are evaluating the candidate's responses and generating the next question.
 
