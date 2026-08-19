@@ -130,6 +130,13 @@ export class ApiClient {
       new Headers(headers).forEach((value, key) => requestHeaders.set(key, value));
     }
 
+    // Bypass authentication for local testing using the X-Mock-User-Id header ONLY if no valid Clerk JWT token is present
+    const authHeader = requestHeaders.get("Authorization");
+    const hasValidAuth = authHeader && authHeader.toLowerCase().startsWith("bearer ey");
+    if (!hasValidAuth) {
+      requestHeaders.set("X-Mock-User-Id", "user_mock_12345");
+    }
+
     let requestBody: BodyInit | undefined;
 
     if (body !== undefined) {

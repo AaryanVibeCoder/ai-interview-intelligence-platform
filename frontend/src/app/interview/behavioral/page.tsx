@@ -74,6 +74,12 @@ export default function BehavioralPage() {
   const [isLoadingHint, setIsLoadingHint] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
   const [isInterviewStarted, setIsInterviewStarted] = useState(false);
+  const [showNoSpeechFallback, setShowNoSpeechFallback] = useState(false);
+  const latestTranscriptRef = useRef("");
+
+  useEffect(() => {
+    latestTranscriptRef.current = userAnswerText;
+  }, [userAnswerText]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -106,11 +112,12 @@ export default function BehavioralPage() {
         rec.lang = "en-US";
 
         rec.onstart = () => {
-          console.log("Speech recognition started");
+          console.log(`[SpeechRecognition] EVENT: onstart | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
           setErrorMessage(null);
         };
 
         rec.onresult = (event: any) => {
+          console.log(`[SpeechRecognition] EVENT: onresult | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
           let interimTranscript = "";
           let finalTranscript = "";
 
@@ -123,13 +130,14 @@ export default function BehavioralPage() {
           }
 
           const txt = (finalTranscript + interimTranscript).trim();
+          console.log(`[SpeechRecognition] RESULT | text="${txt}" | final="${finalTranscript.trim()}" | interim="${interimTranscript.trim()}"`);
           if (txt) {
             setUserAnswerText(txt);
 
             // Auto submit on silence (5s quiet window)
             if (silenceTimeoutRef.current) clearTimeout(silenceTimeoutRef.current);
             silenceTimeoutRef.current = setTimeout(() => {
-              console.log("Silence threshold met (5s), stopping recognition and auto-submitting...");
+              console.log("[SpeechRecognition] Silence threshold met (5s), stopping recognition and auto-submitting...");
               shouldBeListeningRef.current = false;
               rec.stop();
             }, 5000);
@@ -137,6 +145,7 @@ export default function BehavioralPage() {
         };
 
         rec.onerror = (e: { error: string }) => {
+          console.log(`[SpeechRecognition] EVENT: onerror | error=${e.error} | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
           if (e.error === "no-speech") {
             ignoreSubmitOnEndRef.current = true;
             shouldRestartNoSpeechRef.current = true;
@@ -157,6 +166,7 @@ export default function BehavioralPage() {
         };
 
         rec.onend = () => {
+          console.log(`[SpeechRecognition] EVENT: onend | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
           // If we stopped due to a "no-speech" error but we still intend to be listening, auto-restart
           if (shouldRestartNoSpeechRef.current && shouldBeListeningRef.current) {
             shouldRestartNoSpeechRef.current = false;
@@ -181,6 +191,14 @@ export default function BehavioralPage() {
             ignoreSubmitOnEndRef.current = false;
             return;
           }
+
+          // If the final transcript is empty, trigger the UI fallback instead of submitting
+          if (!latestTranscriptRef.current.trim()) {
+            console.log("[SpeechRecognition] onend fired with empty transcript. Triggering UI fallback.");
+            setShowNoSpeechFallback(true);
+            return;
+          }
+
           handleSubmitAnswerRef.current();
         };
 
@@ -328,8 +346,25 @@ export default function BehavioralPage() {
 
   const startAudioAnalysis = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        audio: {
+          echoCancellation: false,
+          noiseSuppression: false,
+          autoGainControl: true,
+        },
+      });
       mediaStreamRef.current = stream;
+
+      // Extract and log media stream track settings/constraints
+      const audioTrack = stream.getAudioTracks()[0];
+      if (audioTrack) {
+        const settings = audioTrack.getSettings ? audioTrack.getSettings() : {};
+        const constraints = audioTrack.getConstraints ? audioTrack.getConstraints() : {};
+        console.log(`[getUserMedia] AUDIO CONSTRAINTS & SETTINGS | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
+        console.log(`[getUserMedia] Settings: echoCancellation=${settings.echoCancellation}, noiseSuppression=${settings.noiseSuppression}, autoGainControl=${settings.autoGainControl}`);
+        console.log(`[getUserMedia] Constraints: ${JSON.stringify(constraints)}`);
+        console.log(`[getUserMedia] Track Label: "${audioTrack.label}"`);
+      }
 
       const win = window as any;
       const AudioCtxClass = win.AudioContext || win.webkitAudioContext;
@@ -448,6 +483,8 @@ export default function BehavioralPage() {
 
   const startRecordingSpeech = async () => {
     if (!recognition) return;
+    console.log(`[startRecordingSpeech] CALLED | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
+    setShowNoSpeechFallback(false);
     ignoreSubmitOnEndRef.current = false;
     shouldBeListeningRef.current = true;
     shouldRestartNoSpeechRef.current = false;
@@ -550,9 +587,14 @@ export default function BehavioralPage() {
     utterance.volume = 1.0;
 
     utterance.onend = () => {
+      console.log(`[TTS] EVENT: utterance.onend | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
       setEleanorSpeaking(false);
-      // Auto-start recording
-      startRecordingSpeech();
+      // Auto-start recording with a 400ms delay to allow speaker audio to decay and prevent echo-cancellation suppression
+      console.log("[TTS] Scheduling startRecordingSpeech with 400ms delay...");
+      setTimeout(() => {
+        console.log(`[TTS] 400ms delay completed, calling startRecordingSpeech() | timestamp=${new Date().toISOString()} | performance.now=${performance.now()}`);
+        startRecordingSpeech();
+      }, 400);
     };
 
     utterance.onerror = (e) => {
@@ -600,6 +642,7 @@ export default function BehavioralPage() {
   const handleSubmitAnswer = async () => {
     if (!userAnswerText.trim() || isSubmitting) return;
 
+    setShowNoSpeechFallback(false);
     setIsSubmitting(true);
     setErrorMessage(null);
 
@@ -884,9 +927,28 @@ export default function BehavioralPage() {
                 </div>
 
                 {/* Answer textarea fallback */}
+                {showNoSpeechFallback && (
+                  <div className="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-center justify-between text-amber-500 text-xs animate-in slide-in-from-top-1 duration-200">
+                    <span className="font-semibold">Didn't catch that, please try again.</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setShowNoSpeechFallback(false);
+                        startRecordingSpeech();
+                      }}
+                      className="cursor-pointer font-bold bg-amber-500 text-black px-3 py-1 rounded-lg hover:bg-amber-600 transition-all text-[11px]"
+                    >
+                      Restart Listening
+                    </button>
+                  </div>
+                )}
+
                 <textarea
                   value={userAnswerText}
-                  onChange={(e) => setUserAnswerText(e.target.value)}
+                  onChange={(e) => {
+                    setUserAnswerText(e.target.value);
+                    setShowNoSpeechFallback(false);
+                  }}
                   disabled={eleanorSpeaking || isSubmitting}
                   placeholder={
                     eleanorSpeaking

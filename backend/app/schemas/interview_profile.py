@@ -23,5 +23,3 @@ class InterviewProfileResponse(BaseModel):
 
     class Config:
         from_attributes = True
-        # Pydantic v1 compatibility just in case
-        orm_mode = True

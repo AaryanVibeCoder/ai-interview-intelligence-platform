@@ -4,8 +4,9 @@ import logging
 import json
 from pydantic import BaseModel
 from fastapi import APIRouter, Depends, HTTPException, Request, status
-from app.api.interview import settings, client, _model
+from app.api.interview import settings, client, _model, detect_and_validate_scoring
 from app.core.rate_limit import limiter
+from app.core.clerk_auth import get_current_user
 
 logger = logging.getLogger(__name__)
 
@@ -276,6 +277,7 @@ Ensure the JSON is valid."""
                 content = "\n".join(lines).strip()
                 
             res_json = json.loads(content)
+            res_json = detect_and_validate_scoring(transcript, res_json)
             fb = res_json["feedback"]
             next_q = res_json["next_question"]
             
@@ -465,7 +467,7 @@ Ensure the JSON is valid."""
 # Define routes under both prefixes for max compatibility
 @router.post("/api/interview/mock/start", response_model=MockStartResponse)
 @limiter.limit("5/minute")
-async def start_mock_api(request: Request, payload: MockStartRequest, db: Session = Depends(get_db)):
+async def start_mock_api(request: Request, payload: MockStartRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     company = payload.target_company
     itype = payload.interview_type
     if not company or not itype:
@@ -480,7 +482,7 @@ async def start_mock_api(request: Request, payload: MockStartRequest, db: Sessio
 
 @router.post("/interviews/mock/start", response_model=MockStartResponse)
 @limiter.limit("5/minute")
-async def start_mock_interviews(request: Request, payload: MockStartRequest, db: Session = Depends(get_db)):
+async def start_mock_interviews(request: Request, payload: MockStartRequest, db: Session = Depends(get_db), current_user = Depends(get_current_user)):
     company = payload.target_company
     itype = payload.interview_type
     if not company or not itype:
@@ -495,12 +497,12 @@ async def start_mock_interviews(request: Request, payload: MockStartRequest, db:
 
 @router.post("/api/interview/mock/answer", response_model=MockAnswerResponse)
 @limiter.limit("30/minute")
-async def answer_mock_api(request: Request, payload: MockAnswerRequest):
+async def answer_mock_api(request: Request, payload: MockAnswerRequest, current_user = Depends(get_current_user)):
     return await answer_mock_session_handler(payload)
 
 @router.post("/interviews/mock/answer", response_model=MockAnswerResponse)
 @limiter.limit("30/minute")
-async def answer_mock_interviews(request: Request, payload: MockAnswerRequest):
+async def answer_mock_interviews(request: Request, payload: MockAnswerRequest, current_user = Depends(get_current_user)):
     return await answer_mock_session_handler(payload)
 
 
@@ -522,7 +524,8 @@ from app.api.interview import (
 
 @router.get("/api/interview/mock/companies/search", response_model=List[Dict[str, Any]])
 @router.get("/interviews/mock/companies/search", response_model=List[Dict[str, Any]])
-async def search_mock_companies(q: str = Query("", description="Search query")):
+@limiter.limit("40/minute")
+async def search_mock_companies(request: Request, q: str = Query("", description="Search query"), current_user = Depends(get_current_user)):
     local_results = search_local_companies(q)
     if len(q.strip()) >= 3 and len(local_results) < 3:
         llm_results = await search_companies_llm(q)
@@ -535,9 +538,12 @@ async def search_mock_companies(q: str = Query("", description="Search query")):
 
 @router.get("/api/interview/mock/companies/recommend", response_model=List[Dict[str, Any]])
 @router.get("/interviews/mock/companies/recommend", response_model=List[Dict[str, Any]])
+@limiter.limit("10/minute")
 async def recommend_mock_companies(
+    request: Request,
     resume_id: int = Query(..., description="ID of the resume to base recommendations on"),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
 ):
     if resume_id in _recommendations_cache:
         return _recommendations_cache[resume_id]
@@ -613,9 +619,12 @@ Return ONLY a JSON list of exactly 3 company names. Example: ["Google", "Stripe"
 # --- Mock Roles Search ---
 @router.get("/api/interview/mock/roles/search", response_model=List[Dict[str, Any]])
 @router.get("/interviews/mock/roles/search", response_model=List[Dict[str, Any]])
+@limiter.limit("40/minute")
 async def search_mock_roles(
+    request: Request,
     q: str = Query("", description="Search query"),
     cache_only: bool = Query(False, description="Whether to search local cache only (no LLM)"),
+    current_user = Depends(get_current_user)
 ):
     roles = get_roles()
     query_clean = q.strip().lower()
@@ -666,7 +675,8 @@ class MockHintRequest(BaseModel):
 
 @router.post("/api/interview/mock/hint")
 @router.post("/interviews/mock/hint")
-async def generate_mock_hint(payload: MockHintRequest):
+@limiter.limit("20/minute")
+async def generate_mock_hint(request: Request, payload: MockHintRequest, current_user = Depends(get_current_user)):
     if settings.LLM_API_KEY and settings.LLM_API_KEY != "placeholder_key":
         prompt = f"""You are an elite technical interviewer conducting a mock interview.
 The candidate is currently answering this question: "{payload.question}"
@@ -700,7 +710,8 @@ class MockRoleValidationRequest(BaseModel):
 
 @router.post("/api/interview/mock/validate-role")
 @router.post("/interviews/mock/validate-role")
-async def validate_mock_role(payload: MockRoleValidationRequest):
+@limiter.limit("20/minute")
+async def validate_mock_role(request: Request, payload: MockRoleValidationRequest, current_user = Depends(get_current_user)):
     if settings.LLM_API_KEY and settings.LLM_API_KEY != "placeholder_key":
         prompt = f"""You are a tech company job role verification engine. 
 Verify if the job role '{payload.role}' is a valid job position that exists, is hired for, or is relevant at '{payload.company}'. 
@@ -755,7 +766,8 @@ class MockCompanyRolesRequest(BaseModel):
 
 @router.post("/api/interview/mock/company-roles")
 @router.post("/interviews/mock/company-roles")
-async def get_mock_company_roles(payload: MockCompanyRolesRequest):
+@limiter.limit("20/minute")
+async def get_mock_company_roles(request: Request, payload: MockCompanyRolesRequest, current_user = Depends(get_current_user)):
     if settings.LLM_API_KEY and settings.LLM_API_KEY != "placeholder_key":
         prompt = f"""Generate a list of exactly 10 real-world job roles/positions that '{payload.company}' hires for (both vacant and non-vacant positions).
 Focus on technology, product, design, and engineering roles relevant to this specific company. Make sure the roles are realistic and actually exist/existed at '{payload.company}'.
@@ -820,18 +832,24 @@ from fastapi import File, Form, UploadFile
 
 @router.post("/api/interview/mock/upload-answer-audio")
 @router.post("/interviews/mock/upload-answer-audio")
+@limiter.limit("20/minute")
 async def mock_upload_answer_audio(
+    request: Request,
     session_id: int = Form(...),
     question_index: int = Form(...),
     audio: UploadFile = File(...),
+    current_user = Depends(get_current_user)
 ):
     logger.info(f"[Mock-NIM-Audio] Uploaded audio for session {session_id}, question index {question_index}")
     return {"status": "saved", "question_index": question_index}
 
 @router.post("/api/interview/mock/enrich")
 @router.post("/interviews/mock/enrich")
+@limiter.limit("20/minute")
 async def mock_enrich_interview(
+    request: Request,
     payload: dict,
+    current_user = Depends(get_current_user)
 ):
     session_id = payload.get("session_id")
     logger.info(f"[Mock-NIM-Enrich] Triggered ASR enrichment for session {session_id}")

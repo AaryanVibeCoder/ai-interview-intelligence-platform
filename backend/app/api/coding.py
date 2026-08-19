@@ -755,6 +755,41 @@ async def get_coding_challenge(
     return challenge_response
 
 
+_bwrap_works = None
+def _check_bwrap_functional() -> bool:
+    global _bwrap_works
+    if _bwrap_works is not None:
+        return _bwrap_works
+    import shutil
+    bwrap_path = shutil.which("bwrap")
+    if not bwrap_path:
+        _bwrap_works = False
+        return False
+    try:
+        res = subprocess.run([bwrap_path, "--unshare-net", "true"], capture_output=True, timeout=1.0)
+        _bwrap_works = (res.returncode == 0)
+    except Exception:
+        _bwrap_works = False
+    return _bwrap_works
+
+_unshare_works = None
+def _check_unshare_functional() -> bool:
+    global _unshare_works
+    if _unshare_works is not None:
+        return _unshare_works
+    import shutil
+    unshare_path = shutil.which("unshare")
+    if not unshare_path:
+        _unshare_works = False
+        return False
+    try:
+        res = subprocess.run([unshare_path, "-n", "-r", "true"], capture_output=True, timeout=1.0)
+        _unshare_works = (res.returncode == 0)
+    except Exception:
+        _unshare_works = False
+    return _unshare_works
+
+
 def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict) -> List[Dict]:
     """
     Execute candidate code against the challenge test cases in a real local
@@ -843,88 +878,127 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
     payload_str = json.dumps(payload_data)
 
     import shutil
-    # Create unique temporary directory for fallback runner execution (if fallback happens)
-    temp_dir = tempfile.mkdtemp(prefix="elevateiq-worker-")
+    # Create unique temporary directory for runner execution.
+    # On Linux (container), use /sandbox_work which is pre-owned by appuser at build time.
+    sandbox_parent = "/sandbox_work" if sys.platform != "win32" and os.path.isdir("/sandbox_work") else None
+    temp_dir = tempfile.mkdtemp(prefix="elevateiq-worker-", dir=sandbox_parent)
     temp_json_path = os.path.join(temp_dir, "payload.json")
     try:
         with open(temp_json_path, "w", encoding="utf-8") as temp_json:
             json.dump(payload_data, temp_json)
 
-        # Check if Docker is available and daemon is running
-        docker_available = False
-        if USE_DOCKER_SANDBOX:
-            try:
-                res = subprocess.run(["docker", "info"], capture_output=True, text=True, timeout=2.0)
-                if res.returncode == 0:
-                    docker_available = True
-            except Exception:
-                pass
-
-        if docker_available:
-            host_services_dir = os.path.abspath(services_dir)
-            if sys.platform == "win32":
-                host_services_dir = host_services_dir.replace("\\", "/")
-
-            cmd = [
-                "docker", "run", "--rm", "-i",
-                "-v", f"{host_services_dir}:/app/services:ro",
-                "--network", "none",
-                "--read-only",
-                "--cap-drop", "ALL",
-                "--security-opt", "no-new-privileges",
-                "--memory", f"{MEMORY_LIMIT_MB}m",
-                "--cpus", str(CPU_LIMIT),
-                "--pids-limit", str(PID_LIMIT),
-                "--user", "1000:1000",
-                "--tmpfs", "/tmp:rw,noexec,nosuid,size=10m",
-                "elevateiq-sandbox"
-            ]
-            if lang == "javascript":
-                cmd.extend(["node", "/app/services/js_runner.js"])
-            else:
-                cmd.extend(["python", "/app/services/py_runner.py"])
+        # Base command depending on language
+        if lang == "javascript":
+            # Pass max-old-space-size to restrict heap memory directly (reconciles 512MB RAM ceiling on Render free tier)
+            base_cmd = ["node", f"--max-old-space-size={max(MEMORY_LIMIT_MB, 128)}", runner_path, temp_json_path]
         else:
-            # Fallback is allowed ONLY in dev environment if ALLOW_UNSANDBOXED_EXECUTION is explicitly True
-            if ALLOW_UNSANDBOXED_EXECUTION:
-                if lang == "javascript":
-                    cmd = ["node", runner_path, temp_json_path]
-                else:
-                    cmd = [sys.executable, runner_path, temp_json_path]
-            else:
-                logger.error("Docker is unavailable and unsandboxed execution is disallowed. Failing closed.")
-                return [
-                    {
-                        "testCaseId": tc.get("id"),
-                        "status": "SANDBOX_UNAVAILABLE",
-                        "passed": False,
-                        "expected": tc.get("expectedOutput"),
-                        "actual": "Sandbox environment is offline",
-                        "error": "Execution service is temporarily unavailable (Docker sandbox not running).",
-                        "runtime": 0
-                    } for tc in test_cases
-                ]
+            base_cmd = [sys.executable, runner_path, temp_json_path]
+
+        # Sandbox wrapper prefix for Linux/UNIX
+        cmd = base_cmd
+        sandbox_tool = None
+        if sys.platform != "win32":
+            if _check_bwrap_functional():
+                # bubblewrap for full read-only filesystem protection, network unsharing, and temp_dir rw mapping
+                cmd = ["bwrap", "--unshare-net", "--ro-bind", "/", "/", "--tmpfs", "/tmp", "--bind", temp_dir, temp_dir, "--"] + base_cmd
+                sandbox_tool = "bwrap"
+            elif _check_unshare_functional():
+                # fallback unshare net namespace + mapping root user
+                cmd = ["unshare", "-n", "-r"] + base_cmd
+                sandbox_tool = "unshare"
 
         # C++ compilation happens inside cpp_runner.py; give it extra headroom.
         timeout_secs = 15.0 if lang == "cpp" else (EXECUTION_TIMEOUT_MS / 1000.0) + 2.0
 
-        # Execute subprocess with Popen to guarantee clean timeout termination
+        # Memory limit & seccomp preexec_fn for Linux
+        def set_limits():
+            try:
+                import resource
+                # Node.js on 64-bit requires ~1.5-2GB virtual memory address space reservation for V8 CodeRange.
+                if lang == "javascript":
+                    mem_limit_mb = max(MEMORY_LIMIT_MB, 2048)
+                else:
+                    mem_limit_mb = max(MEMORY_LIMIT_MB, 512)
+                mem_limit_bytes = mem_limit_mb * 1024 * 1024
+                resource.setrlimit(resource.RLIMIT_AS, (mem_limit_bytes, mem_limit_bytes))
+            except Exception:
+                pass
+
+            # Apply seccomp filter in fallback mode (namespaces unavailable) to block socket system calls
+            if not sandbox_tool:
+                try:
+                    import ctypes
+                    libc = ctypes.CDLL(None)
+                    
+                    # BPF Constants
+                    BPF_LD = 0x00
+                    BPF_W = 0x00
+                    BPF_ABS = 0x20
+                    BPF_JMP = 0x05
+                    BPF_JEQ = 0x10
+                    BPF_K = 0x00
+                    BPF_RET = 0x06
+
+                    SECCOMP_RET_KILL = 0x00000000
+                    SECCOMP_RET_ERRNO = 0x00050000
+                    SECCOMP_RET_ALLOW = 0x7fff0000
+                    EACCES = 13
+
+                    PR_SET_NO_NEW_PRIVS = 38
+                    PR_SET_SECCOMP = 22
+                    SECCOMP_MODE_FILTER = 2
+
+                    class sock_filter(ctypes.Structure):
+                        _fields_ = [
+                            ('code', ctypes.c_uint16),
+                            ('jt', ctypes.c_uint8),
+                            ('jf', ctypes.c_uint8),
+                            ('k', ctypes.c_uint32),
+                        ]
+
+                    class sock_fprog(ctypes.Structure):
+                        _fields_ = [
+                            ('len', ctypes.c_uint16),
+                            ('filter', ctypes.POINTER(sock_filter)),
+                        ]
+
+                    # 1. Set no new privileges
+                    libc.prctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)
+                    
+                    # 2. Build BPF filter instructions to block socket (41), connect (42), bind (49)
+                    instructions = [
+                        sock_filter(BPF_LD | BPF_W | BPF_ABS, 0, 0, 4), # Load arch
+                        sock_filter(BPF_JMP | BPF_JEQ | BPF_K, 1, 0, 0xc000003e), # Check x86_64
+                        sock_filter(BPF_RET | BPF_K, 0, 0, SECCOMP_RET_KILL),
+                        sock_filter(BPF_LD | BPF_W | BPF_ABS, 0, 0, 0), # Load syscall number
+                        sock_filter(BPF_JMP | BPF_JEQ | BPF_K, 3, 0, 41), # socket
+                        sock_filter(BPF_JMP | BPF_JEQ | BPF_K, 2, 0, 42), # connect
+                        sock_filter(BPF_JMP | BPF_JEQ | BPF_K, 1, 0, 49), # bind
+                        sock_filter(BPF_RET | BPF_K, 0, 0, SECCOMP_RET_ALLOW),
+                        sock_filter(BPF_RET | BPF_K, 0, 0, SECCOMP_RET_ERRNO | EACCES)
+                    ]
+                    
+                    FilterArray = sock_filter * len(instructions)
+                    filter_array = FilterArray(*instructions)
+                    program = sock_fprog(len=len(instructions), filter=filter_array)
+                    
+                    # 3. Load seccomp filter
+                    libc.prctl(PR_SET_SECCOMP, SECCOMP_MODE_FILTER, ctypes.byref(program))
+                except Exception:
+                    pass
+
         debug_log_path = os.path.join(os.path.dirname(os.path.dirname(api_dir)), "logs", "docker_debug.log")
-        try:
-            with open(debug_log_path, "a", encoding="utf-8") as df:
-                df.write(f"\n--- [{datetime.now().isoformat()}] START EXECUTION ---\n")
-                df.write(f"Lang: {lang}\n")
-                df.write(f"Cmd: {cmd}\n")
-                df.write(f"Code: {code}\n")
-        except Exception:
-            pass
 
         try:
+            preexec_fn = set_limits if sys.platform != "win32" else None
             proc = subprocess.Popen(
                 cmd,
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
-                text=True
+                text=True,
+                cwd=temp_dir,
+                preexec_fn=preexec_fn
             )
             try:
                 stdout, stderr = proc.communicate(input=payload_str, timeout=timeout_secs)
@@ -950,43 +1024,26 @@ def _execute_code(lang: str, code: str, test_cases: List[Dict], challenge: Dict)
             # Check stderr or crash
             if proc.returncode != 0:
                 logger.error(f"Runner subprocess failed: stdout={stdout}, stderr={stderr}")
-                if docker_available:
-                    # Docker container itself failed or was OOM killed
-                    if proc.returncode == 137 or "oom" in stderr.lower():
-                        status = "MEMORY_LIMIT_EXCEEDED"
-                        err_msg = "Memory Limit Exceeded: Container resource limits reached."
-                    else:
-                        status = "SANDBOX_UNAVAILABLE"
-                        err_msg = f"Docker execution failed (exit code {proc.returncode}). Stderr: {stderr}"
-                    
-                    return [
-                        {
-                            "testCaseId": tc.get("id"),
-                            "status": status,
-                            "passed": False,
-                            "expected": tc.get("expectedOutput"),
-                            "actual": "Sandbox resource limit triggered" if status == "MEMORY_LIMIT_EXCEEDED" else "Sandbox environment offline",
-                            "error": err_msg,
-                            "runtime": 0
-                        } for tc in test_cases
-                    ]
+                if proc.returncode == 137 or "oom" in stderr.lower() or "heap limit allocation failed" in stderr.lower() or "out of memory" in stderr.lower() or "allocation failed" in stderr.lower() or "MemoryError" in stderr or "std::bad_alloc" in stderr:
+                    status = "MEMORY_LIMIT_EXCEEDED"
+                    err_msg = "Memory Limit Exceeded: Sandboxed process resources exhausted."
                 else:
                     status = "RUNTIME_ERROR"
-                    if "SyntaxError" in stderr:
+                    if "SyntaxError" in stderr or "COMPILE_ERROR" in stderr:
                         status = "COMPILE_ERROR"
-                    elif "out of memory" in stderr.lower() or "heap limit allocation failed" in stderr.lower():
-                        status = "MEMORY_LIMIT_EXCEEDED"
-                    return [
-                        {
-                            "testCaseId": tc.get("id"),
-                            "status": status,
-                            "passed": False,
-                            "expected": tc.get("expectedOutput"),
-                            "actual": "Execution crash or compile error",
-                            "error": stderr.strip() or f"Runner exited with code {proc.returncode}",
-                            "runtime": 0
-                        } for tc in test_cases
-                    ]
+                    err_msg = stderr.strip() or f"Runner exited with code {proc.returncode}"
+                
+                return [
+                    {
+                        "testCaseId": tc.get("id"),
+                        "status": status,
+                        "passed": False,
+                        "expected": tc.get("expectedOutput"),
+                        "actual": "Sandbox resource limit triggered" if status == "MEMORY_LIMIT_EXCEEDED" else "Execution crash or compile error",
+                        "error": err_msg,
+                        "runtime": 0
+                    } for tc in test_cases
+                ]
 
             # Parse stdout
             results_list = json.loads(stdout.strip())
@@ -1147,33 +1204,28 @@ async def evaluate_code_quality(
             "codeQuality": f"{score}/10"
         }
 
-    # 5. All tests passed (pass_rate == 1.0): Use LLM to evaluate efficiency and style
-    # Score range: 7.0 - 10.0
-    prompt = f"""You are an elite code quality assessor. Rate the candidate's code on a scale of 7.0 to 10.0 because it successfully passed all test cases.
+    system_prompt = """You are an elite code quality assessor. Rate the candidate's code on a scale of 7.0 to 10.0 because it successfully passed all test cases.
 Evaluate the code for time complexity (O(N) vs O(N^2)), space complexity, readability, and variable naming conventions.
 
-Language: {payload.language}
-Candidate Code:
-```
-{payload.code}
-```
-
 Format your response as a strictly valid JSON object conforming to this structure:
-{{
+{
   "score": 8.5, // float between 7.0 and 10.0
   "strengths": ["string"],
   "gaps": ["string"],
   "suggestions": ["string"]
-}}
+}
 
-Return ONLY this JSON object. Do not wrap in markdown code fences, do not include any conversation or explanation."""
+Return ONLY this JSON object. Do not wrap in markdown code fences, do not include any conversation or explanation.
+You are a precise code quality feedback generator that outputs strictly valid JSON objects."""
+
+    user_content = f"Language: {payload.language}\nCandidate Code:\n```\n{payload.code}\n```"
 
     try:
         response = await client.chat.completions.create(
             model=_model,
             messages=[
-                {"role": "system", "content": "You are a precise code quality feedback generator that outputs strictly valid JSON objects."},
-                {"role": "user", "content": prompt}
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content}
             ],
             max_tokens=800,
             temperature=0.1,

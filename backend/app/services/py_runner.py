@@ -230,6 +230,10 @@ def run():
             else:
                 status = "RUNTIME_ERROR"
                 error = str(re)
+        except MemoryError as me:
+            runtime = int((time.perf_counter() - start) * 1000)
+            status = "MEMORY_LIMIT_EXCEEDED"
+            error = "Memory Limit Exceeded: Sandboxed process resources exhausted."
         except Exception as e:
             runtime = int((time.perf_counter() - start) * 1000)
             status = "RUNTIME_ERROR"
@@ -330,6 +334,9 @@ def run():
                 if proc.returncode != 0:
                     status = "RUNTIME_ERROR"
                     error = stderr_data.strip() or f"Worker process crashed with code {proc.returncode}."
+                    if proc.returncode in (137, -9) or "MemoryError" in error or "out of memory" in error.lower() or "killed" in error.lower():
+                        status = "MEMORY_LIMIT_EXCEEDED"
+                        error = "Memory Limit Exceeded: Sandboxed process resources exhausted."
                 else:
                     try:
                         worker_res = json.loads(stdout_data.strip())

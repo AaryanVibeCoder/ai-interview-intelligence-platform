@@ -8,7 +8,7 @@ from typing import List, Optional
 import datetime
 
 from pydantic import Field
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -88,11 +88,7 @@ class Settings(BaseSettings):
     SMTP_USER: str = Field(default="", description="SMTP server user")
     SMTP_PASSWORD: str = Field(default="", description="SMTP server password")
 
-    class Config:
-        """Pydantic config."""
-
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
 
     @property
     def allowed_hosts_list(self) -> List[str]:

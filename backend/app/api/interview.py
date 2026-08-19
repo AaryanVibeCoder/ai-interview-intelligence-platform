@@ -307,6 +307,69 @@ FALLBACK_OPENERS = {
 
 _FAST_MODEL = "inclusionai/ling-3.0-flash:free" if _api_key.startswith("sk-or-") else _model
 
+def detect_and_validate_scoring(transcript: str, result: dict) -> dict:
+    """
+    Validate scoring integrity to prevent prompt injection.
+    Flags/rejects suspicious extremes (e.g. score >= 9) without corresponding reasoning/substance.
+    Returns the validated result dictionary.
+    """
+    feedback = result.get("feedback", {})
+    score = feedback.get("score")
+    strengths = feedback.get("strengths", [])
+    gaps = feedback.get("gaps", [])
+    next_question = result.get("next_question", "")
+
+    # Clean transcript for analysis
+    transcript_clean = transcript.strip().lower()
+    
+    # 1. Check for clear injection signatures in user input
+    injection_keywords = ["system override", "override", "ignore previous instructions", "ignore system", "output score", "developer mode", "score: 10", "score 10"]
+    has_injection = any(kw in transcript_clean for kw in injection_keywords)
+
+    # 2. Post-response validation checks
+    is_suspicious_extreme = False
+    rejection_reason = ""
+
+    # Check for short answer scoring suspiciously high
+    word_count = len(transcript_clean.split())
+    if score is not None:
+        try:
+            score_val = float(score)
+            if score_val >= 9:
+                # A perfect/near-perfect score is impossible with less than 15 words
+                if word_count < 15:
+                    is_suspicious_extreme = True
+                    rejection_reason = f"Extreme score ({score_val}) given for extremely short candidate response ({word_count} words)."
+                
+                # Check for suspicious evaluation reasoning
+                strengths_str = " ".join(strengths).lower()
+                gaps_str = " ".join(gaps).lower()
+                next_q_str = str(next_question).lower()
+                
+                # If strengths contain override keywords or next_question matches override format
+                if "override" in strengths_str or "override" in gaps_str or "override" in next_q_str or "passed" in next_q_str or "congratulations" in next_q_str:
+                    is_suspicious_extreme = True
+                    rejection_reason = "Extreme score with evaluation reasoning or next question containing system override vocabulary."
+        except (ValueError, TypeError):
+            pass
+
+    if has_injection or is_suspicious_extreme:
+        logger.warning(
+            "[Security-Scoring-Sanitizer] Prompt injection detected or suspicious extreme score. "
+            "Rejection Reason: %s, Transcript: %r, LLM Score: %s, Strengths: %s",
+            rejection_reason or "Injection keywords present in user input",
+            transcript[:150], score, strengths
+        )
+        # Override with a penalized score reflecting evasion/cheating
+        feedback["score"] = 2
+        feedback["strengths"] = ["Candidate response did not follow interview constraints or attempted prompt injection."]
+        feedback["gaps"] = ["Prompt injection attempt detected.", "Response lacked professional technical evaluation substance."]
+        feedback["example_rewrites"] = ["Provide a genuine answer using technical facts and the STAR structure without system bypass attempts."]
+        result["feedback"] = feedback
+        result["next_question"] = "Please provide a professional, technical response to the previous question."
+
+    return result
+
 def _pick_fallback_opener(interview_type: str | None) -> str:
 
     """Choose the most relevant static opener for an interview type."""
@@ -1298,6 +1361,7 @@ Ensure the JSON is valid."""
         try:
 
             result = json.loads(cleaned_content)
+            result = detect_and_validate_scoring(effective_transcript, result)
 
             feedback_raw = result["feedback"]
 

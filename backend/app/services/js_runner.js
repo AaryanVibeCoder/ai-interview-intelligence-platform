@@ -1,4 +1,6 @@
 const fs = require('fs');
+const cp = require('child_process');
+const path = require('path');
 const vm = require('vm');
 const { performance } = require('perf_hooks');
 
@@ -123,12 +125,111 @@ function readStdin() {
   });
 }
 
+// ----------------------------------------------------
+// WORKER MODE
+// ----------------------------------------------------
+function runWorker() {
+  const payloadPath = process.argv[3];
+  let payload;
+  try {
+    payload = JSON.parse(fs.readFileSync(payloadPath, 'utf8'));
+  } catch (err) {
+    console.error("Worker failed to read payload:", err.message);
+    process.exit(1);
+  }
+
+  const { code, args, returnType } = payload;
+  const outputLimit = 10000;
+  let outputBuffer = "";
+
+  // Evaluate candidate's code inside VM context for console redirection/solve checking.
+  // The OS-level sandboxing (bubblewrap) provides the actual security boundary.
+  const sandbox = {
+    console: {
+      log: (...a) => {
+        const str = a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ') + '\n';
+        if (outputBuffer.length + str.length > outputLimit) {
+          throw new Error("Output Limit Exceeded");
+        }
+        outputBuffer += str;
+      },
+      error: (...a) => {
+        const str = a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ') + '\n';
+        if (outputBuffer.length + str.length > outputLimit) {
+          throw new Error("Output Limit Exceeded");
+        }
+        outputBuffer += str;
+      },
+      warn: (...a) => {
+        const str = a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ') + '\n';
+        if (outputBuffer.length + str.length > outputLimit) {
+          throw new Error("Output Limit Exceeded");
+        }
+        outputBuffer += str;
+      },
+      info: (...a) => {
+        const str = a.map(x => typeof x === 'object' ? JSON.stringify(x) : String(x)).join(' ') + '\n';
+        if (outputBuffer.length + str.length > outputLimit) {
+          throw new Error("Output Limit Exceeded");
+        }
+        outputBuffer += str;
+      }
+    }
+  };
+
+  const context = vm.createContext(sandbox);
+
+  try {
+    vm.runInContext(code, context);
+    if (typeof sandbox.solve !== 'function') {
+      throw new Error("Submission must define function solve(...)");
+    }
+    sandbox.__args = args;
+    const rawActual = vm.runInContext("solve(...__args)", context);
+    validateReturnType(rawActual, returnType);
+    
+    console.log(JSON.stringify({
+      status: "PASSED",
+      passed: true,
+      actual: rawActual,
+      error: null
+    }));
+    process.exit(0);
+  } catch (err) {
+    let status = "RUNTIME_ERROR";
+    let error = err.message || String(err);
+    if (error.includes("Output Limit Exceeded")) {
+      status = "OUTPUT_LIMIT_EXCEEDED";
+    } else if (error.includes("Expected return type")) {
+      status = "INVALID_RETURN_TYPE";
+    } else if (err.name === 'SyntaxError' || err instanceof SyntaxError) {
+      status = "COMPILE_ERROR";
+    } else if (error.toLowerCase().includes("allocation failed") || error.toLowerCase().includes("out of memory")) {
+      status = "MEMORY_LIMIT_EXCEEDED";
+    }
+    console.log(JSON.stringify({
+      status: status,
+      passed: false,
+      actual: null,
+      error: error
+    }));
+    process.exit(0);
+  }
+}
+
+// ----------------------------------------------------
+// PARENT RUNNER MODE
+// ----------------------------------------------------
 async function run() {
+  if (process.argv[2] === '--worker') {
+    runWorker();
+    return;
+  }
+
   let payload;
   if (process.argv.length < 3) {
     try {
       const stdinContent = await readStdin();
-      process.stdin.pause();
       payload = JSON.parse(stdinContent);
     } catch (err) {
       console.error("Failed to read/parse input JSON from stdin:", err.message);
@@ -137,8 +238,7 @@ async function run() {
   } else {
     const inputFilePath = process.argv[2];
     try {
-      const fileContent = fs.readFileSync(inputFilePath, 'utf8');
-      payload = JSON.parse(fileContent);
+      payload = JSON.parse(fs.readFileSync(inputFilePath, 'utf8'));
     } catch (err) {
       console.error("Failed to read/parse input JSON file:", err.message);
       process.exit(1);
@@ -147,105 +247,81 @@ async function run() {
 
   const { code, testCases, returnType, comparisonType, limits } = payload;
   const timeLimitMs = (limits && limits.timeMs) || 2000;
-  const outputLimit = 10000; // 10KB
-  
+
   const results = [];
 
   for (const tc of testCases) {
-    let outputBuffer = "";
-    const sandbox = {};
-    
-    // Setup Console inside the sandbox to limit logging
-    sandbox.console = {
-      log: (...args) => {
-        const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ') + '\n';
-        if (outputBuffer.length + str.length > outputLimit) {
-          outputBuffer += str.substring(0, outputLimit - outputBuffer.length);
-          throw new Error("Output Limit Exceeded");
-        }
-        outputBuffer += str;
-      },
-      error: (...args) => {
-        const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ') + '\n';
-        if (outputBuffer.length + str.length > outputLimit) {
-          outputBuffer += str.substring(0, outputLimit - outputBuffer.length);
-          throw new Error("Output Limit Exceeded");
-        }
-        outputBuffer += str;
-      },
-      warn: (...args) => {
-        const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ') + '\n';
-        if (outputBuffer.length + str.length > outputLimit) {
-          outputBuffer += str.substring(0, outputLimit - outputBuffer.length);
-          throw new Error("Output Limit Exceeded");
-        }
-        outputBuffer += str;
-      },
-      info: (...args) => {
-        const str = args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ') + '\n';
-        if (outputBuffer.length + str.length > outputLimit) {
-          outputBuffer += str.substring(0, outputLimit - outputBuffer.length);
-          throw new Error("Output Limit Exceeded");
-        }
-        outputBuffer += str;
-      }
-    };
-
-    const context = vm.createContext(sandbox);
+    const tempDir = path.dirname(process.argv[2] || '/tmp');
+    const workerPayloadPath = path.join(tempDir, `js-worker-payload-${tc.id}.json`);
     
     let error = null;
-    let actual = null;
+    let actualVal = null;
     let passed = false;
     let runtime = 0;
     let status = "PASSED";
 
-    const start = performance.now();
     try {
-      // 1. Load candidate's code inside the fresh context
-      vm.runInContext(code, context, { timeout: timeLimitMs });
-      
-      if (typeof sandbox.solve !== 'function') {
-        status = "INVALID_SUBMISSION";
-        throw new Error("Submission must define function solve(...)");
-      }
-
-      // 2. Deep copy arguments to ensure absolute isolation
       const cleanArgs = JSON.parse(JSON.stringify(tc.args || []));
-      sandbox.__args = cleanArgs;
+      fs.writeFileSync(workerPayloadPath, JSON.stringify({
+        code,
+        args: cleanArgs,
+        returnType
+      }));
 
-      // 3. Invoke solve
-      const rawActual = vm.runInContext("solve(...__args)", context, { timeout: timeLimitMs });
+      const start = performance.now();
+      
+      const res = cp.spawnSync(process.execPath, [__filename, '--worker', workerPayloadPath], {
+        timeout: timeLimitMs,
+        killSignal: 'SIGKILL',
+        maxBuffer: 1024 * 1024,
+        encoding: 'utf8'
+      });
+
       runtime = Math.round(performance.now() - start);
 
-      // Validate return type
-      validateReturnType(rawActual, returnType);
-
-      // Check correctness
-      passed = compareOutputs(rawActual, tc.expectedOutput, returnType, comparisonType || "exact");
-      actual = typeof rawActual === 'object' ? JSON.stringify(rawActual) : String(rawActual);
-      
-      if (!passed) {
-        status = "WRONG_ANSWER";
-      }
-    } catch (err) {
-      runtime = Math.round(performance.now() - start);
-      error = err.message || String(err);
-      passed = false;
-      
-      if (err.code === 'ERR_SCRIPT_EXECUTION_TIMEOUT' || error.includes('script execution timed out')) {
-        status = "TIME_LIMIT_EXCEEDED";
-        error = `Execution timed out after ${timeLimitMs}ms.`;
-      } else if (error.includes("Output Limit Exceeded")) {
-        status = "OUTPUT_LIMIT_EXCEEDED";
-      } else if (error.includes("Expected return type")) {
-        status = "INVALID_RETURN_TYPE";
-      } else if (status === "PASSED") {
-        if (err.name === 'SyntaxError' || err instanceof SyntaxError) {
-          status = "COMPILE_ERROR";
+      if (res.error) {
+        if (res.error.code === 'ETIMEDOUT') {
+          status = "TIME_LIMIT_EXCEEDED";
+          error = `Execution timed out after ${timeLimitMs}ms.`;
         } else {
           status = "RUNTIME_ERROR";
+          error = res.error.message || String(res.error);
+        }
+      } else if (res.status !== 0 || res.signal) {
+        status = "RUNTIME_ERROR";
+        const stderrStr = res.stderr || "";
+        error = stderrStr.trim() || `Worker exited with status ${res.status} (signal: ${res.signal})`;
+        if (res.status === 137 || res.signal === 'SIGKILL' || error.toLowerCase().includes("out of memory") || error.toLowerCase().includes("heap limit allocation failed") || error.toLowerCase().includes("allocation failed") || error.toLowerCase().includes("bad_alloc") || error.toLowerCase().includes("unhandled exception")) {
+          status = "MEMORY_LIMIT_EXCEEDED";
+          error = "Memory Limit Exceeded: Sandboxed process resources exhausted.";
+        }
+      } else {
+        const stdoutStr = (res.stdout || "").trim();
+        try {
+          const workerRes = JSON.parse(stdoutStr);
+          status = workerRes.status || "PASSED";
+          passed = workerRes.passed || false;
+          actualVal = workerRes.actual;
+          error = workerRes.error;
+          
+          if (status === "PASSED") {
+            passed = compareOutputs(actualVal, tc.expectedOutput, returnType, comparisonType || "exact");
+            if (!passed) {
+              status = "WRONG_ANSWER";
+            }
+          }
+        } catch (parseErr) {
+          status = "INTERNAL_RUNNER_ERROR";
+          error = `Failed to parse worker output: ${parseErr.message}. Stdout: ${stdoutStr}. Stderr: ${res.stderr || ""}`;
         }
       }
+    } catch (err) {
+      status = "INTERNAL_RUNNER_ERROR";
+      error = err.message || String(err);
+    } finally {
+      try {
+        fs.unlinkSync(workerPayloadPath);
+      } catch (_) {}
     }
 
     results.push({
@@ -253,8 +329,8 @@ async function run() {
       status,
       passed,
       expected: typeof tc.expectedOutput === 'object' ? JSON.stringify(tc.expectedOutput) : String(tc.expectedOutput),
-      actual: actual !== null ? actual : "No output",
-      error: error,
+      actual: actualVal !== null && actualVal !== undefined ? (typeof actualVal === 'object' ? JSON.stringify(actualVal) : String(actualVal)) : "No output",
+      error,
       runtime
     });
   }

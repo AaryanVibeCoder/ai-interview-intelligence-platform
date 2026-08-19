@@ -287,8 +287,8 @@ async def score_response(
             resp = await client.chat.completions.create(
                 model=model,
                 messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"{user_msg}\n\nRespond with ONLY JSON:"},
+                    {"role": "system", "content": system_prompt + "\n\nRespond with ONLY JSON:"},
+                    {"role": "user", "content": user_msg},
                 ],
                 max_tokens=100,   # Tight limit, cuts generation time/latency significantly
                 temperature=0.0,

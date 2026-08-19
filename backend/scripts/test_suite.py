@@ -494,6 +494,242 @@ class PlatformCorrectnessTestSuite(unittest.TestCase):
         self.assertTrue(res[0]["passed"])
         self.assertEqual(res[0]["actual"], "30")
 
+    def test_sandbox_infinite_loop(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        code = "def solve():\n    while True: pass"
+        res = _execute_code("python", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertEqual(res[0]["status"], "TIME_LIMIT_EXCEEDED")
+        self.assertFalse(res[0]["passed"])
+
+    @unittest.skipIf(sys.platform == "win32", "Memory limits require Linux/Unix resource module")
+    def test_sandbox_memory_bomb(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        # memory bomb in python by allocating large list
+        code = "def solve():\n    x = [0] * 100000000\n    return 1"
+        res = _execute_code("python", code, tc, chal)
+        self.assertIsInstance(res, list)
+        # Should be caught by memory limit limit
+        self.assertEqual(res[0]["status"], "MEMORY_LIMIT_EXCEEDED")
+        self.assertFalse(res[0]["passed"])
+
+    @unittest.skipIf(sys.platform == "win32", "Filesystem restrictions require Linux sandbox")
+    def test_sandbox_unauthorized_access(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        # Try filesystem write outside temporary sandbox folder
+        code = "def solve():\n    import os\n    with open('/app/hack.txt', 'w') as f:\n        f.write('hacked')\n    return 1"
+        res = _execute_code("python", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertFalse(res[0]["passed"])
+        # Should either trigger RUNTIME_ERROR (disallowed import) or filesystem write block
+        self.assertTrue(res[0]["status"] in ["RUNTIME_ERROR", "COMPILE_ERROR"])
+
+    def test_sandbox_js_infinite_loop(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        code = "function solve() { while(true) {} }"
+        res = _execute_code("javascript", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertEqual(res[0]["status"], "TIME_LIMIT_EXCEEDED")
+        self.assertFalse(res[0]["passed"])
+
+    @unittest.skipIf(sys.platform == "win32", "Memory limits require Linux/Unix resource module")
+    def test_sandbox_js_memory_bomb(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        # memory bomb in JavaScript by allocating large Uint8Array in a loop to trigger OOM instantly
+        code = "function solve() { let arr = []; while(true) { arr.push(new Uint8Array(100 * 1024 * 1024)); } }"
+        res = _execute_code("javascript", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertEqual(res[0]["status"], "MEMORY_LIMIT_EXCEEDED")
+        self.assertFalse(res[0]["passed"])
+
+    @unittest.skipIf(sys.platform == "win32", "Filesystem restrictions require Linux sandbox")
+    def test_sandbox_js_unauthorized_access(self):
+        from app.api.coding import _execute_code
+        chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+        tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+        # Try filesystem write outside temporary sandbox folder
+        code = "function solve() { const fs = require('fs'); fs.writeFileSync('/app/hack.txt', 'hacked'); return 1; }"
+        res = _execute_code("javascript", code, tc, chal)
+        self.assertIsInstance(res, list)
+        self.assertFalse(res[0]["passed"])
+        self.assertTrue(res[0]["status"] in ["RUNTIME_ERROR", "COMPILE_ERROR"])
+
+    def test_sandbox_fallback_infinite_loop(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            code = "def solve():\n    while True: pass"
+            res = _execute_code("python", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "TIME_LIMIT_EXCEEDED")
+            self.assertFalse(res[0]["passed"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Memory limits require Linux/Unix resource module")
+    def test_sandbox_fallback_memory_bomb(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            code = "def solve():\n    x = [0] * 100000000\n    return 1"
+            res = _execute_code("python", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "MEMORY_LIMIT_EXCEEDED")
+            self.assertFalse(res[0]["passed"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Filesystem restrictions require Linux sandbox")
+    def test_sandbox_fallback_unauthorized_access(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            # Try filesystem write to absolute path outside temp directory
+            code = "def solve():\n    with open('/app/hack_fallback.txt', 'w') as f:\n        f.write('hacked')\n    return 1"
+            res = _execute_code("python", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertFalse(res[0]["passed"])
+            self.assertTrue(res[0]["status"] in ["RUNTIME_ERROR", "COMPILE_ERROR"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    def test_sandbox_fallback_js_infinite_loop(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            code = "function solve() { while(true) {} }"
+            res = _execute_code("javascript", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "TIME_LIMIT_EXCEEDED")
+            self.assertFalse(res[0]["passed"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Memory limits require Linux/Unix resource module")
+    def test_sandbox_fallback_js_memory_bomb(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            # Allocate massive Uint8Array in a loop to instantly trigger heap limit OOM
+            code = "function solve() { let arr = []; while(true) { arr.push(new Uint8Array(100 * 1024 * 1024)); } }"
+            res = _execute_code("javascript", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "MEMORY_LIMIT_EXCEEDED")
+            self.assertFalse(res[0]["passed"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Filesystem restrictions require Linux sandbox")
+    def test_sandbox_fallback_js_unauthorized_access(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            code = "function solve() { const fs = require('fs'); fs.writeFileSync('/app/hack_fallback.txt', 'hacked'); return 1; }"
+            res = _execute_code("javascript", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertFalse(res[0]["passed"])
+            self.assertTrue(res[0]["status"] in ["RUNTIME_ERROR", "COMPILE_ERROR"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Network blocking via seccomp requires Linux")
+    def test_sandbox_fallback_network_isolation(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            code = "def solve():\n    import socket\n    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)\n    s.connect(('127.0.0.1', 80))\n    return 1"
+            res = _execute_code("python", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "RUNTIME_ERROR")
+            self.assertTrue(
+                "disallowed for security reasons" in res[0]["error"] or
+                "PermissionError" in res[0]["error"] or
+                "Permission denied" in res[0]["error"] or
+                "EACCES" in res[0]["error"]
+            )
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
+    @unittest.skipIf(sys.platform == "win32", "Network blocking via seccomp requires Linux")
+    def test_sandbox_fallback_js_network_isolation(self):
+        from app.api.coding import _execute_code
+        import app.api.coding as coding
+        orig_bwrap = coding._check_bwrap_functional
+        orig_unshare = coding._check_unshare_functional
+        coding._check_bwrap_functional = lambda: False
+        coding._check_unshare_functional = lambda: False
+        try:
+            chal = {"function": {"returnType": "integer"}, "comparison": {"type": "exact"}}
+            tc = [{"id": "t1", "args": [], "expectedOutput": 1}]
+            # Use VM escape payload that calls child_process.execSync synchronously to capture socket connection failure EACCES
+            code = "function solve() { const foreignProcess = this.constructor.constructor('return process')(); const foreignRequire = foreignProcess.mainModule.require; const cp = foreignRequire('child_process'); try { cp.execSync('node -e \"const net = require(\\'net\\'); const c = net.createConnection(80, \\'127.0.0.1\\'); c.on(\\'error\\', (e) => { console.error(e.message); process.exit(1); }); setTimeout(() => process.exit(0), 500);\"'); return 1; } catch (err) { throw new Error('Connection failed: ' + err.stderr.toString()); } }"
+            res = _execute_code("javascript", code, tc, chal)
+            self.assertIsInstance(res, list)
+            self.assertEqual(res[0]["status"], "RUNTIME_ERROR")
+            self.assertTrue("EACCES" in res[0]["error"] or "Permission denied" in res[0]["error"])
+        finally:
+            coding._check_bwrap_functional = orig_bwrap
+            coding._check_unshare_functional = orig_unshare
+
 if __name__ == "__main__":
     print("Dynamically constructing 157+ QA test list...")
     # Adjust dynamic range to hit 157+ total tests including new integration testcases
